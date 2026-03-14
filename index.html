@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Pokemon Educational Adventure!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=3">
+</head>
+<body>
+
+<!-- TITLE SCREEN -->
+<div id="scene-title" class="scene active">
+  <div class="title-bg"></div>
+  <div class="title-content">
+    <div class="title-logo">
+      <div class="title-pokemon-text">POKÉMON</div>
+      <div class="title-edu-text">Educational Adventure!</div>
+    </div>
+    <div class="title-sprites">
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" class="title-sprite s1" alt="Pikachu">
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png" class="title-sprite s2" alt="Charmander">
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png" class="title-sprite s3" alt="Squirtle">
+    </div>
+    <div class="title-trainer-input" id="title-trainer-input">
+      <p class="title-prompt">What's your name, Trainer?</p>
+      <input type="text" id="trainer-name-input" placeholder="Enter your name..." maxlength="12">
+      <button class="btn-primary btn-xl" id="start-btn">Start Adventure!</button>
+      <button class="settings-gear-btn title-settings-btn" onclick="Game.openSettings()">⚙️ Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOWN MAP -->
+<div id="scene-map" class="scene">
+  <div class="map-bg"></div>
+  <div class="trainer-bar">
+    <div class="trainer-info">
+      <div class="trainer-avatar">🧢</div>
+      <div class="trainer-details">
+        <span class="trainer-name-display" id="trainer-name-display">Trainer</span>
+        <span class="trainer-level">Lv. <span id="trainer-level">1</span></span>
+      </div>
+    </div>
+    <div class="badges-display">
+      <span class="badges-label">Badges:</span>
+      <div class="badges-row" id="badges-row">
+        <div class="badge-slot" data-badge="0">⬡</div>
+        <div class="badge-slot" data-badge="1">⬡</div>
+        <div class="badge-slot" data-badge="2">⬡</div>
+        <div class="badge-slot" data-badge="3">⬡</div>
+        <div class="badge-slot" data-badge="4">⬡</div>
+        <div class="badge-slot" data-badge="5">⬡</div>
+        <div class="badge-slot" data-badge="6">⬡</div>
+        <div class="badge-slot" data-badge="7">⬡</div>
+      </div>
+    </div>
+    <div class="caught-display">
+      <span class="caught-label">Caught:</span>
+      <span id="caught-count">0</span>/151
+    </div>
+    <button class="settings-gear-btn" onclick="Game.openSettings()">⚙️</button>
+  </div>
+  <div class="map-locations">
+    <button class="map-location loc-grass" id="loc-grass" onclick="Game.goToEncounter()">
+      <div class="loc-content">
+        <div class="loc-icon">🌿</div>
+        <div class="loc-name">Tall Grass</div>
+        <div class="loc-desc">Find &amp; catch wild Pokémon!</div>
+        <div class="loc-badge-row"><span class="loc-tag">🔍 Clues</span><span class="loc-tag">➕ Math</span><span class="loc-tag">📖 Reading</span></div>
+      </div>
+    </button>
+    <button class="map-location loc-gym" id="loc-gym" onclick="Game.goToGym()">
+      <div class="loc-content">
+        <div class="loc-icon">🏆</div>
+        <div class="loc-name">Pokémon Gym</div>
+        <div class="loc-desc">Battle leaders, earn badges!</div>
+        <div class="loc-badge-row"><span class="loc-tag">⚔️ Battle</span><span class="loc-tag">🏅 8 Badges</span></div>
+      </div>
+    </button>
+    <button class="map-location loc-rocket" id="loc-rocket" onclick="Game.goToRocket()">
+      <div class="loc-content">
+        <div class="loc-icon">🚀</div>
+        <div class="loc-name">Team Rocket</div>
+        <div class="loc-desc">Solve puzzles, stop the villains!</div>
+        <div class="loc-badge-row"><span class="loc-tag">🧩 Puzzles</span><span class="loc-tag">🔤 Words</span></div>
+      </div>
+    </button>
+    <button class="map-location loc-pokecenter" id="loc-pokecenter" onclick="Game.goToPokeCenter()">
+      <div class="loc-content">
+        <div class="loc-icon">🏥</div>
+        <div class="loc-name">Pokémon Center</div>
+        <div class="loc-desc">Heal your Pokémon &amp; play games!</div>
+        <div class="loc-badge-row"><span class="loc-tag">💖 Heal</span><span class="loc-tag">🔍 Word Search</span></div>
+      </div>
+    </button>
+  </div>
+  <div class="map-secondary">
+    <button class="map-location map-location-sm loc-lab" onclick="Game.goToLab()">
+      <div class="loc-content">
+        <div class="loc-icon">🔬</div>
+        <div class="loc-name">Pokémon Lab</div>
+        <div class="loc-badge-row"><span class="loc-tag">🎯 Activities</span><span class="loc-tag" id="caught-tag">0/151 Caught</span></div>
+      </div>
+    </button>
+    <button class="map-location map-location-sm loc-guide-sm" onclick="Game.goToGuide()">
+      <div class="loc-content">
+        <div class="loc-icon">📚</div>
+        <div class="loc-name">Trainer's Guide</div>
+        <div class="loc-badge-row"><span class="loc-tag">⭐ Levels</span><span class="loc-tag">📋 Info</span></div>
+      </div>
+    </button>
+  </div>
+</div>
+
+<!-- POKEMON ENCOUNTER -->
+<div id="scene-encounter" class="scene">
+  <div class="encounter-bg"></div>
+  <div class="encounter-content">
+    <div class="encounter-header">
+      <button class="btn-back" onclick="Game.goToMap()">← Back</button>
+      <div class="encounter-title" id="encounter-title">A wild Pokémon appeared!</div>
+    </div>
+    <div class="encounter-main">
+      <div class="encounter-pokemon-area">
+        <div id="encounter-pokemon-display" class="pokemon-display">
+          <img id="encounter-pokemon-sprite" src="" alt="Wild Pokemon" class="encounter-sprite hidden-pokemon">
+          <div id="pokemon-mystery" class="pokemon-mystery">?</div>
+        </div>
+        <div id="encounter-guess-area">
+          <div class="guess-label">Who's that Pokémon?</div>
+          <div class="guess-input-wrap">
+            <input type="text" id="pokemon-guess-input" placeholder="Type Pokémon name..." autocomplete="off">
+            <div id="autocomplete-list" class="autocomplete-list"></div>
+          </div>
+          <button class="btn-primary" id="guess-btn" onclick="Game.submitGuess()">Guess!</button>
+        </div>
+        <div id="encounter-result" class="encounter-result hidden"></div>
+      </div>
+      <div class="clues-panel">
+        <div class="clues-title">Clues</div>
+        <div id="clues-container"></div>
+        <div id="clue-challenge-area" class="clue-challenge hidden"></div>
+      </div>
+    </div>
+    <div class="encounter-pokeballs">
+      <span class="pokeballs-label">Pokéballs:</span>
+      <div id="pokeballs-display"></div>
+    </div>
+  </div>
+</div>
+
+<!-- POKEBALL THROW MINI-GAME -->
+<div id="scene-throw" class="scene">
+  <div class="throw-bg"></div>
+  <div class="throw-content">
+    <div id="throw-pokemon-area" class="throw-pokemon-area">
+      <div id="throw-pokemon-wrap" class="throw-pokemon-wrap">
+        <img id="throw-pokemon-sprite" src="" alt="Pokemon" class="throw-sprite">
+        <div id="throw-target-ring" class="target-ring"></div>
+      </div>
+    </div>
+    <div id="throw-status" class="throw-status"></div>
+    <div id="pokeball-throw-container" class="pokeball-throw-container">
+      <div id="pokeball-draggable" class="pokeball-css">
+        <div class="pokeball-top"></div>
+        <div class="pokeball-bottom"></div>
+        <div class="pokeball-line"></div>
+        <div class="pokeball-button"></div>
+      </div>
+    </div>
+    <div class="throw-instructions">Drag the Pokéball toward the Pokémon!</div>
+    <div id="throw-balls-left" class="throw-balls-left"></div>
+  </div>
+</div>
+
+<!-- POKEDEX -->
+<div id="scene-pokedex" class="scene">
+  <div class="pokedex-bg"></div>
+  <div class="pokedex-content">
+    <div class="scene-header">
+      <button class="btn-back" onclick="Game.goToMap()">← Back</button>
+      <h2 class="scene-title">📖 Pokédex</h2>
+      <div class="completion-badge" id="completion-badge">0/151</div>
+    </div>
+    <div id="pokedex-grid" class="pokedex-grid"></div>
+    <div id="pokedex-modal" class="modal-overlay hidden">
+      <div class="modal-card pokedex-card">
+        <button class="modal-close" onclick="Game.closePokedexModal()">✕</button>
+        <div id="pokedex-modal-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GYM SCENE -->
+<div id="scene-gym" class="scene">
+  <div class="battle-bg"></div>
+  <div class="gym-content">
+    <div class="scene-header">
+      <button class="btn-back" onclick="Game.goToMap()">← Back</button>
+      <h2 class="scene-title" id="gym-scene-title">🏆 Pokémon Gym</h2>
+    </div>
+    <!-- Gym Select -->
+    <div id="gym-select" class="gym-select">
+      <div class="gym-select-prompt">Choose your next challenge!</div>
+      <div id="gym-list" class="gym-list"></div>
+    </div>
+    <!-- Pokemon Picker -->
+    <div id="gym-pokemon-picker" class="gym-pokemon-picker hidden">
+      <div class="picker-header">
+        <div class="picker-title" id="picker-title">Choose your Pokémon!</div>
+        <div class="picker-subtitle" id="picker-subtitle">Select a Pokémon to battle with</div>
+      </div>
+      <div id="picker-grid" class="picker-grid"></div>
+      <div class="picker-footer">
+        <button class="btn-back" onclick="Game.cancelPicker()">← Back to Gyms</button>
+      </div>
+    </div>
+    <!-- Gym Battle -->
+    <div id="gym-battle" class="gym-battle hidden">
+      <div class="battle-arena">
+        <div class="battle-enemy-side">
+          <img id="gym-leader-portrait-battle" src="" alt="Gym Leader" class="battle-leader-portrait">
+          <div class="battle-trainer-name" id="gym-leader-name">Brock's Geodude</div>
+          <div class="battle-hp-row">
+            <span class="hp-label" id="gym-enemy-pokemon-name">Geodude</span>
+            <span class="hp-text" id="enemy-hp-text">40 / 40</span>
+          </div>
+          <div class="hp-bar"><div id="enemy-hp-bar" class="hp-fill enemy-hp"></div></div>
+          <img id="gym-leader-sprite" src="" alt="Gym Leader Pokemon" class="battle-sprite enemy-sprite">
+        </div>
+        <div class="battle-vs">⚔️</div>
+        <div class="battle-player-side">
+          <img id="player-pokemon-sprite" src="" alt="Your Pokemon" class="battle-sprite player-sprite">
+          <div class="battle-trainer-name" id="player-pokemon-name">Your Pokémon</div>
+          <div class="battle-hp-row">
+            <span class="hp-label">HP</span>
+            <span class="hp-text" id="player-hp-text">45 / 45</span>
+          </div>
+          <div class="hp-bar"><div id="player-hp-bar" class="hp-fill player-hp"></div></div>
+        </div>
+      </div>
+      <!-- Battle message box (typewriter text) -->
+      <div class="battle-message-box" id="battle-message-box">Choose a move!</div>
+      <!-- Move grid -->
+      <div id="battle-moves-area" class="battle-moves-area"></div>
+      <!-- Challenge area (replaces move grid during questions) -->
+      <div id="battle-challenge-area" class="battle-challenge-area hidden"></div>
+    </div>
+    <!-- Victory / Defeat -->
+    <div id="gym-result" class="gym-result hidden"></div>
+  </div>
+</div>
+
+<!-- TEAM ROCKET SCENE -->
+<div id="scene-rocket" class="scene">
+  <div class="rocket-bg"></div>
+  <div class="rocket-content">
+    <div class="scene-header">
+      <button class="btn-back" onclick="Game.goToMap()">← Back</button>
+      <h2 class="scene-title">🚀 Team Rocket Hideout</h2>
+    </div>
+    <!-- Rocket Intro -->
+    <div id="rocket-intro" class="rocket-intro">
+      <div class="rocket-dialogue-box">
+        <div class="rocket-sprites">
+          <div class="rocket-grunt grunt-l">
+            <img class="rocket-portrait" src="assets/rocket-jessie.webp" alt="Jessie">
+            <span class="rocket-grunt-name">Jessie</span>
+          </div>
+          <div class="rocket-grunt grunt-r">
+            <img class="rocket-portrait" src="assets/rocket-james.webp" alt="James">
+            <span class="rocket-grunt-name">James</span>
+          </div>
+        </div>
+        <div id="rocket-dialogue-text" class="rocket-dialogue-text"></div>
+        <button class="btn-primary" id="rocket-continue-btn" onclick="Game.startRocketPuzzle()">Fight Back!</button>
+      </div>
+    </div>
+    <!-- Rocket Puzzle -->
+    <div id="rocket-puzzle" class="rocket-puzzle hidden">
+      <div class="puzzle-header">
+        <div class="puzzle-type-label" id="puzzle-type-label"></div>
+        <div class="puzzle-timer-wrap" id="puzzle-timer-wrap">
+          <span class="puzzle-timer-label">Time:</span>
+          <span id="puzzle-timer" class="puzzle-timer">60</span>
+        </div>
+      </div>
+      <div id="puzzle-content" class="puzzle-content"></div>
+    </div>
+    <!-- Rocket Result -->
+    <div id="rocket-result" class="rocket-result hidden"></div>
+  </div>
+</div>
+
+<!-- POKEMON CENTER SCENE -->
+<div id="scene-pokecenter" class="scene">
+  <div class="pokecenter-bg"></div>
+  <div class="pokecenter-content">
+    <div class="scene-header">
+      <button class="btn-back" onclick="Game.goToMap()">← Back</button>
+      <h2 class="scene-title">🏥 Pokémon Center</h2>
+    </div>
+    <div class="pokecenter-scroll" id="pokecenter-scroll"></div>
+  </div>
+  <!-- Word Search Activity Overlay -->
+  <div id="pokecenter-ws-overlay" class="pokecenter-ws-overlay hidden">
+    <div class="pokecenter-ws-modal">
+      <div class="pokecenter-ws-header">
+        <h3>🔍 Word Search</h3>
+        <button class="modal-close" onclick="closePokeCenterWordSearch()">✕</button>
+      </div>
+      <div id="pokecenter-ws-content" class="pokecenter-ws-body"></div>
+      <button class="btn-back" style="margin-top:12px" onclick="closePokeCenterWordSearch()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRAINER'S GUIDE SCENE -->
+<div id="scene-guide" class="scene">
+  <div class="guide-bg"></div>
+  <div class="guide-content">
+    <div class="scene-header">
+      <button class="btn-back" onclick="Game.goToMap()">← Back</button>
+      <h2 class="scene-title">📚 Trainer's Guide</h2>
+    </div>
+    <div class="guide-scroll" id="guide-scroll"></div>
+  </div>
+</div>
+
+<!-- POKEMON LAB HUB -->
+<div id="scene-lab" class="scene">
+  <div class="lab-bg"></div>
+  <div class="lab-content">
+    <div class="scene-header">
+      <button class="btn-back" onclick="Game.goToMap()">← Back</button>
+      <h2 class="scene-title">🔬 Pokémon Lab</h2>
+    </div>
+    <div class="lab-tabs" id="lab-tabs"></div>
+    <div class="lab-activities" id="lab-activities"></div>
+    <div id="lab-activity-area" class="lab-activity-area hidden"></div>
+  </div>
+</div>
+
+<!-- STANDALONE ACTIVITY -->
+<div id="scene-activity" class="scene">
+  <div class="activity-bg"></div>
+  <div class="activity-content">
+    <div class="scene-header">
+      <button class="btn-back" onclick="Game.exitActivity()">← Back</button>
+      <h2 class="scene-title" id="activity-scene-title">Activity</h2>
+      <div class="activity-score" id="activity-score"></div>
+    </div>
+    <div id="activity-play-area" class="activity-play-area"></div>
+    <div id="activity-feedback" class="activity-feedback hidden"></div>
+  </div>
+</div>
+
+<!-- SETTINGS OVERLAY -->
+<div id="settings-overlay" class="settings-overlay hidden">
+  <div class="settings-panel">
+    <div class="settings-header">
+      <h2>⚙️ Trainer Settings</h2>
+      <button class="settings-close" onclick="Game.closeSettings()">✕</button>
+    </div>
+    <div class="settings-section">
+      <div class="settings-label">Learning Level</div>
+      <div class="settings-subtitle">Choose the right level for your trainer!</div>
+      <div id="level-cards" class="level-cards"></div>
+    </div>
+    <div class="settings-section settings-danger">
+      <div class="settings-label">⚠️ Danger Zone</div>
+      <button class="btn-reset" id="reset-progress-btn" onclick="Game.confirmReset()">Reset All Progress</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET CONFIRMATION OVERLAY -->
+<div id="reset-confirm-overlay" class="reset-confirm-overlay hidden">
+  <div class="reset-confirm-card">
+    <div class="reset-confirm-icon">⚠️</div>
+    <div class="reset-confirm-title">Reset All Progress?</div>
+    <div class="reset-confirm-text">This will erase all your caught Pokémon, badges, XP, and settings. This cannot be undone!</div>
+    <div class="reset-confirm-buttons">
+      <button class="btn-reset-cancel" onclick="Game.cancelReset()">Cancel</button>
+      <button class="btn-reset-confirm" onclick="Game.executeReset()">Yes, Reset Everything</button>
+    </div>
+  </div>
+</div>
+
+<!-- GLOBAL NOTIFICATION -->
+<div id="global-notify" class="global-notify hidden"></div>
+<!-- SCENE TRANSITION OVERLAY -->
+<div id="scene-transition-overlay" class="scene-transition-overlay"></div>
+<!-- CONFETTI CANVAS -->
+<canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+<!-- Core -->
+<script src="js/audio.js"></script>
+<script src="js/data.js"></script>
+<script src="js/engine.js?v=1773119255"></script>
+
+<!-- Scenes -->
+<script src="js/encounter.js"></script>
+<script src="js/pokedex.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/rocket.js"></script>
+<script src="js/guide.js"></script>
+<script src="js/pokecenter.js"></script>
+<script src="js/settings.js"></script>
+
+<!-- Activity generators & cross-cutting systems -->
+<script src="js/activities.js"></script>
+<script src="js/systems.js"></script>
+
+</body>
+</html>
