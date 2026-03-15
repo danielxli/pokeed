@@ -450,7 +450,7 @@ function renderChallengeHTML(ch, context) {
     wordBuilder: '🧱 Word Builder', consonantTeamMatch: '🤝 Consonant Teams',
     vowelSoundSort: '🗂️ Vowel Sort', blendAndRead: '🔗 Blend & Read',
     sightWordFlash: '⚡ Sight Word Flash',
-    phonogramMatch: '🔠 Phonogram Match', syllableSort: '📐 Syllable Sort',
+    phonogramMatch: '🔠 Phonogram Match',
     spellingRulesQuiz: '📏 Spelling Rules', speedRead: '⏱️ Speed Read',
     wordSurgeon: '🔬 Word Surgeon', vocabularyDetective: '🔍 Vocabulary',
     passageQuestL4: '📚 Reading Quest',
@@ -899,15 +899,6 @@ function renderChallengeHTML(ch, context) {
     html += `<div class="challenge-choices">`;
     (ch.choices || []).forEach(c => {
       html += `<button class="btn-choice" style="font-size:20px;font-weight:700;letter-spacing:2px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
-    });
-    html += `</div>`;
-
-  } else if (ch.type === 'syllableSort') {
-    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">What type of syllable is this?</div>`;
-    html += `<div style="font-size:36px;font-weight:700;text-align:center;color:#333;margin-bottom:16px;padding:14px;background:#f5f5f5;border-radius:12px;">${ch.question}</div>`;
-    html += `<div class="challenge-choices">`;
-    (ch.choices || []).forEach(c => {
-      html += `<button class="btn-choice" style="font-size:14px;text-align:center;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
     });
     html += `</div>`;
 

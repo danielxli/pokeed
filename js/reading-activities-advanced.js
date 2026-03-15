@@ -457,35 +457,6 @@ function genPhonogramMatch(difficulty) {
 }
 
 /**
- * Wilson/OG syllable type identification.
- * Show a word, student picks which syllable type it is.
- */
-function genSyllableSort(difficulty) {
-  const allTypes = Object.keys(SYLLABLE_TYPE_WORDS);
-  // At difficulty 3, only use first 3 types; at 4+, use all 6
-  const availableTypes = difficulty >= 4
-    ? allTypes
-    : ['Closed', 'Open', 'Silent E'];
-
-  const correctType = randItem(availableTypes);
-  const word = randItem(SYLLABLE_TYPE_WORDS[correctType]);
-
-  // Build choices: correct type + other types (3 or 4 total depending on difficulty)
-  const wrongTypes = availableTypes.filter(t => t !== correctType);
-  const numChoices = difficulty >= 4 ? 4 : 3;
-  const selectedWrong = randItems(shuffleArray(wrongTypes), numChoices - 1);
-  const choices = shuffleArray([correctType, ...selectedWrong]);
-
-  return {
-    type: 'syllableSort',
-    question: word,
-    answer: correctType,
-    choices: choices,
-    hint: 'What type of syllable is this?'
-  };
-}
-
-/**
  * Logic of English spelling rules quiz.
  * Show a word, ask which spelling rule applies.
  */
@@ -706,7 +677,6 @@ if (typeof ACTIVITY_REGISTRY !== 'undefined') {
   Object.assign(ACTIVITY_REGISTRY, {
     // L3 — 1st Grade
     phonogramMatch:      { name: 'Phonogram Match',      icon: '🔠', levels: [3],       skill: 'phonics',        generator: genPhonogramMatch },
-    syllableSort:        { name: 'Syllable Sort',        icon: '📐', levels: [3, 4],    skill: 'reading',        generator: genSyllableSort },
     spellingRulesQuiz:   { name: 'Spelling Rules',       icon: '📏', levels: [3, 4],    skill: 'spelling',       generator: genSpellingRulesQuiz },
     speedRead:           { name: 'Speed Read',           icon: '⏱️', levels: [3],       skill: 'reading',        generator: genSpeedRead },
     // L4 — 2nd-3rd Grade
