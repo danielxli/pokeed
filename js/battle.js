@@ -296,43 +296,8 @@ function playerSelectMove(moveKey) {
 }
 
 function renderBattleChallengeHTML(ch) {
-  let html = `<div class="battle-challenge-title">`;
-  html += ch.type === 'math' ? '➕ Math Challenge!' :
-         ch.type === 'reading' ? '📚 Reading Challenge!' :
-         ch.type === 'spelling' ? '🔤 Spelling Challenge!' :
-         ch.type === 'cvc' ? '📖 Read the Word!' : '📖 Reading Comprehension!';
-  html += `</div>`;
-
-  if (ch.type === 'cvc') {
-    html += renderWordTiles(ch.word, { big: true });
-    html += `<div class="cvc-emoji-grid">`;
-    ch.choices.forEach(emoji => {
-      html += `<button class="cvc-emoji-btn" onclick="answerChallenge('${emoji}', 'gym')">${emoji}</button>`;
-    });
-    html += `</div>`;
-  } else if (ch.type === 'comprehension') {
-    html += `<div style="font-size:13px;color:#555;margin-bottom:8px;line-height:1.4;padding:8px;background:#f9f9f9;border-radius:8px;max-height:100px;overflow-y:auto;">${ch.passage}</div>`;
-    html += `<div class="battle-challenge-question">${ch.question}</div>`;
-    html += `<div class="challenge-choices">`;
-    ch.choices.forEach(c => {
-      html += `<button class="btn-choice" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', 'gym')">${c}</button>`;
-    });
-    html += `</div>`;
-  } else if (ch.type === 'spelling') {
-    const scrambled = ch.question.replace('Unscramble: ', '');
-    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue);margin-bottom:6px;">Tap the letters in the right order!</div>`;
-    html += renderTileSpell(scrambled, ch.answer.length, 'gym', ch.hint);
-  } else {
-    if (ch.hint) html += `<div style="font-size:13px;color:#666;margin-bottom:6px;">${ch.hint}</div>`;
-    html += `<div class="battle-challenge-question">${ch.question}</div>`;
-    html += `<div class="challenge-choices">`;
-    ch.choices.forEach(c => {
-      const val = typeof c === 'number' ? c : `'${c.replace(/'/g,"\\'")}'`;
-      html += `<button class="btn-choice" onclick="answerChallenge(${val}, 'gym')">${c}</button>`;
-    });
-    html += `</div>`;
-  }
-  return html;
+  // Delegate to the main renderChallengeHTML which handles all activity types
+  return renderChallengeHTML(ch, 'gym');
 }
 
 function resolveGymAnswer(isCorrect) {
