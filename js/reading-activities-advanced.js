@@ -425,9 +425,22 @@ function genPhonogramMatch(difficulty) {
   var idx = word.toLowerCase().indexOf(phonogramLower);
   var blanked = word.substring(0, idx) + '___' + word.substring(idx + phonogramLower.length);
 
-  // Build distractor phonograms from other entries
+  // Build a set of all known words for collision checking
+  var allWords = {};
+  PHONOGRAM_BANK.forEach(function (e) {
+    e.words.forEach(function (w) { allWords[w.toLowerCase()] = true; });
+  });
+
+  // Build distractor phonograms, excluding any that would form a real word
+  var prefix = word.substring(0, idx).toLowerCase();
+  var suffix = word.substring(idx + phonogramLower.length).toLowerCase();
   var otherPhonograms = PHONOGRAM_BANK
-    .filter(function (e) { return e.phonogram !== entry.phonogram; })
+    .filter(function (e) {
+      if (e.phonogram === entry.phonogram) return false;
+      // Reject if inserting this phonogram creates a known word
+      var formed = prefix + e.phonogram.toLowerCase() + suffix;
+      return !allWords[formed];
+    })
     .map(function (e) { return e.phonogram; });
   var distractors = randItems(otherPhonograms, 3);
 
