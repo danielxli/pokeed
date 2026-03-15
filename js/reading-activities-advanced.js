@@ -413,37 +413,33 @@ const ADVANCED_VOCAB = [
 
 /**
  * Logic of English phonogram identification.
- * Shows a phonogram, student picks which word uses it.
+ * Shows a word with its phonogram blanked out — student picks the right
+ * letter combo to complete the word.
  */
 function genPhonogramMatch(difficulty) {
-  const entry = randItem(PHONOGRAM_BANK);
-  const correctWord = randItem(entry.words);
-  const phonogramLower = entry.phonogram.toLowerCase();
+  var entry = randItem(PHONOGRAM_BANK);
+  var word = randItem(entry.words);
+  var phonogramLower = entry.phonogram.toLowerCase();
 
-  // Build distractors: 1 from the entry's own distractors array
-  const distractorFromEntry = randItem(entry.distractors);
+  // Find where the phonogram sits in the word and blank it out
+  var idx = word.toLowerCase().indexOf(phonogramLower);
+  var blanked = word.substring(0, idx) + '___' + word.substring(idx + phonogramLower.length);
 
-  // 2 more from other phonogram entries' words that DON'T contain the target phonogram
-  const otherEntries = PHONOGRAM_BANK.filter(e => e.phonogram !== entry.phonogram);
-  const candidateWords = [];
-  for (const other of otherEntries) {
-    for (const w of other.words) {
-      if (!w.toLowerCase().includes(phonogramLower)) {
-        candidateWords.push(w);
-      }
-    }
-  }
-  const extraDistractors = randItems(shuffleArray(candidateWords), 2);
+  // Build distractor phonograms from other entries
+  var otherPhonograms = PHONOGRAM_BANK
+    .filter(function (e) { return e.phonogram !== entry.phonogram; })
+    .map(function (e) { return e.phonogram; });
+  var distractors = randItems(otherPhonograms, 3);
 
-  const allDistractors = [distractorFromEntry, ...extraDistractors];
-  const choices = shuffleArray([correctWord, ...allDistractors]);
+  var choices = shuffleArray([entry.phonogram].concat(distractors));
 
   return {
     type: 'phonogramMatch',
-    question: entry.phonogram,
-    answer: correctWord,
+    question: blanked,
+    answer: entry.phonogram,
+    word: word,
     choices: choices,
-    hint: 'Which word uses this sound pattern?'
+    hint: 'Fill in the missing letters!'
   };
 }
 

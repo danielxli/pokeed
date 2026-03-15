@@ -891,11 +891,14 @@ function renderChallengeHTML(ch, context) {
     html += `</div>`;
 
   } else if (ch.type === 'phonogramMatch') {
-    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">Which word uses this sound pattern?</div>`;
-    html += `<div style="font-size:48px;font-weight:700;text-align:center;color:var(--pk-blue,#1565C0);margin-bottom:16px;padding:12px;background:#e3f2fd;border-radius:12px;letter-spacing:4px;">${ch.question}</div>`;
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">${ch.hint || 'Fill in the missing letters!'}</div>`;
+    // Show blanked word with the gap highlighted
+    const parts = ch.question.split('___');
+    html += `<div style="font-size:36px;font-weight:700;text-align:center;margin-bottom:16px;padding:14px;background:#f5f5f5;border-radius:12px;">`;
+    html += `${parts[0]}<span style="display:inline-block;min-width:50px;border-bottom:4px solid var(--pk-blue,#1565C0);margin:0 2px;color:var(--pk-blue,#1565C0);">&nbsp;?&nbsp;</span>${parts[1] || ''}</div>`;
     html += `<div class="challenge-choices">`;
     (ch.choices || []).forEach(c => {
-      html += `<button class="btn-choice" style="font-size:17px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+      html += `<button class="btn-choice" style="font-size:20px;font-weight:700;letter-spacing:2px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
     });
     html += `</div>`;
 
