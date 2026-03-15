@@ -1029,8 +1029,9 @@ window.answerChallenge = function(chosen, context) {
   const container = context === 'clue' ? 'clue-challenge-area'
     : context === 'activity' ? 'activity-play-area'
     : 'battle-challenge-area';
-  const isCvc = ch.type === 'cvc';
-  const btnSelector = isCvc ? '.cvc-emoji-btn' : '.btn-choice';
+  const containerEl = document.getElementById(container);
+  const hasEmojiBtn = containerEl && containerEl.querySelector('.cvc-emoji-btn');
+  const btnSelector = hasEmojiBtn ? '.cvc-emoji-btn' : '.btn-choice';
   const btns = document.querySelectorAll(`#${container} ${btnSelector}`);
   btns.forEach(b => {
     b.disabled = true;
