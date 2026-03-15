@@ -496,14 +496,32 @@ function genSpellingRulesQuiz(difficulty) {
  * Show a decodable word, student picks the matching emoji.
  */
 function genSpeedRead(difficulty) {
-  const entry = randItem(SPEED_READ_WORDS);
+  difficulty = difficulty || 1;
+  var pool;
 
-  // Pick 3 distractor emojis from other entries
-  const otherEntries = SPEED_READ_WORDS.filter(e => e.word !== entry.word);
-  const distractorEntries = randItems(shuffleArray(otherEntries), 3);
-  const distractorEmojis = distractorEntries.map(e => e.emoji);
+  if (difficulty <= 1) {
+    // L1: CVC words only
+    pool = SOUND_SPOTTER_WORDS.map(function (w) {
+      return { word: w.word, emoji: w.emoji };
+    });
+  } else if (difficulty <= 2) {
+    // L2: CVC + CCVC words
+    pool = SOUND_SPOTTER_WORDS.map(function (w) {
+      return { word: w.word, emoji: w.emoji };
+    }).concat(CCVC_WORDS);
+  } else {
+    // L3+: original advanced pool
+    pool = SPEED_READ_WORDS;
+  }
 
-  const choices = shuffleArray([entry.emoji, ...distractorEmojis]);
+  var entry = randItem(pool);
+
+  // Pick 3 distractor emojis from other entries in the same pool
+  var otherEntries = pool.filter(function (e) { return e.word !== entry.word && e.emoji !== entry.emoji; });
+  var distractorEntries = randItems(shuffleArray(otherEntries), 3);
+  var distractorEmojis = distractorEntries.map(function (e) { return e.emoji; });
+
+  var choices = shuffleArray([entry.emoji].concat(distractorEmojis));
 
   return {
     type: 'speedRead',
@@ -678,7 +696,7 @@ if (typeof ACTIVITY_REGISTRY !== 'undefined') {
     // L3 — 1st Grade
     phonogramMatch:      { name: 'Phonogram Match',      icon: '🔠', levels: [3],       skill: 'phonics',        generator: genPhonogramMatch },
     spellingRulesQuiz:   { name: 'Spelling Rules',       icon: '📏', levels: [3, 4],    skill: 'spelling',       generator: genSpellingRulesQuiz },
-    speedRead:           { name: 'Speed Read',           icon: '⏱️', levels: [3],       skill: 'reading',        generator: genSpeedRead },
+    speedRead:           { name: 'Speed Read',           icon: '⏱️', levels: [1, 2, 3], skill: 'reading',        generator: genSpeedRead },
     // L4 — 2nd-3rd Grade
     wordSurgeon:         { name: 'Word Surgeon',         icon: '🔬', levels: [4],       skill: 'reading',        generator: genWordSurgeon },
     vocabularyDetective: { name: 'Vocabulary Detective',  icon: '🔍', levels: [4],       skill: 'reading',        generator: genVocabularyDetective },
