@@ -331,58 +331,7 @@ function genWordBuilder(difficulty) {
 }
 
 // ---------------------------------------------------------------------------
-// 6. genConsonantTeamMatch — Digraph identification
-// ---------------------------------------------------------------------------
-function genConsonantTeamMatch(difficulty) {
-  difficulty = difficulty || 1;
-
-  var digraphNames = Object.keys(DIGRAPH_WORDS);
-
-  // Pick a random digraph and a random word from it
-  var digraph = randItem(digraphNames);
-  var word = randItem(DIGRAPH_WORDS[digraph]);
-
-  // Build choices: correct digraph + 3 random other digraphs
-  var otherDigraphs = digraphNames.filter(function (d) { return d !== digraph; });
-  var distractors = randItems(otherDigraphs, 3);
-
-  return {
-    type: 'consonantTeamMatch',
-    question: word,
-    answer: digraph,
-    choices: shuffleArray([digraph].concat(distractors)),
-    hint: 'Which consonant team does this word use?',
-  };
-}
-
-// ---------------------------------------------------------------------------
-// 7. genVowelSoundSort — Short vowel identification
-// ---------------------------------------------------------------------------
-function genVowelSoundSort(difficulty) {
-  difficulty = difficulty || 1;
-
-  // Use SOUND_SPOTTER_WORDS to determine the vowel from the sounds field
-  var target = randItem(SOUND_SPOTTER_WORDS);
-
-  // Extract the vowel from the sounds string — it is the middle phoneme
-  // Sounds format: "/k/ /a/ /t/" — the vowel is always the second phoneme
-  var soundParts = target.sounds.split(' ');
-  var vowelSound = soundParts[1]; // e.g. "/a/"
-  var vowel = vowelSound.replace(/\//g, ''); // e.g. "a"
-
-  return {
-    type: 'vowelSoundSort',
-    question: target.word,
-    answer: vowel.toUpperCase(),
-    choices: ['A', 'E', 'I', 'O', 'U'],
-    word: target.word,
-    emoji: target.emoji,
-    hint: 'Listen for the middle sound!',
-  };
-}
-
-// ---------------------------------------------------------------------------
-// 8. genBlendAndRead — DISTAR blending (letters -> word)
+// 6. genBlendAndRead — DISTAR blending (letters -> word)
 // ---------------------------------------------------------------------------
 function genBlendAndRead(difficulty) {
   difficulty = difficulty || 1;
@@ -415,27 +364,6 @@ function genBlendAndRead(difficulty) {
   };
 }
 
-// ---------------------------------------------------------------------------
-// 9. genSightWordFlash — Timed sight word recognition
-// ---------------------------------------------------------------------------
-function genSightWordFlash(difficulty) {
-  difficulty = difficulty || 1;
-
-  var word = randItem(SIGHT_WORDS_L2);
-
-  // Pick 3 distractor words from the same pool
-  var otherWords = SIGHT_WORDS_L2.filter(function (w) { return w !== word; });
-  var distractors = randItems(otherWords, 3);
-
-  return {
-    type: 'sightWordFlash',
-    question: word,
-    answer: word,
-    choices: shuffleArray([word].concat(distractors)),
-    hint: 'Which word matches?',
-  };
-}
-
 // =============================================================================
 // REGISTER L1-L2 READING ACTIVITIES
 // =============================================================================
@@ -448,9 +376,6 @@ if (typeof ACTIVITY_REGISTRY !== 'undefined') {
     firstSoundMatch:     { name: 'First Sound Match',    icon: '👂', levels: [1],    skill: 'phonics',  generator: genFirstSoundMatch },
     // L2 — K
     wordBuilder:         { name: 'Word Builder',         icon: '🧱', levels: [2],    skill: 'phonics',  generator: genWordBuilder },
-    consonantTeamMatch:  { name: 'Consonant Teams',      icon: '🤝', levels: [2],    skill: 'phonics',  generator: genConsonantTeamMatch },
-    vowelSoundSort:      { name: 'Vowel Sound Sort',     icon: '🗂️', levels: [2],    skill: 'phonics',  generator: genVowelSoundSort },
     blendAndRead:        { name: 'Blend & Read',         icon: '🔗', levels: [2],    skill: 'phonics',  generator: genBlendAndRead },
-    sightWordFlash:      { name: 'Sight Word Flash',     icon: '⚡', levels: [2],    skill: 'reading',  generator: genSightWordFlash },
   });
 }

@@ -447,9 +447,7 @@ function renderChallengeHTML(ch, context) {
     // New reading curriculum
     soundSpotter: '🔊 Sound Spotter', rhymeCatcher: '🎵 Rhyme Catcher',
     letterSoundSafari: '🔤 Letter Sounds', firstSoundMatch: '👂 First Sound Match',
-    wordBuilder: '🧱 Word Builder', consonantTeamMatch: '🤝 Consonant Teams',
-    vowelSoundSort: '🗂️ Vowel Sort', blendAndRead: '🔗 Blend & Read',
-    sightWordFlash: '⚡ Sight Word Flash',
+    wordBuilder: '🧱 Word Builder', blendAndRead: '🔗 Blend & Read',
     phonogramMatch: '🔠 Phonogram Match',
     spellingRulesQuiz: '📏 Spelling Rules', speedRead: '⏱️ Speed Read',
     wordSurgeon: '🔬 Word Surgeon', vocabularyDetective: '🔍 Vocabulary',
@@ -847,25 +845,6 @@ function renderChallengeHTML(ch, context) {
       html += renderTileSpell(ch.letters.join('').toUpperCase(), ch.word.length, context, ch.hint);
     }
 
-  } else if (ch.type === 'consonantTeamMatch') {
-    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">Which consonant team does this word use?</div>`;
-    html += renderWordTiles(ch.question.toUpperCase(), { big: true });
-    html += `<div class="challenge-choices" style="margin-top:12px;">`;
-    (ch.choices || []).forEach(c => {
-      html += `<button class="btn-choice" style="font-size:20px;font-weight:700;letter-spacing:2px;" onclick="answerChallenge('${c}', '${context}')">${c}</button>`;
-    });
-    html += `</div>`;
-
-  } else if (ch.type === 'vowelSoundSort') {
-    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">What vowel sound do you hear?</div>`;
-    if (ch.emoji) html += `<div style="font-size:36px;text-align:center;margin-bottom:6px;">${ch.emoji}</div>`;
-    html += renderWordTiles(ch.question.toUpperCase(), { big: true });
-    html += `<div class="challenge-choices" style="margin-top:12px;">`;
-    (ch.choices || []).forEach(c => {
-      html += `<button class="btn-choice" style="font-size:24px;font-weight:700;width:60px;height:60px;border-radius:50%;" onclick="answerChallenge('${c}', '${context}')">${c}</button>`;
-    });
-    html += `</div>`;
-
   } else if (ch.type === 'blendAndRead') {
     html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">Blend the letters to read the word!</div>`;
     const letters = ch.letters || ch.question.split('');
@@ -878,15 +857,6 @@ function renderChallengeHTML(ch, context) {
     html += `<div class="challenge-choices">`;
     (ch.choices || []).forEach(c => {
       html += `<button class="btn-choice" style="font-size:17px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
-    });
-    html += `</div>`;
-
-  } else if (ch.type === 'sightWordFlash') {
-    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:10px;">Which word matches?</div>`;
-    html += `<div style="font-size:42px;font-weight:700;text-align:center;color:#333;margin-bottom:16px;padding:16px;background:#f5f5f5;border-radius:12px;">${ch.question}</div>`;
-    html += `<div class="challenge-choices">`;
-    (ch.choices || []).forEach(c => {
-      html += `<button class="btn-choice" style="font-size:18px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
     });
     html += `</div>`;
 
