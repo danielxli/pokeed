@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Pokemon Educational Adventure — a Pokemon-themed educational game for kids (Pre-K through 5th grade) with wild encounters, gym battles, Team Rocket puzzles, a Pokedex, and 26 learning activities. Covers all 151 Gen 1 Pokemon.
+Pokemon Educational Adventure — a Pokemon-themed educational game for kids (Pre-K through 5th grade) with wild encounters, gym battles, Team Rocket puzzles, a Pokedex, and 39 learning activities. Covers all 151 Gen 1 Pokemon.
 
 ## Development
 
@@ -35,8 +35,10 @@ Scripts are loaded via `<script>` tags in `index.html` and **must** be in this o
 8. `js/guide.js` — Trainer's Guide renderer
 9. `js/pokecenter.js` — Pokemon Center (healing, word search)
 10. `js/settings.js` — `LEVEL_DATA` (5 difficulty levels), settings panel, game init
-11. `js/activities.js` — `ACTIVITY_REGISTRY`, 26 educational activity generators
-12. `js/systems.js` — `DDA`, `StreakTracker`, `DailyChallenge`, `Evolution`, `SessionTimer`, `Collab`
+11. `js/activities.js` — `ACTIVITY_REGISTRY`, math/science/logic activity generators, plus kept reading activities (Story Sequence, Pokédex Speller)
+12. `js/reading-activities.js` — New reading curriculum L1-L2: Sound Spotter, Rhyme Catcher, Letter Sound Safari, First Sound Match, Word Builder, Consonant Teams, Vowel Sound Sort, Blend & Read, Sight Word Flash
+13. `js/reading-activities-advanced.js` — New reading curriculum L3-L5: Phonogram Match, Syllable Sort, Spelling Rules, Speed Read, Word Surgeon, Vocabulary Detective, Reading Quest L4, Root Explorer, Inference Lab, Main Idea Matcher, Vocab in Context
+14. `js/systems.js` — `DDA`, `StreakTracker`, `DailyChallenge`, `Evolution`, `SessionTimer`, `Collab`
 
 ### Key Globals
 
@@ -51,6 +53,8 @@ Scripts are loaded via `<script>` tags in `index.html` and **must** be in this o
 - `getChallenge(type, difficulty)` dispatches to generators: math, CVC, reading, spelling, comprehension
 - `getAvailableChallengeTypes()` filters challenge types by current difficulty level
 - `renderChallengeHTML(challenge, context)` / `answerChallenge(chosen, context)` — shared across encounters and gym battles
+- Reading challenges now come from the structured reading curriculum in `reading-activities.js` and `reading-activities-advanced.js`, not the old flat pools. The old 'reading', 'spelling', 'comprehension' types are kept as dormant fallbacks.
+- Based on STELLAR, Logic of English, All About Reading, DISTAR, and Orton-Gillingham/Wilson programs — systematic phonics progression from phonemic awareness through comprehension.
 
 ### External Dependencies
 

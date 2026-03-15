@@ -102,13 +102,50 @@ const PATTERNS_BY_LEVEL = {
 };
 
 function renderPatternPuzzle(content) {
+  document.getElementById('puzzle-timer-wrap').classList.remove('hidden');
+  State.rocket.patternScore = 0;
+  State.rocket.patternTotal = 5;
+  State.rocket.patternAnswered = 0;
+
+  let timeLeft = 90;
+  document.getElementById('puzzle-timer').textContent = timeLeft;
+  document.getElementById('puzzle-timer').className = 'puzzle-timer';
+
+  clearInterval(State.rocket.timerInterval);
+  State.rocket.timerInterval = setInterval(() => {
+    timeLeft--;
+    document.getElementById('puzzle-timer').textContent = timeLeft;
+    if (timeLeft <= 10) document.getElementById('puzzle-timer').className = 'puzzle-timer urgent';
+    if (timeLeft <= 0) {
+      clearInterval(State.rocket.timerInterval);
+      if (State.rocket.patternScore >= 4) {
+        rocketSuccess();
+      } else {
+        rocketFail(`Time's up! You only got ${State.rocket.patternScore}/5 correct.`);
+      }
+    }
+  }, 1000);
+
+  showNextPattern(content);
+}
+
+function showNextPattern(content) {
+  if (!content) content = document.getElementById('puzzle-content');
+  if (State.rocket.patternAnswered >= State.rocket.patternTotal) {
+    clearInterval(State.rocket.timerInterval);
+    if (State.rocket.patternScore >= 4) rocketSuccess();
+    else rocketFail(`You got ${State.rocket.patternScore}/5 correct. You need at least 4!`);
+    return;
+  }
+
   const level = State.settings.level;
   const patterns = PATTERNS_BY_LEVEL[level] || PATTERNS_BY_LEVEL[3];
   const pattern = patterns[Math.floor(Math.random() * patterns.length)];
   State.rocket.puzzle.pattern = pattern;
 
-  let html = `<div style="text-align:center;padding:20px 0;">`;
-  html += `<div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:20px;text-shadow:2px 2px 4px rgba(0,0,0,0.6);">What comes next in the pattern?</div>`;
+  let html = `<div class="timed-math-score">Score: ${State.rocket.patternScore}/${State.rocket.patternTotal} | Pattern ${State.rocket.patternAnswered + 1} of ${State.rocket.patternTotal}</div>`;
+  html += `<div style="text-align:center;padding:10px 0;">`;
+  html += `<div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:14px;text-shadow:2px 2px 4px rgba(0,0,0,0.6);">What comes next?</div>`;
   html += `<div class="pattern-display">`;
   pattern.seq.forEach(n => {
     html += `<div class="pattern-item">${n}</div>`;
@@ -116,7 +153,7 @@ function renderPatternPuzzle(content) {
   });
   html += `<div class="pattern-item blank">?</div>`;
   html += `</div>`;
-  html += `<div class="pattern-choices" style="margin-top:20px;">`;
+  html += `<div class="pattern-choices" style="margin-top:16px;">`;
   [...pattern.choices].sort(() => Math.random() - 0.5).forEach(c => {
     html += `<button class="btn-choice" style="font-size:24px;padding:16px 28px;" onclick="checkPatternAnswer(${c})">${c}</button>`;
   });
@@ -126,14 +163,19 @@ function renderPatternPuzzle(content) {
 
 window.checkPatternAnswer = function(choice) {
   const pattern = State.rocket.puzzle.pattern;
+  if (!pattern) return;
+  State.rocket.puzzle.pattern = null;
+  State.rocket.patternAnswered++;
   if (choice === pattern.answer) {
     SFX.correct();
-    rocketSuccess();
+    State.rocket.patternScore++;
+    if (typeof onAnswerResult === 'function') onAnswerResult(true, { scene: 'rocket', challengeType: 'pattern' });
   } else {
     SFX.wrong();
-    notify(`Not quite! The pattern rule is: ${pattern.rule}. Try again!`, 'error');
-    renderPatternPuzzle(document.getElementById('puzzle-content'));
+    if (typeof onAnswerResult === 'function') onAnswerResult(false, { scene: 'rocket', challengeType: 'pattern' });
+    notify(`The rule was: ${pattern.rule}`, 'error');
   }
+  showNextPattern();
 };
 
 // ===== WORD SEARCH (shared renderer — used by Pokemon Center) =====
@@ -221,7 +263,9 @@ function renderWordSearchPuzzle(content, opts) {
   }
 
   const wordPositions = {};
-  wordSet.words.forEach(w => { const p = placeWord(w); if(p) wordPositions[w] = p; });
+  const placedWords = [];
+  wordSet.words.forEach(w => { const p = placeWord(w); if(p) { wordPositions[w] = p; placedWords.push(w); } });
+  wordSet.words = placedWords;
 
   // Fill empty cells
   const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -521,10 +565,12 @@ window.checkSentenceOrder = function() {
   const placed = State.rocket.sentencePlaced.map(p => p.word).join(' ');
   if (placed === sent.answer) {
     SFX.correct();
+    if (typeof onAnswerResult === 'function') onAnswerResult(true, { scene: 'rocket', challengeType: 'sentence' });
     document.querySelectorAll('.sentence-word.placed').forEach(el => el.classList.add('correct'));
     setTimeout(() => rocketSuccess(), 800);
   } else {
     SFX.wrong();
+    if (typeof onAnswerResult === 'function') onAnswerResult(false, { scene: 'rocket', challengeType: 'sentence' });
     notify(`Not quite right! The correct order is: "${sent.answer}"`, 'error');
     clearSentence();
   }
@@ -548,7 +594,7 @@ function renderTimedMathPuzzle(content) {
     if (timeLeft <= 10) document.getElementById('puzzle-timer').className = 'puzzle-timer urgent';
     if (timeLeft <= 0) {
       clearInterval(State.rocket.timerInterval);
-      if (State.rocket.timedScore >= 3) {
+      if (State.rocket.timedScore >= 4) {
         rocketSuccess();
       } else {
         rocketFail(`Time's up! You only got ${State.rocket.timedScore}/5 correct.`);
@@ -563,8 +609,8 @@ function showNextTimedMath(content) {
   if (!content) content = document.getElementById('puzzle-content');
   if (State.rocket.timedAnswered >= State.rocket.timedTotal) {
     clearInterval(State.rocket.timerInterval);
-    if (State.rocket.timedScore >= 3) rocketSuccess();
-    else rocketFail(`You got ${State.rocket.timedScore}/5 correct. You need at least 3!`);
+    if (State.rocket.timedScore >= 4) rocketSuccess();
+    else rocketFail(`You got ${State.rocket.timedScore}/5 correct. You need at least 4!`);
     return;
   }
 
@@ -592,8 +638,10 @@ window.answerTimedMath = function(choice) {
     if (Number(choice) === Number(ch.answer)) {
       SFX.correct();
       State.rocket.timedScore++;
+      if (typeof onAnswerResult === 'function') onAnswerResult(true, { scene: 'rocket', challengeType: 'timedMath' });
     } else {
       SFX.wrong();
+      if (typeof onAnswerResult === 'function') onAnswerResult(false, { scene: 'rocket', challengeType: 'timedMath' });
     }
     showNextTimedMath();
   } catch(e) {

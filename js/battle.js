@@ -2,8 +2,9 @@
 // Damage formula, gym scene, turn-based battle system
 // ===== BATTLE DAMAGE FORMULA =====
 function calcDamage(attacker, move, defender, attackerLevel) {
-  const atk = move.isSpecial ? attacker.atk : attacker.atk;
-  const def = move.isSpecial ? defender.def : defender.def;
+  // Gen 1 didn't split Sp.Atk/Sp.Def, so use atk for physical, spd as proxy for special
+  const atk = move.isSpecial ? attacker.spd : attacker.atk;
+  const def = move.isSpecial ? defender.spd : defender.def;
   const level = attackerLevel || 5;
   let base = ((2 * level / 5 + 2) * move.power * (atk / def)) / 50 + 2;
   const effectiveness = getEffectiveness(move.type, defender.type);
@@ -200,18 +201,35 @@ function updateBattleHpBars() {
 }
 
 let _battleTypewriterTimeout = null;
+let _battleTypewriterSkip = null;
 function battleTypewriter(text, callback) {
   const box = document.getElementById('battle-message-box');
   if (!box) { if (callback) callback(); return; }
   clearTimeout(_battleTypewriterTimeout);
+  // Remove previous skip listener if any
+  if (_battleTypewriterSkip) { box.removeEventListener('click', _battleTypewriterSkip); _battleTypewriterSkip = null; }
   box.textContent = '';
+  box.style.cursor = 'pointer';
   let i = 0;
+  let done = false;
+  function finish() {
+    if (done) return;
+    done = true;
+    clearTimeout(_battleTypewriterTimeout);
+    box.textContent = text;
+    box.style.cursor = '';
+    if (_battleTypewriterSkip) { box.removeEventListener('click', _battleTypewriterSkip); _battleTypewriterSkip = null; }
+    if (callback) _battleTypewriterTimeout = setTimeout(callback, 200);
+  }
+  _battleTypewriterSkip = finish;
+  box.addEventListener('click', _battleTypewriterSkip);
   function type() {
+    if (done) return;
     if (i < text.length) {
       box.textContent += text[i++];
       _battleTypewriterTimeout = setTimeout(type, 22);
     } else {
-      if (callback) _battleTypewriterTimeout = setTimeout(callback, 200);
+      finish();
     }
   }
   type();
@@ -263,8 +281,8 @@ function playerSelectMove(moveKey) {
   const gymDifficultyBoost = Math.floor(gym.difficulty / 3);
   const effectiveDifficulty = Math.min(State.settings.level + gymDifficultyBoost, 5);
 
-  const availableTypes = getAvailableChallengeTypes();
-  const challengeType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
+  // Gym battles use reading/literacy challenges
+  const challengeType = pickChallengeType('reading');
   const challenge = getChallenge(challengeType, effectiveDifficulty);
   s.pendingChallenge = challenge;
 
@@ -466,12 +484,20 @@ function gymVictory() {
       const result = document.getElementById('gym-result');
       result.classList.remove('hidden');
       result.style.background = 'rgba(0,0,0,0.5)';
+      // Check if this badge unlocks new rarity tiers
+      let unlockMsg = '';
+      const badgeCount = State.badges.length;
+      if (badgeCount === 2) unlockMsg = '🌟 New Pokémon unlocked! Uncommon Pokémon now appear in the wild!';
+      else if (badgeCount === 4) unlockMsg = '🔥 New Pokémon unlocked! Rare Pokémon now appear in the wild!';
+      else if (badgeCount === 6) unlockMsg = '⚡ New Pokémon unlocked! Legendary Pokémon now appear in the wild!';
+
       result.innerHTML = `
         <div class="result-title">⭐ Victory! ⭐</div>
         <img class="result-leader-portrait" src="${gym.img}" alt="${gym.leader}">
         <div class="result-badge"><img src="${gym.badge}" alt="${gym.name}" style="width:80px;height:80px;image-rendering:pixelated;"></div>
         <div class="result-desc">You earned the <strong>${gym.name}</strong>!</div>
         <div style="color:rgba(255,255,255,0.8);font-size:16px;">${gym.leader}: "You are truly skilled! Take this badge!"</div>
+        ${unlockMsg ? `<div style="margin-top:14px;padding:12px 18px;background:rgba(255,215,0,0.2);border:2px solid #FFD700;border-radius:12px;color:#FFD700;font-size:17px;font-weight:700;text-align:center;">${unlockMsg}</div>` : ''}
         <button class="btn-primary btn-xl" style="margin-top:20px" onclick="Game.goToGym()">Back to Gyms</button>
       `;
     }, 1000);

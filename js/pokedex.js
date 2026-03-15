@@ -197,17 +197,7 @@ function _updateActivityScore() {
 Game.submitActivityAnswer = function(answer) {
   const ch = _activitySession.currentChallenge;
   if (!ch) return;
-  let isCorrect;
-  if (ch.type === 'creativeWriting') {
-    isCorrect = String(answer).trim().length >= 10;
-  } else if (ch.type === 'estimationStation') {
-    const tolerance = ch.tolerance != null ? ch.tolerance : 0.15;
-    const num = Number(answer);
-    const ans = Number(ch.answer);
-    isCorrect = !isNaN(num) && ans !== 0 && Math.abs(num - ans) / ans <= tolerance;
-  } else {
-    isCorrect = String(answer).toLowerCase().trim() === String(ch.answer).toLowerCase().trim();
-  }
+  const isCorrect = String(answer).toLowerCase().trim() === String(ch.answer).toLowerCase().trim();
   _activitySession.total++;
   if (isCorrect) { _activitySession.correct++; SFX.correct(); addXp(10); } else { SFX.wrong(); }
   if (typeof onAnswerResult === 'function') onAnswerResult(isCorrect, { scene: 'activity', challengeType: ch.type });

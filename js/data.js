@@ -1099,41 +1099,25 @@ function genMathQuestion(difficulty) {
       q = `${big} - ${small} = ?`;
     }
   } else if (effectiveLevel <= 4) {
-    // 2nd-3rd Grade: Add/sub/multiply, numbers up to 12
-    const a = Math.floor(Math.random() * 12) + 2;
-    const b = Math.floor(Math.random() * 12) + 2;
-    const ops = ['+', '-', '×'][Math.floor(Math.random() * 3)];
-    if (ops === '+') {
-      answer = a + b;
-      q = `${a} + ${b} = ?`;
-    } else if (ops === '-') {
-      const big = Math.max(a, b), small = Math.min(a, b);
-      answer = big - small;
-      q = `${big} - ${small} = ?`;
-    } else {
-      answer = a * b;
-      q = `${a} × ${b} = ?`;
-    }
-  } else {
-    // 4th-5th Grade: Multiply/divide, bigger numbers
+    // 2nd-3rd Grade: Multiply tables, simple division, larger add/sub
     const variant = Math.random();
-    if (variant < 0.4) {
-      // Multiplication
-      const a = Math.floor(Math.random() * 12) + 2;
-      const b = Math.floor(Math.random() * 12) + 2;
+    if (variant < 0.35) {
+      // Multiplication up to 12×12
+      const a = Math.floor(Math.random() * 11) + 2;
+      const b = Math.floor(Math.random() * 11) + 2;
       answer = a * b;
       q = `${a} × ${b} = ?`;
-    } else if (variant < 0.7) {
-      // Division
-      const b = Math.floor(Math.random() * 10) + 2;
-      const answer_val = Math.floor(Math.random() * 10) + 2;
+    } else if (variant < 0.55) {
+      // Division (clean results)
+      const b = Math.floor(Math.random() * 8) + 2;
+      const answer_val = Math.floor(Math.random() * 8) + 2;
       const a = b * answer_val;
       answer = answer_val;
       q = `${a} ÷ ${b} = ?`;
-    } else {
-      // Larger add/sub
-      const a = Math.floor(Math.random() * 50) + 10;
-      const b = Math.floor(Math.random() * 50) + 10;
+    } else if (variant < 0.8) {
+      // Add/sub with 2-digit numbers
+      const a = Math.floor(Math.random() * 40) + 10;
+      const b = Math.floor(Math.random() * 30) + 5;
       const ops = ['+', '-'][Math.floor(Math.random() * 2)];
       if (ops === '+') {
         answer = a + b;
@@ -1143,17 +1127,74 @@ function genMathQuestion(difficulty) {
         answer = big - small;
         q = `${big} - ${small} = ?`;
       }
+    } else {
+      // Mixed operations word-style: "What is 6 groups of 4?"
+      const a = Math.floor(Math.random() * 8) + 2;
+      const b = Math.floor(Math.random() * 8) + 2;
+      answer = a * b;
+      q = `What is ${a} groups of ${b}?`;
+    }
+  } else {
+    // 4th-5th Grade: Multi-digit multiply, long division, order of operations, larger numbers
+    const variant = Math.random();
+    if (variant < 0.25) {
+      // Multi-digit multiplication
+      const a = Math.floor(Math.random() * 12) + 2;
+      const b = [10, 15, 20, 25, 50, 11, 12, 13, 14][Math.floor(Math.random() * 9)];
+      answer = a * b;
+      q = `${a} × ${b} = ?`;
+    } else if (variant < 0.45) {
+      // Division with larger dividends
+      const b = Math.floor(Math.random() * 10) + 2;
+      const answer_val = Math.floor(Math.random() * 15) + 2;
+      const a = b * answer_val;
+      answer = answer_val;
+      q = `${a} ÷ ${b} = ?`;
+    } else if (variant < 0.6) {
+      // Order of operations (two-step)
+      const a = Math.floor(Math.random() * 8) + 2;
+      const b = Math.floor(Math.random() * 8) + 2;
+      const c = Math.floor(Math.random() * 10) + 1;
+      if (Math.random() < 0.5) {
+        answer = a * b + c;
+        q = `${a} × ${b} + ${c} = ?`;
+      } else {
+        answer = c + a * b;
+        q = `${c} + ${a} × ${b} = ?`;
+      }
+    } else if (variant < 0.8) {
+      // Larger add/sub (3-digit)
+      const a = Math.floor(Math.random() * 400) + 100;
+      const b = Math.floor(Math.random() * 300) + 50;
+      const ops = ['+', '-'][Math.floor(Math.random() * 2)];
+      if (ops === '+') {
+        answer = a + b;
+        q = `${a} + ${b} = ?`;
+      } else {
+        const big = Math.max(a, b), small = Math.min(a, b);
+        answer = big - small;
+        q = `${big} - ${small} = ?`;
+      }
+    } else {
+      // Squares and simple powers
+      const base = Math.floor(Math.random() * 10) + 2;
+      answer = base * base;
+      q = `${base}² = ?`;
     }
   }
 
-  // Generate wrong choices
+  // Generate wrong choices scaled to answer size
   const wrong = new Set();
   while (wrong.size < 3) {
     let w;
     if (answer <= 10) {
       w = answer + Math.floor(Math.random() * 6) - 3;
+    } else if (answer <= 50) {
+      w = answer + Math.floor(Math.random() * 14) - 7;
+    } else if (answer <= 200) {
+      w = answer + Math.floor(Math.random() * 30) - 15;
     } else {
-      w = answer + Math.floor(Math.random() * 10) - 5;
+      w = answer + Math.floor(Math.random() * 60) - 30;
     }
     if (w !== answer && w >= 0) wrong.add(w);
   }
@@ -1174,6 +1215,44 @@ const READING_QUESTIONS = [
   { question: "Which word rhymes with 'moon'?", answer: "spoon", choices: ["spoon", "star", "rock", "fire"], hint: "" },
   { question: "I ___ my teeth every morning.", answer: "brush", choices: ["brush", "throw", "paint", "bake"], hint: "Fill in the blank:" },
   { question: "What is a word for a baby dog?", answer: "puppy", choices: ["puppy", "kitten", "duckling", "foal"], hint: "" },
+  { question: "Pikachu uses ___ to attack.", answer: "electricity", choices: ["electricity", "water", "fire", "rocks"], hint: "Fill in the blank:" },
+  { question: "Which word rhymes with 'fight'?", answer: "knight", choices: ["knight", "king", "queen", "lake"], hint: "" },
+  { question: "A Pokémon trainer carries Poké ___.", answer: "Balls", choices: ["Balls", "Bags", "Books", "Boots"], hint: "Fill in the blank:" },
+  { question: "Which word means 'to get bigger'?", answer: "grow", choices: ["grow", "shrink", "sleep", "hide"], hint: "" },
+  { question: "Charmander has a flame on its ___.", answer: "tail", choices: ["tail", "head", "foot", "hand"], hint: "Fill in the blank:" },
+  { question: "Which word is the OPPOSITE of 'fast'?", answer: "slow", choices: ["slow", "quick", "loud", "tall"], hint: "" },
+  { question: "Water is super effective against ___ type.", answer: "Fire", choices: ["Fire", "Grass", "Water", "Normal"], hint: "Fill in the blank:" },
+  { question: "Which word rhymes with 'cake'?", answer: "lake", choices: ["lake", "dog", "tree", "ball"], hint: "" },
+  { question: "A Pokémon ___ when it gets stronger.", answer: "evolves", choices: ["evolves", "melts", "floats", "hides"], hint: "Fill in the blank:" },
+  { question: "Which word means 'very strong'?", answer: "powerful", choices: ["powerful", "tiny", "gentle", "quiet"], hint: "" },
+  { question: "Squirtle lives near the ___.", answer: "water", choices: ["water", "desert", "volcano", "moon"], hint: "Fill in the blank:" },
+  { question: "Which word rhymes with 'night'?", answer: "light", choices: ["light", "dark", "cloud", "rain"], hint: "" },
+  { question: "A gym leader gives you a ___ when you win.", answer: "badge", choices: ["badge", "cookie", "hat", "shoe"], hint: "Fill in the blank:" },
+  { question: "Which word is the OPPOSITE of 'hot'?", answer: "cold", choices: ["cold", "warm", "bright", "loud"], hint: "" },
+  { question: "Bulbasaur has a ___ on its back.", answer: "bulb", choices: ["bulb", "wing", "horn", "shell"], hint: "Fill in the blank:" },
+  { question: "Which word means 'to catch'?", answer: "grab", choices: ["grab", "drop", "throw", "kick"], hint: "" },
+  { question: "Pokémon live in tall ___.", answer: "grass", choices: ["grass", "buildings", "clouds", "caves"], hint: "Fill in the blank:" },
+  { question: "Which word rhymes with 'blue'?", answer: "clue", choices: ["clue", "red", "green", "black"], hint: "" },
+  { question: "A Pokémon Center ___ your Pokémon.", answer: "heals", choices: ["heals", "sells", "hides", "paints"], hint: "Fill in the blank:" },
+  { question: "Which word means 'a person who trains Pokémon'?", answer: "trainer", choices: ["trainer", "teacher", "doctor", "chef"], hint: "" },
+  { question: "Flying-type Pokémon can ___ in the sky.", answer: "soar", choices: ["soar", "swim", "dig", "melt"], hint: "Fill in the blank:" },
+  { question: "Which word rhymes with 'star'?", answer: "far", choices: ["far", "sun", "moon", "sky"], hint: "" },
+  { question: "Jigglypuff puts people to ___ with its song.", answer: "sleep", choices: ["sleep", "work", "school", "play"], hint: "Fill in the blank:" },
+  { question: "Which word is the OPPOSITE of 'weak'?", answer: "strong", choices: ["strong", "small", "soft", "slow"], hint: "" },
+  { question: "You use a Pokédex to ___ Pokémon.", answer: "identify", choices: ["identify", "cook", "wash", "build"], hint: "Fill in the blank:" },
+  { question: "Which word means 'a fight between Pokémon'?", answer: "battle", choices: ["battle", "party", "snack", "nap"], hint: "" },
+  { question: "Grass-type moves are strong against ___ type.", answer: "Water", choices: ["Water", "Fire", "Flying", "Ghost"], hint: "Fill in the blank:" },
+  { question: "Which word rhymes with 'dark'?", answer: "park", choices: ["park", "pool", "road", "hill"], hint: "" },
+  { question: "Eevee can ___ into many different Pokémon.", answer: "evolve", choices: ["evolve", "melt", "freeze", "paint"], hint: "Fill in the blank:" },
+  { question: "Which word means 'very brave'?", answer: "bold", choices: ["bold", "shy", "tired", "quiet"], hint: "" },
+  { question: "A Pokémon egg will ___ into a baby Pokémon.", answer: "hatch", choices: ["hatch", "melt", "fly", "cook"], hint: "Fill in the blank:" },
+  { question: "Which word rhymes with 'seed'?", answer: "need", choices: ["need", "rock", "leaf", "sand"], hint: "" },
+  { question: "Nurse Joy works at the Pokémon ___.", answer: "Center", choices: ["Center", "School", "Store", "Park"], hint: "Fill in the blank:" },
+  { question: "Which word is the OPPOSITE of 'dark'?", answer: "bright", choices: ["bright", "dim", "heavy", "rough"], hint: "" },
+  { question: "Meowth loves shiny ___ coins.", answer: "gold", choices: ["gold", "paper", "wooden", "glass"], hint: "Fill in the blank:" },
+  { question: "Which word means 'to look for something'?", answer: "search", choices: ["search", "forget", "sleep", "eat"], hint: "" },
+  { question: "Snorlax likes to ___ all day.", answer: "sleep", choices: ["sleep", "run", "fly", "sing"], hint: "Fill in the blank:" },
+  { question: "Which word rhymes with 'tail'?", answer: "trail", choices: ["trail", "head", "arm", "leg"], hint: "" },
 ];
 
 const SPELLING_WORDS = [
@@ -1193,6 +1272,40 @@ const SPELLING_WORDS = [
   { word: 'LIGHT', scrambled: 'TILGH', hint: 'The sun gives us this!' },
   { word: 'FROST', scrambled: 'TSROF', hint: 'Very cold ice crystals!' },
   { word: 'SWIFT', scrambled: 'WTFIS', hint: 'Moving very quickly!' },
+  { word: 'TRAIL', scrambled: 'LRAIT', hint: 'A path through the woods!' },
+  { word: 'BADGE', scrambled: 'DAGBE', hint: 'You earn this at a gym!' },
+  { word: 'CATCH', scrambled: 'TAHCC', hint: 'Gotta do this to all Pokémon!' },
+  { word: 'BRAVE', scrambled: 'RAVEB', hint: 'Not afraid of anything!' },
+  { word: 'GHOST', scrambled: 'THGOS', hint: 'A spooky type of Pokémon!' },
+  { word: 'SLEEP', scrambled: 'PELSA', hint: 'What Snorlax loves to do!' },
+  { word: 'BERRY', scrambled: 'REYBA', hint: 'Pokémon eat these for health!' },
+  { word: 'SHINE', scrambled: 'NEISH', hint: 'What rare Pokémon do!' },
+  { word: 'CLIMB', scrambled: 'BLIMC', hint: 'Going up a mountain!' },
+  { word: 'BLAST', scrambled: 'SLBAT', hint: 'A powerful explosion!' },
+  { word: 'OCEAN', scrambled: 'CANOE', hint: 'A big body of water!' },
+  { word: 'TRAIN', scrambled: 'NRAIT', hint: 'What you do with your Pokémon!' },
+  { word: 'SHELL', scrambled: 'LEHLS', hint: 'Squirtle has one on its back!' },
+  { word: 'ROCKY', scrambled: 'YCORK', hint: 'Full of rocks and stones!' },
+  { word: 'WINGS', scrambled: 'SGNWI', hint: 'Birds use these to fly!' },
+  { word: 'TOXIC', scrambled: 'XITOC', hint: 'A poisonous attack!' },
+  { word: 'QUICK', scrambled: 'UCKQI', hint: 'Very fast and speedy!' },
+  { word: 'FLAME', scrambled: 'LEMAF', hint: 'A tongue of fire!' },
+  { word: 'SPARK', scrambled: 'PRASK', hint: 'A tiny flash of electricity!' },
+  { word: 'DREAM', scrambled: 'MAERD', hint: 'What you see when sleeping!' },
+  { word: 'STEEL', scrambled: 'LEETS', hint: 'A very strong metal!' },
+  { word: 'SWORD', scrambled: 'WRDOS', hint: 'A sharp blade for fighting!' },
+  { word: 'VALOR', scrambled: 'LROVA', hint: 'Great courage and bravery!' },
+  { word: 'SCOUT', scrambled: 'TUCSO', hint: 'To explore and look around!' },
+  { word: 'CREST', scrambled: 'STRCE', hint: 'The top of a wave or hill!' },
+  { word: 'FLOCK', scrambled: 'LCKOF', hint: 'A group of flying Pokémon!' },
+  { word: 'PEARL', scrambled: 'LRPEA', hint: 'A shiny gem from the sea!' },
+  { word: 'BLAZE', scrambled: 'ZABEL', hint: 'A big bright fire!' },
+  { word: 'GUARD', scrambled: 'DRAUG', hint: 'To protect and keep safe!' },
+  { word: 'MISTY', scrambled: 'YTSIM', hint: 'A famous Water-type gym leader!' },
+  { word: 'ARENA', scrambled: 'NAERA', hint: 'A place where battles happen!' },
+  { word: 'VENOM', scrambled: 'MOENV', hint: 'Poison from a Pokémon!' },
+  { word: 'HAVEN', scrambled: 'VENHA', hint: 'A safe place to rest!' },
+  { word: 'FAINT', scrambled: 'TANFI', hint: 'What happens when a Pokémon loses!' },
 ];
 
 const READING_COMP_PASSAGES = [
@@ -1216,6 +1329,81 @@ const READING_COMP_PASSAGES = [
     question: "What does Magikarp evolve into?",
     answer: "Gyarados", choices: ["Gyarados", "Dragonite", "Lapras", "Snorlax"]
   },
+  {
+    passage: "Eevee is a very special Pokémon because it can evolve into many different forms. If you give Eevee a Water Stone, it becomes Vaporeon. A Thunder Stone turns it into Jolteon. A Fire Stone makes it become Flareon!",
+    question: "What does Eevee become when you use a Water Stone?",
+    answer: "Vaporeon", choices: ["Vaporeon", "Jolteon", "Flareon", "Eevee"]
+  },
+  {
+    passage: "Nurse Joy works at every Pokémon Center. She helps heal sick and tired Pokémon. Trainers can bring their Pokémon to her after a battle. She always has a Chansey to help her do her job.",
+    question: "Which Pokémon helps Nurse Joy?",
+    answer: "Chansey", choices: ["Chansey", "Pikachu", "Jigglypuff", "Meowth"]
+  },
+  {
+    passage: "Charizard is a Fire and Flying type Pokémon. It can fly very high in the sky. Its tail always has a flame on it. If the flame ever goes out, Charizard is in big trouble!",
+    question: "What two types is Charizard?",
+    answer: "Fire and Flying", choices: ["Fire and Flying", "Fire and Water", "Fire and Grass", "Fire and Rock"]
+  },
+  {
+    passage: "Ash Ketchum started his Pokémon journey when he was ten years old. He was late to Professor Oak's lab, so he did not get to pick Bulbasaur, Charmander, or Squirtle. Instead, he got a Pikachu! At first, Pikachu did not like Ash at all.",
+    question: "Why did Ash get a Pikachu instead of a starter?",
+    answer: "He was late", choices: ["He was late", "He chose it", "He found it", "It was a gift"]
+  },
+  {
+    passage: "Geodude is a Rock-type Pokémon that looks like a round boulder with arms. It lives in mountains and caves. Geodude is very strong and can punch with great force. Be careful not to step on one — they look just like regular rocks!",
+    question: "Where does Geodude live?",
+    answer: "mountains and caves", choices: ["mountains and caves", "lakes and rivers", "forests and meadows", "cities and towns"]
+  },
+  {
+    passage: "The Pokédex is a special tool that every trainer carries. It can tell you information about any Pokémon you see. Professor Oak invented the Pokédex. He gave one to Ash at the start of his journey.",
+    question: "Who invented the Pokédex?",
+    answer: "Professor Oak", choices: ["Professor Oak", "Nurse Joy", "Ash Ketchum", "Brock"]
+  },
+  {
+    passage: "Jigglypuff loves to sing. When it sings its song, everyone who hears it falls asleep. This makes Jigglypuff very sad because no one stays awake to hear the whole song. When it gets angry, it draws on the faces of sleeping people with a marker!",
+    question: "What happens when people hear Jigglypuff sing?",
+    answer: "They fall asleep", choices: ["They fall asleep", "They start dancing", "They run away", "They clap"]
+  },
+  {
+    passage: "Bulbasaur has a seed on its back that was planted at birth. As Bulbasaur grows bigger, the seed grows too. The seed uses sunlight to make energy for Bulbasaur. When the seed finally blooms into a flower, Bulbasaur has fully evolved!",
+    question: "What does the seed on Bulbasaur's back use to make energy?",
+    answer: "sunlight", choices: ["sunlight", "water", "food", "electricity"]
+  },
+  {
+    passage: "There are many different types of Poké Balls. A regular Poké Ball is red and white. A Great Ball is blue and works better than a regular one. The best one is the Master Ball — it can catch any Pokémon without fail!",
+    question: "Which Poké Ball can catch any Pokémon?",
+    answer: "Master Ball", choices: ["Master Ball", "Great Ball", "Ultra Ball", "Poké Ball"]
+  },
+  {
+    passage: "Slowpoke is one of the slowest Pokémon in the world. It takes five seconds for Slowpoke to feel pain after being bitten. Slowpoke loves to fish with its tail by the river. Sometimes a Shellder bites its tail and it evolves into Slowbro!",
+    question: "What bites Slowpoke's tail to make it evolve?",
+    answer: "Shellder", choices: ["Shellder", "Magikarp", "Goldeen", "Staryu"]
+  },
+  {
+    passage: "Brock is a Gym Leader who uses Rock-type Pokémon. His gym is in Pewter City. Brock's strongest Pokémon is Onix, a giant rock snake. Water and Grass type moves work best against his team.",
+    question: "What type of Pokémon does Brock use?",
+    answer: "Rock-type", choices: ["Rock-type", "Fire-type", "Water-type", "Grass-type"]
+  },
+  {
+    passage: "Meowth is a Normal-type Pokémon that loves shiny things, especially coins. It has a gold charm on its forehead. In Team Rocket, there is a Meowth that can actually talk like a human! Most Pokémon can only say their own name.",
+    question: "What does Meowth love to collect?",
+    answer: "shiny things", choices: ["shiny things", "berries", "leaves", "rocks"]
+  },
+  {
+    passage: "When two trainers make eye contact, they must have a Pokémon battle. That is the rule! Each trainer sends out one Pokémon at a time. The Pokémon take turns using moves. The trainer whose Pokémon faints first loses the battle.",
+    question: "What happens when two trainers make eye contact?",
+    answer: "They must battle", choices: ["They must battle", "They trade Pokémon", "They run away", "They shake hands"]
+  },
+  {
+    passage: "Lapras is a gentle Water and Ice type Pokémon. It can carry people across the ocean on its back. Lapras can understand human speech. Sadly, Lapras was once hunted so much that very few are left in the wild.",
+    question: "What can Lapras carry on its back?",
+    answer: "people", choices: ["people", "other Pokémon", "treasure", "food"]
+  },
+  {
+    passage: "Diglett is a tiny Ground-type Pokémon that lives underground. No one has ever seen what Diglett looks like below the ground. It digs tunnels through the earth very quickly. Farmers love Diglett because its tunnels help their crops grow better!",
+    question: "Why do farmers love Diglett?",
+    answer: "Its tunnels help crops grow", choices: ["Its tunnels help crops grow", "It eats bugs", "It brings rain", "It is cute"]
+  },
 ];
 
 // ===== CVC WORDS + EMOJI =====
@@ -1229,6 +1417,8 @@ const CVC_WORDS = {
     { word: 'map', emoji: '🗺️' },
     { word: 'jam', emoji: '🫙' },
     { word: 'van', emoji: '🚐' },
+    { word: 'cap', emoji: '🧢' },
+    { word: 'tap', emoji: '🚰' },
   ],
   e: [
     { word: 'bed', emoji: '🛏️' },
@@ -1239,6 +1429,8 @@ const CVC_WORDS = {
     { word: 'net', emoji: '🥅' },
     { word: 'jet', emoji: '✈️' },
     { word: 'leg', emoji: '🦵' },
+    { word: 'red', emoji: '🔴' },
+    { word: 'vet', emoji: '👨‍⚕️' },
   ],
   i: [
     { word: 'pig', emoji: '🐷' },
@@ -1249,6 +1441,8 @@ const CVC_WORDS = {
     { word: 'pin', emoji: '📌' },
     { word: 'zip', emoji: '🤐' },
     { word: 'bib', emoji: '👶' },
+    { word: 'dig', emoji: '⛏️' },
+    { word: 'hit', emoji: '💥' },
   ],
   o: [
     { word: 'dog', emoji: '🐶' },
@@ -1259,6 +1453,8 @@ const CVC_WORDS = {
     { word: 'fox', emoji: '🦊' },
     { word: 'hop', emoji: '🐰' },
     { word: 'cob', emoji: '🌽' },
+    { word: 'cot', emoji: '🛏️' },
+    { word: 'rod', emoji: '🎣' },
   ],
   u: [
     { word: 'sun', emoji: '☀️' },
@@ -1269,6 +1465,8 @@ const CVC_WORDS = {
     { word: 'tub', emoji: '🛁' },
     { word: 'hug', emoji: '🤗' },
     { word: 'gum', emoji: '🫧' },
+    { word: 'jug', emoji: '🫗' },
+    { word: 'mud', emoji: '🟤' },
   ],
 };
 
@@ -1300,6 +1498,8 @@ function getChallenge(type, difficulty) {
   }
   if (type === 'cvc') return genCvcChallenge();
   if (type === 'math') return genMathQuestion(difficulty);
+  // Legacy reading/spelling/comprehension types — kept as fallback but no longer
+  // actively generated (new reading curriculum uses activity generators instead)
   if (type === 'reading') {
     const q = READING_QUESTIONS[Math.floor(Math.random() * READING_QUESTIONS.length)];
     return { type: 'reading', question: q.question, answer: q.answer, choices: [...q.choices].sort(() => Math.random() - 0.5), hint: q.hint || '' };

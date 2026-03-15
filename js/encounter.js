@@ -2,11 +2,121 @@
 // Wild Pokemon encounters, clues, challenges, letter tiles, guessing, pokeball throw
 
 // ===== RARITY HELPER =====
+// Gen 1 evolved Pokemon IDs — evolutions are at least uncommon
+const EVOLVED_IDS = new Set([
+  // Starters mid
+  2, 5, 8,
+  // Starters final
+  3, 6, 9,
+  // Caterpie line
+  12,
+  // Weedle line
+  15,
+  // Pidgey line
+  17, 18,
+  // Rattata
+  20,
+  // Spearow
+  22,
+  // Ekans
+  24,
+  // Pikachu → Raichu
+  26,
+  // Sandshrew
+  28,
+  // Nidoran lines
+  30, 31, 33, 34,
+  // Clefairy
+  36,
+  // Vulpix
+  38,
+  // Jigglypuff
+  40,
+  // Zubat
+  42,
+  // Oddish line
+  44, 45,
+  // Paras
+  47,
+  // Venonat
+  49,
+  // Diglett
+  51,
+  // Meowth
+  53,
+  // Psyduck
+  55,
+  // Mankey
+  57,
+  // Growlithe
+  59,
+  // Poliwag line
+  61, 62,
+  // Abra line
+  64, 65,
+  // Machop line
+  67, 68,
+  // Bellsprout line
+  70, 71,
+  // Tentacool
+  73,
+  // Geodude line
+  75, 76,
+  // Ponyta
+  78,
+  // Slowpoke
+  80,
+  // Magnemite
+  82,
+  // Doduo
+  85,
+  // Seel
+  87,
+  // Grimer
+  89,
+  // Shellder
+  91,
+  // Gastly line
+  93, 94,
+  // Drowzee
+  97,
+  // Krabby
+  99,
+  // Voltorb
+  101,
+  // Exeggcute
+  103,
+  // Cubone
+  105,
+  // Koffing
+  110,
+  // Rhyhorn
+  112,
+  // Horsea
+  117,
+  // Goldeen
+  119,
+  // Staryu
+  121,
+  // Magikarp
+  130,
+  // Eevee evos
+  134, 135, 136,
+  // Omanyte
+  139,
+  // Kabuto
+  141,
+  // Dragonair, Dragonite
+  148, 149,
+]);
+
 function getPokemonRarity(pokemon) {
   const total = pokemon.hp + pokemon.atk + pokemon.def + pokemon.spd;
-  if (total >= 500) return 'legendary';
-  if (total >= 450) return 'rare';
-  if (total >= 350) return 'uncommon';
+  if (total >= 390) return 'legendary';
+  if (total >= 340) return 'rare';
+  if (total >= 250) return 'uncommon';
+  // Evolved Pokemon are at least uncommon
+  if (EVOLVED_IDS.has(pokemon.id)) return 'uncommon';
   return 'common';
 }
 
@@ -18,6 +128,18 @@ const RARITY_LABELS = {
   rare:      'Tough Catch! 🟠',
   legendary: 'Ultra Rare! 🔴',
 };
+
+// ===== BADGE-GATED RARITY UNLOCKS =====
+// Badges unlock progressively rarer Pokemon
+// 0 badges: common only | 2+: uncommon | 4+: rare | 6+: legendary
+function getUnlockedRarities() {
+  const badges = State.badges.length;
+  const rarities = ['common'];
+  if (badges >= 2) rarities.push('uncommon');
+  if (badges >= 4) rarities.push('rare');
+  if (badges >= 6) rarities.push('legendary');
+  return rarities;
+}
 
 function weightedRandomPick(pool) {
   // Group pool by rarity
@@ -49,10 +171,12 @@ function weightedRandomPick(pool) {
 // ===== ENCOUNTER SCENE =====
 Game.goToEncounter = function() {
   SFX.pop();
-  // Pick a random uncaught pokemon, weighted by rarity
-  const uncaught = POKEMON_DB.filter(p => !State.caught.includes(p.id));
-  const pool = uncaught.length > 0 ? uncaught : POKEMON_DB;
-  const pokemon = uncaught.length > 0 ? weightedRandomPick(pool) : pool[Math.floor(Math.random() * pool.length)];
+  // Pick a random uncaught pokemon, filtered by unlocked rarities and weighted
+  const unlockedRarities = getUnlockedRarities();
+  const rarityFiltered = POKEMON_DB.filter(p => unlockedRarities.includes(getPokemonRarity(p)));
+  const uncaught = rarityFiltered.filter(p => !State.caught.includes(p.id));
+  const pool = uncaught.length > 0 ? uncaught : rarityFiltered;
+  const pokemon = weightedRandomPick(pool);
 
   State.encounter = {
     pokemon,
@@ -140,19 +264,16 @@ function renderPokeballs() {
 }
 
 // ===== CHALLENGE TYPE SELECTION BY LEVEL =====
-function getAvailableChallengeTypes() {
-  const lvl = State.settings.level;
-  let types;
-  if (lvl <= 1) types = ['math', 'cvc'];
-  else if (lvl <= 2) types = ['math', 'cvc', 'reading'];
-  else if (lvl <= 3) types = ['math', 'reading', 'spelling'];
-  else if (lvl <= 4) types = ['math', 'reading', 'spelling', 'comprehension'];
-  else types = ['math', 'reading', 'spelling', 'comprehension'];
+// Math skills for catching, reading/literacy skills for battling
+const MATH_SKILLS = ['math', 'counting', 'number'];
+const READING_SKILLS = ['reading', 'phonics', 'spelling', 'comprehension'];
 
-  // Add activity registry types available at this level
+function getMathChallengeTypes() {
+  const lvl = State.settings.level;
+  const types = ['math'];
   if (typeof ACTIVITY_REGISTRY !== 'undefined') {
     Object.entries(ACTIVITY_REGISTRY).forEach(([key, info]) => {
-      if (info.levels.includes(lvl)) {
+      if (info.levels.includes(lvl) && MATH_SKILLS.includes(info.skill)) {
         types.push(key);
       }
     });
@@ -160,10 +281,30 @@ function getAvailableChallengeTypes() {
   return types;
 }
 
-function pickChallengeType(seed) {
-  const types = getAvailableChallengeTypes();
-  // Use seed for some variety but pick from available types
-  return types[seed % types.length];
+function getReadingChallengeTypes() {
+  const lvl = State.settings.level;
+  const types = [];
+  // CVC stays as a core challenge type for L1-2
+  if (lvl <= 2) types.push('cvc');
+
+  // All reading/phonics/spelling/comprehension activities come from the registry now
+  if (typeof ACTIVITY_REGISTRY !== 'undefined') {
+    Object.entries(ACTIVITY_REGISTRY).forEach(([key, info]) => {
+      if (info.levels.includes(lvl) && (READING_SKILLS.includes(info.skill) || info.skill === 'science' || info.skill === 'logic' || info.skill === 'strategy')) {
+        types.push(key);
+      }
+    });
+  }
+  return types;
+}
+
+function getAvailableChallengeTypes() {
+  return [...getMathChallengeTypes(), ...getReadingChallengeTypes()];
+}
+
+function pickChallengeType(mode) {
+  const types = mode === 'reading' ? getReadingChallengeTypes() : getMathChallengeTypes();
+  return types[Math.floor(Math.random() * types.length)];
 }
 
 function startClueChallenge(clueNum) {
@@ -175,8 +316,8 @@ function startClueChallenge(clueNum) {
   SFX.pop();
   State.encounter.pendingChallenge = clueNum;
 
-  // Pick challenge type based on settings level
-  const challengeType = pickChallengeType(clueNum);
+  // Encounters use math challenges
+  const challengeType = pickChallengeType('math');
   const challenge = getChallenge(challengeType, State.settings.level);
   State.encounter.currentChallenge = challenge;
 
@@ -291,18 +432,30 @@ function renderChallengeHTML(ch, context) {
     math: '\u2795 Math', reading: '\ud83d\udcda Reading', spelling: '\ud83d\udd24 Spelling',
     cvc: '\ud83d\udcd6 Read the Word', comprehension: '\ud83d\udcd6 Reading',
     soundSafari: '\ud83d\udd0a Sound Safari', countingCatch: '\ud83d\udd22 Counting Catch',
-    shapeSorting: '\ud83d\udd37 Shape Sorting', colorMatch: '\ud83c\udfa8 Color Match',
     patternPath: '\ud83e\udde9 Pattern Path', blendAMon: '\ud83d\udde3\ufe0f Blend-a-Mon',
     rhymeBattle: '\ud83c\udfb5 Rhyme Battle', pokedexSpeller: '\u270f\ufe0f Pok\u00e9dex Speller',
     numberLineRace: '\ud83d\udccf Number Line', moreOrLess: '\u2696\ufe0f More or Less',
     potionMixer: '\ud83e\uddea Potion Mixer', sightWordScramble: '\ud83d\udd24 Sight Word',
     storySequence: '\ud83d\udcd6 Story Sequence', coinCounter: '\ud83e\ude99 Coin Counter',
     missingNumber: '\u2753 Missing Number', typeAdvantageQuiz: '\u2694\ufe0f Type Quiz',
-    habitatMatch: '\ud83c\udf0d Habitat Match', multiPowerup: '\ud83d\udcaa Multiply',
-    readingPassage: '\ud83d\udcda Reading Quest', estimationStation: '\ud83c\udfaf Estimation',
+    multiPowerup: '\ud83d\udcaa Multiply',
+    readingPassage: '\ud83d\udcda Reading Quest',
     breederFractions: '\ud83e\udd5a Fractions', geographyExplorer: '\ud83d\uddfa\ufe0f Geography',
-    battleStrategy: '\ud83e\udde0 Strategy', scienceLab: '\ud83d\udd2c Science Lab',
-    creativeWriting: '\u270d\ufe0f Creative Writing', codeBreaker: '\ud83d\udd10 Code Breaker',
+    scienceLab: '\ud83d\udd2c Science Lab',
+    codeBreaker: '\ud83d\udd10 Code Breaker',
+    numberBond: '🔗 Number Bond', makeTen: '🎯 Make 10', barModel: '📊 Bar Model', placeValue: '🔢 Place Value',
+    // New reading curriculum
+    soundSpotter: '🔊 Sound Spotter', rhymeCatcher: '🎵 Rhyme Catcher',
+    letterSoundSafari: '🔤 Letter Sounds', firstSoundMatch: '👂 First Sound Match',
+    wordBuilder: '🧱 Word Builder', consonantTeamMatch: '🤝 Consonant Teams',
+    vowelSoundSort: '🗂️ Vowel Sort', blendAndRead: '🔗 Blend & Read',
+    sightWordFlash: '⚡ Sight Word Flash',
+    phonogramMatch: '🔠 Phonogram Match', syllableSort: '📐 Syllable Sort',
+    spellingRulesQuiz: '📏 Spelling Rules', speedRead: '⏱️ Speed Read',
+    wordSurgeon: '🔬 Word Surgeon', vocabularyDetective: '🔍 Vocabulary',
+    passageQuestL4: '📚 Reading Quest',
+    rootWordExplorer: '🌳 Root Explorer', inferenceLab: '🧠 Inference Lab',
+    mainIdeaMatcher: '🎯 Main Idea', vocabInContext: '📖 Vocab in Context',
   };
   const typeLabel = typeLabels[ch.type] || '\ud83d\udcd6 Challenge';
   const contextPrefix = context === 'clue' ? '\ud83d\udd12 Unlock Clue - ' : context === 'activity' ? '' : '\u2694\ufe0f Battle - ';
@@ -328,22 +481,6 @@ function renderChallengeHTML(ch, context) {
     const scrambled = ch.question.replace('Unscramble: ', '');
     html += `<div style="font-size:15px;font-weight:600;color:var(--pk-blue);margin-bottom:8px;">Tap the letters in the right order!</div>`;
     html += renderTileSpell(scrambled, ch.answer.length, context, ch.hint);
-  } else if (ch.type === 'creativeWriting') {
-    html += `<div class="challenge-question">${ch.question}</div>`;
-    if (ch.hint) html += `<div style="font-size:13px;color:#666;margin-bottom:8px;">${ch.hint}</div>`;
-    html += `<textarea id="creative-writing-input" class="battle-challenge-input" rows="4" placeholder="Write your response here (at least 10 characters)..." style="width:100%;box-sizing:border-box;resize:vertical;"></textarea>`;
-    html += `<button class="btn-primary" onclick="(function(){var v=document.getElementById('creative-writing-input').value;answerChallenge(v,'${context}');})()">Submit!</button>`;
-  } else if (ch.type === 'estimationStation') {
-    const estEmojiMap = {'Zubat':'🦇','berries':'🍓','Poke Balls':'⚾','Magikarp':'🐟','coins':'🪙','stars':'⭐','Caterpie':'🐛','apples':'🍎','footprints':'🐾','Voltorb':'⚡'};
-    const estEmoji = estEmojiMap[ch.label] || '⭐';
-    const estCount = ch.actual || 20;
-    html += `<div class="challenge-question">About how many ${ch.label || 'items'} do you see?</div>`;
-    html += `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:3px;font-size:20px;text-align:center;padding:10px;background:rgba(0,0,0,0.04);border-radius:12px;margin-bottom:12px;max-height:180px;overflow-y:auto;">`;
-    for (let i = 0; i < estCount; i++) { html += `<div style="line-height:1.3;">${estEmoji}</div>`; }
-    html += `</div>`;
-    html += `<div style="font-size:13px;color:#666;margin-bottom:8px;">Your guess just needs to be within 20% of the real answer!</div>`;
-    html += `<input type="number" id="estimation-input" class="battle-challenge-input" placeholder="Enter your estimate...">`;
-    html += `<button class="btn-primary" onclick="(function(){var v=document.getElementById('estimation-input').value;answerChallenge(v,'${context}');})()">Submit!</button>`;
   } else if (ch.type === 'codeBreaker') {
     if (ch.hint) html += `<div style="font-size:13px;color:#888;margin-bottom:6px;font-style:italic;">${ch.hint}</div>`;
     // Show coded numbers as tiles
@@ -367,7 +504,7 @@ function renderChallengeHTML(ch, context) {
   } else if (ch.type === 'countingCatch') {
     const emoji = ch.emoji || '⭐';
     const count = parseInt(ch.answer, 10) || 0;
-    html += `<div class="challenge-question" style="font-size:16px;margin-bottom:8px;">How many Pokémon do you see?</div>`;
+    html += `<div class="challenge-question" style="font-size:16px;margin-bottom:8px;">How many do you see?</div>`;
     html += `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;font-size:28px;text-align:center;margin-bottom:14px;">`;
     for (let i = 0; i < count; i++) html += `<div>${emoji}</div>`;
     html += `</div>`;
@@ -375,14 +512,6 @@ function renderChallengeHTML(ch, context) {
     (ch.choices || []).forEach(c => {
       const val = typeof c === 'number' ? c : `'${String(c).replace(/'/g,"\\'")}'`;
       html += `<button class="btn-choice" onclick="answerChallenge(${val}, '${context}')">${c}</button>`;
-    });
-    html += `</div>`;
-  } else if (ch.type === 'shapeSorting') {
-    html += `<div class="challenge-question">${ch.question}</div>`;
-    html += `<div class="challenge-choices">`;
-    (ch.choices || []).forEach(c => {
-      const val = `'${String(c).replace(/'/g,"\\'")}'`;
-      html += `<button class="btn-choice" style="font-size:20px;" onclick="answerChallenge(${val}, '${context}')">${c}</button>`;
     });
     html += `</div>`;
   } else if (ch.type === 'blendAMon') {
@@ -551,16 +680,328 @@ function renderChallengeHTML(ch, context) {
       html += `<button class="btn-choice" onclick="answerChallenge(${val}, '${context}')">${c}</button>`;
     });
     html += `</div>`;
-  } else if (ch.type === 'colorMatch') {
+  } else if (ch.type === 'numberBond') {
+    // Number bond diagram: circle on top (whole) connected to two circles below (parts)
+    const whole = ch.whole;
+    const pA = ch.partA;
+    const pB = ch.partB;
+    html += `<div style="display:flex;flex-direction:column;align-items:center;margin-bottom:16px;">`;
+    // Whole circle
+    html += `<div style="width:64px;height:64px;border-radius:50%;background:#1565c0;color:white;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;box-shadow:0 2px 8px rgba(21,101,194,0.3);">${whole}</div>`;
+    // Connecting lines (using a simple V shape)
+    html += `<div style="display:flex;align-items:flex-start;justify-content:center;margin:4px 0;">`;
+    html += `<div style="width:40px;height:24px;border-right:3px solid #1565c0;transform:skewX(30deg);"></div>`;
+    html += `<div style="width:40px;height:24px;border-left:3px solid #1565c0;transform:skewX(-30deg);"></div>`;
+    html += `</div>`;
+    // Part circles
+    html += `<div style="display:flex;gap:40px;">`;
+    html += `<div style="width:56px;height:56px;border-radius:50%;background:${pA != null ? '#4CAF50' : '#fff3e0'};color:${pA != null ? 'white' : '#e65100'};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;border:${pA != null ? 'none' : '3px dashed #ff9800'};box-shadow:0 2px 6px rgba(0,0,0,0.15);">${pA != null ? pA : '?'}</div>`;
+    html += `<div style="width:56px;height:56px;border-radius:50%;background:${pB != null ? '#FF6B35' : '#fff3e0'};color:${pB != null ? 'white' : '#e65100'};display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;border:${pB != null ? 'none' : '3px dashed #ff9800'};box-shadow:0 2px 6px rgba(0,0,0,0.15);">${pB != null ? pB : '?'}</div>`;
+    html += `</div></div>`;
+    html += `<div class="challenge-question">What number completes the bond?</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      const val = typeof c === 'number' ? c : `'${String(c).replace(/'/g,"\\'")}'`;
+      html += `<button class="btn-choice" onclick="answerChallenge(${val}, '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'makeTen') {
+    const target = ch.target || 10;
+    const shown = ch.numA;
+    // Visual: show filled dots + empty dots to make target
+    html += `<div style="text-align:center;margin-bottom:14px;">`;
+    html += `<div style="font-size:15px;font-weight:600;color:#1565c0;margin-bottom:10px;">How many more to make ${target}?</div>`;
+    // Show a ten-frame (or hundred-frame) visual for small targets
+    if (target <= 20) {
+      const cols = target <= 10 ? 5 : 10;
+      html += `<div style="display:inline-grid;grid-template-columns:repeat(${cols},1fr);gap:4px;padding:12px;background:#f5f5f5;border-radius:12px;margin-bottom:10px;">`;
+      for (let i = 1; i <= target; i++) {
+        const filled = i <= shown;
+        html += `<div style="width:28px;height:28px;border-radius:50%;background:${filled ? '#1565c0' : '#e0e0e0'};border:2px solid ${filled ? '#0d47a1' : '#bbb'};display:flex;align-items:center;justify-content:center;font-size:11px;color:${filled ? 'white' : '#999'};">${filled ? i : ''}</div>`;
+      }
+      html += `</div>`;
+    } else {
+      // For 100: show a progress bar instead of dots
+      const pct = Math.round((shown / target) * 100);
+      html += `<div style="padding:12px;background:#f5f5f5;border-radius:12px;margin-bottom:10px;">`;
+      html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">`;
+      html += `<div style="font-size:22px;font-weight:700;color:#1565c0;">${shown}</div>`;
+      html += `<div style="flex:1;height:24px;background:#e0e0e0;border-radius:12px;overflow:hidden;">`;
+      html += `<div style="width:${pct}%;height:100%;background:linear-gradient(90deg,#1565c0,#42a5f5);border-radius:12px;"></div>`;
+      html += `</div>`;
+      html += `<div style="font-size:22px;font-weight:700;color:#888;">${target}</div>`;
+      html += `</div>`;
+      html += `<div style="font-size:12px;color:#888;">${shown} out of ${target} — how many more?</div>`;
+      html += `</div>`;
+    }
+    html += `</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      const val = typeof c === 'number' ? c : `'${String(c).replace(/'/g,"\\'")}'`;
+      html += `<button class="btn-choice" onclick="answerChallenge(${val}, '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'barModel') {
+    html += `<div class="challenge-question" style="font-size:14px;line-height:1.5;margin-bottom:12px;">${ch.question}</div>`;
+    // Render bar model visual
+    const parts = ch.barParts || [];
+    const maxVal = Math.max(...parts.map(p => p.value), ch.barTotal || 0);
+    html += `<div style="margin-bottom:16px;padding:12px;background:#f5f5f5;border-radius:12px;">`;
+    if (ch.barTotal) {
+      html += `<div style="font-size:12px;color:#666;text-align:center;margin-bottom:6px;">${ch.barLabel || ''}</div>`;
+      html += `<div style="height:36px;background:#e0e0e0;border-radius:8px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#555;border:2px solid #bbb;">${ch.barTotal}</div>`;
+    }
+    html += `<div style="display:flex;gap:2px;margin-bottom:4px;">`;
+    parts.forEach(p => {
+      const pct = Math.max((p.value / maxVal) * 100, 15);
+      const isUnknown = p.label === '?';
+      html += `<div style="flex:${p.value};height:36px;background:${isUnknown ? 'repeating-linear-gradient(45deg,#fff3e0,#fff3e0 5px,#ffe0b2 5px,#ffe0b2 10px)' : p.color || '#4A90D9'};border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:${isUnknown ? '#e65100' : 'white'};border:${isUnknown ? '2px dashed #ff9800' : 'none'};min-width:40px;">${p.label}${!isUnknown ? ': ' + p.value : ''}</div>`;
+    });
+    html += `</div>`;
+    if (!ch.barTotal && ch.barLabel) {
+      html += `<div style="font-size:12px;color:#888;text-align:center;margin-top:6px;">${ch.barLabel}</div>`;
+    }
+    html += `</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      const val = typeof c === 'number' ? c : `'${String(c).replace(/'/g,"\\'")}'`;
+      html += `<button class="btn-choice" onclick="answerChallenge(${val}, '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'placeValue') {
+    const digits = ch.digits || [];
+    const num = ch.number;
+    // Show the number large, then digit boxes all styled the same (no answer giveaway)
+    html += `<div style="text-align:center;margin-bottom:16px;">`;
+    html += `<div style="font-size:36px;font-weight:700;color:#1565c0;margin-bottom:10px;">${ch.place === 'expanded' ? num.toLocaleString() : num.toLocaleString()}</div>`;
+    html += `<div style="display:inline-flex;gap:4px;margin-bottom:8px;">`;
+    digits.forEach((d, i) => {
+      html += `<div style="width:48px;height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;background:#f5f5f5;color:#333;border:2px solid #e0e0e0;">`;
+      html += `<div style="font-size:24px;font-weight:700;">${d.value}</div>`;
+      html += `<div style="font-size:9px;text-transform:uppercase;color:#888;">${d.place}</div>`;
+      html += `</div>`;
+    });
+    html += `</div></div>`;
     html += `<div class="challenge-question">${ch.question}</div>`;
     html += `<div class="challenge-choices">`;
     (ch.choices || []).forEach(c => {
-      const val = `'${String(c).replace(/'/g,"\\'")}'`;
-      const swatch = (ch.swatchMap && ch.swatchMap[c]) || '#888';
-      const border = swatch === '#FFFFFF' || swatch === '#FFFFF0' ? '1px solid #ccc' : '1px solid rgba(0,0,0,0.15)';
-      html += `<button class="btn-choice" style="display:flex;align-items:center;gap:8px;font-size:15px;" onclick="answerChallenge(${val}, '${context}')"><span style="width:22px;height:22px;border-radius:5px;background:${swatch};display:inline-block;border:${border};flex-shrink:0;"></span>${c}</button>`;
+      const val = typeof c === 'number' ? c : `'${String(c).replace(/'/g,"\\'")}'`;
+      html += `<button class="btn-choice" onclick="answerChallenge(${val}, '${context}')">${c}</button>`;
     });
     html += `</div>`;
+
+  // === NEW READING CURRICULUM RENDERERS ===
+
+  } else if (ch.type === 'soundSpotter') {
+    // Show segmented sounds, pick the matching emoji
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">Blend these sounds together!</div>`;
+    const sounds = ch.question.split(' ');
+    html += `<div class="letter-tiles" style="margin-bottom:14px;">`;
+    sounds.forEach((s, i) => {
+      html += `<div class="letter-tile tile-display ${tileColor(i)}" style="width:auto;padding:0 14px;font-size:24px;font-style:italic;">${s}</div>`;
+    });
+    html += `</div>`;
+    html += `<div class="cvc-emoji-grid">`;
+    ch.choices.forEach(emoji => {
+      html += `<button class="cvc-emoji-btn" onclick="answerChallenge('${emoji}', '${context}')">${emoji}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'rhymeCatcher' || ch.type === 'rhymeBattle') {
+    html += `<div class="challenge-question">${ch.question}</div>`;
+    if (ch.hint) html += `<div style="font-size:13px;color:#666;margin-bottom:8px;">${ch.hint}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:17px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'letterSoundSafari' || ch.type === 'soundSafari') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">${ch.hint || 'What starts with this sound?'}</div>`;
+    html += `<div style="font-size:72px;text-align:center;margin-bottom:14px;font-weight:700;color:var(--pk-blue,#1565C0);">${ch.question}</div>`;
+    html += `<div class="cvc-emoji-grid">`;
+    ch.choices.forEach(emoji => {
+      html += `<button class="cvc-emoji-btn" onclick="answerChallenge('${emoji}', '${context}')">${emoji}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'firstSoundMatch') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:12px;">Do these words start with the same sound?</div>`;
+    html += `<div style="display:flex;gap:20px;justify-content:center;margin-bottom:16px;">`;
+    html += `<div style="text-align:center;"><div style="font-size:48px;">${ch.emojiA || ''}</div><div style="font-size:18px;font-weight:600;margin-top:4px;">${ch.wordA}</div></div>`;
+    html += `<div style="text-align:center;"><div style="font-size:48px;">${ch.emojiB || ''}</div><div style="font-size:18px;font-weight:600;margin-top:4px;">${ch.wordB}</div></div>`;
+    html += `</div>`;
+    html += `<div style="display:flex;gap:12px;justify-content:center;">`;
+    html += `<button class="btn-choice" style="flex:1;max-width:140px;font-size:20px;font-weight:700;padding:14px;background:#e8f5e9;border:2px solid #4CAF50;color:#2E7D32;" onclick="answerChallenge('Yes', '${context}')">✅ Yes</button>`;
+    html += `<button class="btn-choice" style="flex:1;max-width:140px;font-size:20px;font-weight:700;padding:14px;background:#ffebee;border:2px solid #f44336;color:#c62828;" onclick="answerChallenge('No', '${context}')">❌ No</button>`;
+    html += `</div>`;
+
+  } else if (ch.type === 'wordBuilder') {
+    // Show emoji + tap-to-spell tiles (same rendering as pokedexSpeller)
+    html += `<div style="font-size:48px;text-align:center;margin-bottom:8px;">${ch.emoji || ''}</div>`;
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue);margin-bottom:8px;">Tap the letters to spell the word!</div>`;
+    if (ch.letters && ch.word) {
+      html += renderTileSpell(ch.letters.join('').toUpperCase(), ch.word.length, context, ch.hint);
+    }
+
+  } else if (ch.type === 'consonantTeamMatch') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">Which consonant team does this word use?</div>`;
+    html += renderWordTiles(ch.question.toUpperCase(), { big: true });
+    html += `<div class="challenge-choices" style="margin-top:12px;">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:20px;font-weight:700;letter-spacing:2px;" onclick="answerChallenge('${c}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'vowelSoundSort') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">What vowel sound do you hear?</div>`;
+    if (ch.emoji) html += `<div style="font-size:36px;text-align:center;margin-bottom:6px;">${ch.emoji}</div>`;
+    html += renderWordTiles(ch.question.toUpperCase(), { big: true });
+    html += `<div class="challenge-choices" style="margin-top:12px;">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:24px;font-weight:700;width:60px;height:60px;border-radius:50%;" onclick="answerChallenge('${c}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'blendAndRead') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">Blend the letters to read the word!</div>`;
+    const letters = ch.letters || ch.question.split('');
+    html += `<div class="letter-tiles" style="margin-bottom:14px;">`;
+    letters.forEach((l, i) => {
+      html += `<div class="letter-tile tile-display ${tileColor(i)}" style="font-size:28px;">${l.toUpperCase()}</div>`;
+    });
+    html += `</div>`;
+    if (ch.emoji) html += `<div style="font-size:36px;text-align:center;margin-bottom:10px;">${ch.emoji}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:17px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'sightWordFlash') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:10px;">Which word matches?</div>`;
+    html += `<div style="font-size:42px;font-weight:700;text-align:center;color:#333;margin-bottom:16px;padding:16px;background:#f5f5f5;border-radius:12px;">${ch.question}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:18px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'phonogramMatch') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">Which word uses this sound pattern?</div>`;
+    html += `<div style="font-size:48px;font-weight:700;text-align:center;color:var(--pk-blue,#1565C0);margin-bottom:16px;padding:12px;background:#e3f2fd;border-radius:12px;letter-spacing:4px;">${ch.question}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:17px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'syllableSort') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">What type of syllable is this?</div>`;
+    html += `<div style="font-size:36px;font-weight:700;text-align:center;color:#333;margin-bottom:16px;padding:14px;background:#f5f5f5;border-radius:12px;">${ch.question}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:14px;text-align:center;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'spellingRulesQuiz') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">Why is this word spelled this way?</div>`;
+    html += `<div style="font-size:36px;font-weight:700;text-align:center;color:#333;margin-bottom:16px;padding:14px;background:#f5f5f5;border-radius:12px;">${ch.question}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:13px;text-align:left;line-height:1.4;padding:12px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'speedRead') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">Read the word and pick the picture!</div>`;
+    html += `<div style="font-size:42px;font-weight:700;text-align:center;color:#333;margin-bottom:16px;padding:16px;background:#f5f5f5;border-radius:12px;">${ch.word || ch.question}</div>`;
+    html += `<div class="cvc-emoji-grid">`;
+    ch.choices.forEach(emoji => {
+      html += `<button class="cvc-emoji-btn" onclick="answerChallenge('${emoji}', '${context}')">${emoji}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'wordSurgeon') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">Find the ${ch.affixType || 'affix'} in this word!</div>`;
+    // Render word with parts highlighted
+    if (ch.parts && ch.parts.length >= 2) {
+      html += `<div style="display:flex;gap:2px;justify-content:center;margin-bottom:12px;">`;
+      ch.parts.forEach((part, i) => {
+        const isAffix = (ch.affixType === 'prefix' && i === 0) || (ch.affixType === 'suffix' && i === ch.parts.length - 1);
+        html += `<div style="padding:10px 16px;font-size:22px;font-weight:700;border-radius:8px;background:${isAffix ? '#fff3e0' : '#e3f2fd'};color:${isAffix ? '#e65100' : '#1565c0'};border:2px ${isAffix ? 'dashed #ff9800' : 'solid #90caf9'};">${part}</div>`;
+      });
+      html += `</div>`;
+    } else {
+      html += `<div style="font-size:28px;font-weight:700;text-align:center;margin-bottom:12px;">${ch.question}</div>`;
+    }
+    if (ch.meaning) html += `<div style="font-size:13px;color:#666;margin-bottom:10px;font-style:italic;">Meaning: ${ch.meaning}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:18px;font-weight:600;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'vocabularyDetective' || ch.type === 'vocabInContext') {
+    // Show sentence with target word bolded
+    const sentence = ch.question.replace(new RegExp('\\b' + (ch.target || '') + '\\b', 'i'), `<strong style="color:var(--pk-blue,#1565C0);text-decoration:underline;">$&</strong>`);
+    html += `<div style="font-size:14px;color:#444;line-height:1.6;text-align:left;padding:12px;background:#f9f9f9;border-radius:8px;margin-bottom:12px;border-left:4px solid var(--pk-blue,#1565c0);">${sentence}</div>`;
+    html += `<div style="font-size:14px;font-weight:600;margin-bottom:8px;">What does "<em>${ch.target || ''}</em>" mean?</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:13px;text-align:left;line-height:1.4;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'passageQuestL4') {
+    // Same rendering as readingPassage
+    html += `<div style="font-weight:600;font-size:15px;color:var(--pk-blue,#1565c0);margin-bottom:6px;">${ch.title || 'Reading Passage'}</div>`;
+    if (ch.passage) {
+      html += `<div style="font-size:13px;color:#444;margin-bottom:12px;line-height:1.6;text-align:left;padding:12px;background:#f9f9f9;border-radius:8px;border-left:4px solid var(--pk-blue,#1565c0);max-height:160px;overflow-y:auto;">${ch.passage}</div>`;
+    }
+    html += `<div class="challenge-question">${ch.question}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="text-align:left;font-size:13px;line-height:1.4;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'rootWordExplorer') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-purple,#7B1FA2);margin-bottom:8px;">Which word uses this root?</div>`;
+    html += `<div style="text-align:center;margin-bottom:14px;padding:14px;background:#f3e5f5;border-radius:12px;">`;
+    html += `<div style="font-size:36px;font-weight:700;color:#7B1FA2;">${ch.question}</div>`;
+    html += `<div style="font-size:14px;color:#666;margin-top:4px;">= "${ch.rootMeaning || ''}"</div>`;
+    html += `</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="font-size:15px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'inferenceLab') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:6px;">🧠 Read and infer!</div>`;
+    html += `<div style="font-size:13px;color:#444;margin-bottom:12px;line-height:1.6;text-align:left;padding:12px;background:#f9f9f9;border-radius:8px;border-left:4px solid #7B1FA2;max-height:160px;overflow-y:auto;">${ch.passage}</div>`;
+    html += `<div class="challenge-question">${ch.question}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="text-align:left;font-size:13px;line-height:1.4;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
+  } else if (ch.type === 'mainIdeaMatcher') {
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:6px;">What is this passage mostly about?</div>`;
+    html += `<div style="font-size:13px;color:#444;margin-bottom:12px;line-height:1.6;text-align:left;padding:12px;background:#f9f9f9;border-radius:8px;border-left:4px solid #4CAF50;max-height:160px;overflow-y:auto;">${ch.passage}</div>`;
+    html += `<div class="challenge-question">${ch.question}</div>`;
+    html += `<div class="challenge-choices">`;
+    (ch.choices || []).forEach(c => {
+      html += `<button class="btn-choice" style="text-align:left;font-size:13px;line-height:1.4;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;
+    });
+    html += `</div>`;
+
   } else {
     if (ch.hint) html += `<div style="font-size:14px;color:#666;margin-bottom:6px;">${ch.hint}</div>`;
     html += `<div class="challenge-question">${ch.question}</div>`;
@@ -582,16 +1023,7 @@ window.answerChallenge = function(chosen, context) {
 
   // Determine correctness based on challenge type
   let isCorrect;
-  if (ch.type === 'creativeWriting') {
-    isCorrect = String(chosen).trim().length >= 10;
-  } else if (ch.type === 'estimationStation') {
-    const tolerance = ch.tolerance != null ? ch.tolerance : 0.15;
-    const num = Number(chosen);
-    const ans = Number(ch.answer);
-    isCorrect = !isNaN(num) && ans !== 0 && Math.abs(num - ans) / ans <= tolerance;
-  } else {
-    isCorrect = String(chosen) === String(ch.answer) || String(chosen).toLowerCase() === String(ch.answer).toLowerCase();
-  }
+  isCorrect = String(chosen) === String(ch.answer) || String(chosen).toLowerCase() === String(ch.answer).toLowerCase();
 
   // Highlight buttons - support both .btn-choice and .cvc-emoji-btn
   const container = context === 'clue' ? 'clue-challenge-area'
@@ -622,7 +1054,15 @@ window.answerChallenge = function(chosen, context) {
         notify('Correct! Clue unlocked! \ud83c\udf89', 'success');
       } else {
         SFX.wrong();
-        notify('Not quite! Try again!', 'error');
+        State.encounter.ballsLeft--;
+        renderPokeballs();
+        if (State.encounter.ballsLeft <= 0) {
+          document.getElementById('clue-challenge-area').classList.add('hidden');
+          notify(`${State.encounter.pokemon.name} ran away! You're out of Poké Balls!`, 'error');
+          setTimeout(() => Game.goToMap(), 2500);
+          return;
+        }
+        notify(`Not quite! Lost a Poké Ball! (${State.encounter.ballsLeft} left)`, 'error');
         startClueChallenge(State.encounter.pendingChallenge);
       }
     } else if (context === 'activity') {
@@ -700,9 +1140,19 @@ Game.submitGuess = function() {
     setTimeout(() => startPokeBallThrow(pokemon), 1200);
   } else {
     SFX.wrong();
-    result.textContent = `❌ That's not right! Try getting more clues!`;
-    result.className = 'encounter-result wrong';
+    State.encounter.ballsLeft--;
+    renderPokeballs();
     result.classList.remove('hidden');
+    if (State.encounter.ballsLeft <= 0) {
+      result.textContent = `${pokemon.name} ran away! You're out of Poké Balls!`;
+      result.className = 'encounter-result wrong';
+      guessInput.disabled = true;
+      document.getElementById('guess-btn').disabled = true;
+      setTimeout(() => Game.goToMap(), 2500);
+      return;
+    }
+    result.textContent = `❌ Wrong guess! Lost a Poké Ball! (${State.encounter.ballsLeft} left)`;
+    result.className = 'encounter-result wrong';
     guessInput.value = '';
     guessInput.classList.add('shake');
     setTimeout(() => guessInput.classList.remove('shake'), 500);
@@ -712,7 +1162,7 @@ Game.submitGuess = function() {
 // ===== POKEBALL THROW =====
 function startPokeBallThrow(pokemon) {
   State.encounter.awaitingThrow = true;
-  State.encounter.ballsLeft = 3;
+  // ballsLeft carries over from encounter phase (penalties for wrong answers)
 
   const throwSprite = document.getElementById('throw-pokemon-sprite');
   throwSprite.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemon.id}.png`;

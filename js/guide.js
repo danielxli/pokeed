@@ -53,7 +53,7 @@ function renderGuide() {
         <div class="guide-activity-detail">
           <strong>How it works:</strong><br>
           • Clue 1 reveals the Pokémon's type, Clue 5 reveals its silhouette<br>
-          • Solve a ${tag('Math','math')} ${tag('Reading','reading')} ${tag('CVC Words','cvc')} or ${tag('Spelling','spelling')} challenge to unlock each clue<br>
+          • Solve a ${tag('Math','math')} challenge to unlock each clue<br>
           • Guess the Pokémon's name at any time<br>
           • Once guessed, throw Pokéballs to catch it (3 tries, Pokémon GO style!)<br>
           • Caught Pokémon go in your Pokédex and can be used in gym battles
@@ -68,7 +68,7 @@ function renderGuide() {
         <div class="guide-activity-detail">
           <strong>How it works:</strong><br>
           • Pick a Pokémon from your collection to battle with<br>
-          • Choose attack moves — each requires a ${tag('Math','math')} ${tag('Reading','reading')} or ${tag('Comprehension','comprehension')} challenge<br>
+          • Choose attack moves — each requires a ${tag('Reading','reading')} or ${tag('Phonics','phonics')} challenge<br>
           • Correct answers deal damage; wrong answers let the gym leader attack you<br>
           • Type advantages matter (Fire > Grass > Water > Fire, etc.)<br>
           • Gym difficulty increases — later gyms boost question difficulty above your level<br>
@@ -84,10 +84,9 @@ function renderGuide() {
         </div>
         <div class="guide-activity-detail">
           <strong>Puzzle types:</strong><br>
-          • ${tag('Pattern Recognition','pattern')} — Find the next number in a sequence (e.g. 2, 4, 6, 8, ?)<br>
-          • ${tag('Word Search','wordsearch')} — Find hidden Pokémon-themed words in a letter grid<br>
+          • ${tag('Pattern Blitz','pattern')} — Solve 5 number patterns before time runs out (90 sec, need 4/5)!<br>
           • ${tag('Sentence Ordering','sentence')} — Drag words into the correct order to form a sentence<br>
-          • ${tag('Quick Math','timedmath')} — Solve as many math problems as you can before time runs out!
+          • ${tag('Quick Math','timedmath')} — Solve 5 math problems before time runs out (60 sec, need 4/5)!
         </div>
       </div>
 
@@ -150,76 +149,80 @@ function renderGuide() {
 
       <div class="guide-activity" style="border-color:#1565C0">
         <div class="guide-activity-title">${tag('Reading','reading')} Reading Challenges</div>
-        <div class="guide-activity-desc">Fill-in-the-blank, rhyming, opposites, and vocabulary questions.</div>
+        <div class="guide-activity-desc">22 structured activities based on the Science of Reading: phonemic awareness → phonics → fluency → vocabulary → comprehension.</div>
         <div class="guide-activity-detail">
-          • "The ___ sat on the mat" (fill in the blank)<br>
-          • "Which word rhymes with 'ball'?"<br>
-          • "Which word is the OPPOSITE of 'big'?"<br>
-          • Available from Kindergarten and up
+          • Activities progress through 5 levels from Pre-K to 4th–5th Grade<br>
+          • Each level targets age-appropriate literacy skills<br>
+          • See the <strong>Learning Activities</strong> section below for full details
         </div>
       </div>
 
       <div class="guide-activity" style="border-color:#7B1FA2">
         <div class="guide-activity-title">${tag('Spelling','spelling')} Spelling Challenges</div>
-        <div class="guide-activity-desc">Unscramble letters to spell Pokémon-themed words, with hints.</div>
+        <div class="guide-activity-desc">Spelling practice is embedded within Pokédex Speller, Spelling Rules Quiz, and Word Builder activities.</div>
         <div class="guide-activity-detail">
-          • Words like FIRE, WATER, GRASS, MAGIC, POWER, STORM<br>
-          • Each word has a hint: "It is very hot and burns!"<br>
-          • Type the unscrambled word to answer<br>
-          • Available from 1st Grade and up
+          • <strong>Word Builder (K):</strong> Tap letter tiles to spell CVC words from a picture<br>
+          • <strong>Spelling Rules (1st, 2nd–3rd):</strong> Learn why words are spelled the way they are<br>
+          • <strong>Pokédex Speller (1st, 2nd–3rd):</strong> Unscramble Pokémon-world words
         </div>
       </div>
 
       <div class="guide-activity" style="border-color:#00897B">
         <div class="guide-activity-title">${tag('Comprehension','comprehension')} Reading Comprehension</div>
-        <div class="guide-activity-desc">Read a short Pokémon-themed passage and answer a question about it.</div>
+        <div class="guide-activity-desc">Level-specific comprehension passages and inference questions.</div>
         <div class="guide-activity-detail">
-          • Passages about Pikachu, Gym badges, Snorlax, Magikarp & more<br>
-          • Tests understanding, not just word recognition<br>
-          • Available from 2nd–3rd Grade and up
+          • <strong>Reading Quest (2nd–3rd):</strong> 10 level-specific comprehension passages<br>
+          • <strong>Inference Lab (4th–5th):</strong> Answer questions requiring inference from 12 passages<br>
+          • <strong>Main Idea Matcher (4th–5th):</strong> Identify the best main idea from 8 passages
         </div>
       </div>
 
     </div>
   </div>`;
 
-  // ===== SECTION 2b: NEW ACTIVITIES =====
+  // ===== SECTION 2b: LEARNING ACTIVITIES =====
   html += `
   <div class="guide-section collapsed">
     <div class="guide-section-header" style="background:linear-gradient(135deg,#2E7D32,#388E3C)" onclick="toggleGuideSection(this)">
-      🆕 New Activities
+      📚 Learning Activities
       <span class="guide-chevron">▲</span>
     </div>
     <div class="guide-section-body">
 
       <div style="font-size:14px;color:#555;margin-bottom:12px;line-height:1.5;">
-        26 new activities are available in the <strong>Pokémon Lab → Activities</strong> tab! Activities are filtered to your current level. Here's what's available at each level:
+        39 activities are available in the <strong>Pokémon Lab → Activities</strong> tab! Activities are filtered to your current level. Here's what's available:
       </div>
 
-      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 1–2 · Little &amp; Rookie Trainer (Pre-K / Kindergarten)</div>
+      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 1 · Little Trainer (Pre-K)</div>
 
       <div class="guide-activity" style="border-color:#E91E63">
-        <div class="guide-activity-title">🔊 Sound Safari</div>
-        <div class="guide-activity-desc">Match pictures to their beginning sounds! "Which starts with /b/?"</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K, Kindergarten &nbsp; ${tag('Phonics','phonics')}</div>
+        <div class="guide-activity-title">🔊 Sound Spotter</div>
+        <div class="guide-activity-desc">Hear segmented sounds (/k/ /a/ /t/) and pick the matching picture. DISTAR "say it fast" method.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K &nbsp; ${tag('Phonics','phonics')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E91E63">
+        <div class="guide-activity-title">🎵 Rhyme Catcher</div>
+        <div class="guide-activity-desc">Pick which word rhymes with the target from rhyme families (-at, -an, -ig, etc).</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K &nbsp; ${tag('Phonics','phonics')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E91E63">
+        <div class="guide-activity-title">🔤 Letter Sound Safari</div>
+        <div class="guide-activity-desc">See a letter, pick which picture starts with that sound. All 26 letters.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K &nbsp; ${tag('Phonics','phonics')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E91E63">
+        <div class="guide-activity-title">👂 First Sound Match</div>
+        <div class="guide-activity-desc">Do two words start with the same sound? Yes or No.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K &nbsp; ${tag('Phonics','phonics')}</div>
       </div>
 
       <div class="guide-activity" style="border-color:#E53935">
         <div class="guide-activity-title">🔢 Counting Catch</div>
         <div class="guide-activity-desc">Count an emoji cluster and pick the right number — great for building number sense!</div>
         <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K through 1st Grade &nbsp; ${tag('Math','math')}</div>
-      </div>
-
-      <div class="guide-activity" style="border-color:#E53935">
-        <div class="guide-activity-title">🔷 Shape Sorting Lab</div>
-        <div class="guide-activity-desc">Name the shape shown or pick the matching shape from a set of big emoji choices.</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K, Kindergarten &nbsp; ${tag('Math','math')}</div>
-      </div>
-
-      <div class="guide-activity" style="border-color:#1565C0">
-        <div class="guide-activity-title">🎨 Color Match</div>
-        <div class="guide-activity-desc">Read a color word and match it to the correct swatch — builds sight word + color vocabulary.</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K, Kindergarten &nbsp; ${tag('Reading','reading')}</div>
       </div>
 
       <div class="guide-activity" style="border-color:#E53935">
@@ -234,18 +237,66 @@ function renderGuide() {
         <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K, Kindergarten &nbsp; ${tag('Math','math')}</div>
       </div>
 
-      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 2–3 · Kindergarten / 1st Grade</div>
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔗 Number Bond</div>
+        <div class="guide-activity-desc">Find the missing part! Given a whole and one part, figure out the other part.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">📊 Bar Model</div>
+        <div class="guide-activity-desc">Use bar model diagrams to solve word problems — a visual approach to addition and subtraction.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔢 Place Value</div>
+        <div class="guide-activity-desc">What digit is in the tens place? Identify place values from ones to thousands.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 2 · Rookie Trainer (Kindergarten)</div>
 
       <div class="guide-activity" style="border-color:#E91E63">
-        <div class="guide-activity-title">🗣️ Blend-a-Mon</div>
-        <div class="guide-activity-desc">Blend consonant sounds together and tap the matching picture. "Sl + eep = ?"</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten, 1st Grade &nbsp; ${tag('Phonics','phonics')}</div>
+        <div class="guide-activity-title">🧱 Word Builder</div>
+        <div class="guide-activity-desc">See a picture, tap letter tiles to spell the CVC word.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten &nbsp; ${tag('Phonics','phonics')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E91E63">
+        <div class="guide-activity-title">🤝 Consonant Teams</div>
+        <div class="guide-activity-desc">Identify which digraph (SH, TH, CH, CK, WH) a word uses.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten &nbsp; ${tag('Phonics','phonics')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E91E63">
+        <div class="guide-activity-title">🗂️ Vowel Sound Sort</div>
+        <div class="guide-activity-desc">Hear a CVC word, identify its vowel sound (A, E, I, O, U).</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten &nbsp; ${tag('Phonics','phonics')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E91E63">
+        <div class="guide-activity-title">🔗 Blend &amp; Read</div>
+        <div class="guide-activity-desc">See individual letters appear, blend them into a word. CVC + CCVC blends.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten &nbsp; ${tag('Phonics','phonics')}</div>
       </div>
 
       <div class="guide-activity" style="border-color:#1565C0">
-        <div class="guide-activity-title">🎵 Rhyme Battle</div>
-        <div class="guide-activity-desc">Which word rhymes with the given word? Pick the rhyming pair from four options.</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten, 1st Grade &nbsp; ${tag('Reading','reading')}</div>
+        <div class="guide-activity-title">⚡ Sight Word Flash</div>
+        <div class="guide-activity-desc">Dolch sight word recognition from 92 words.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔢 Counting Catch</div>
+        <div class="guide-activity-desc">Count an emoji cluster and pick the right number — great for building number sense!</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K through 1st Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🧩 Pattern Path</div>
+        <div class="guide-activity-desc">What comes next? Finish AB, ABC, or AABB emoji patterns.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K through 1st Grade &nbsp; ${tag('Math','math')}</div>
       </div>
 
       <div class="guide-activity" style="border-color:#E53935">
@@ -260,12 +311,90 @@ function renderGuide() {
         <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten through 2nd Grade &nbsp; ${tag('Math','math')}</div>
       </div>
 
-      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 3–4 · 1st / 2nd–3rd Grade</div>
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🎯 Make 10</div>
+        <div class="guide-activity-desc">How many more to make 10 (or 20, or 100)? Builds mental math fluency with complements.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten through 4th–5th Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔗 Number Bond</div>
+        <div class="guide-activity-desc">Find the missing part! Given a whole and one part, figure out the other part.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">📊 Bar Model</div>
+        <div class="guide-activity-desc">Use bar model diagrams to solve word problems — a visual approach to addition and subtraction.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔢 Place Value</div>
+        <div class="guide-activity-desc">What digit is in the tens place? Identify place values from ones to thousands.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 3 · Junior Trainer (1st Grade)</div>
+
+      <div class="guide-activity" style="border-color:#E91E63">
+        <div class="guide-activity-title">🔠 Phonogram Match</div>
+        <div class="guide-activity-desc">See a phonogram (EA, OA, AI, etc), pick which word uses it. 20 phonograms.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade &nbsp; ${tag('Phonics','phonics')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#1565C0">
+        <div class="guide-activity-title">📐 Syllable Sort</div>
+        <div class="guide-activity-desc">Identify syllable types: Closed, Open, Silent E (L3), plus R-Controlled, Vowel Team, Consonant-LE (L4).</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade, 2nd–3rd Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#7B1FA2">
+        <div class="guide-activity-title">📏 Spelling Rules</div>
+        <div class="guide-activity-desc">Why is this word spelled this way? Logic of English rules.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade, 2nd–3rd Grade &nbsp; ${tag('Spelling','spelling')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#1565C0">
+        <div class="guide-activity-title">⏱️ Speed Read</div>
+        <div class="guide-activity-desc">Read a word quickly, pick the matching picture. Fluency building.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#1565C0">
+        <div class="guide-activity-title">📖 Story Sequence</div>
+        <div class="guide-activity-desc">Read three short story panels and tap them in the correct order to tell the story.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade, 2nd–3rd Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
 
       <div class="guide-activity" style="border-color:#7B1FA2">
         <div class="guide-activity-title">✏️ Pokédex Speller</div>
         <div class="guide-activity-desc">Unscramble the letters to spell a Pokémon-world word using the given hint.</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> 1st through 2nd–3rd Grade &nbsp; ${tag('Spelling','spelling')}</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade, 2nd–3rd Grade &nbsp; ${tag('Spelling','spelling')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔢 Counting Catch</div>
+        <div class="guide-activity-desc">Count an emoji cluster and pick the right number — great for building number sense!</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K through 1st Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🧩 Pattern Path</div>
+        <div class="guide-activity-desc">What comes next? Finish AB, ABC, or AABB emoji patterns.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Pre-K through 1st Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">📏 Number Line Race</div>
+        <div class="guide-activity-desc">Where does this number go on the number line? Builds number-line intuition.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten, 1st Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">❓ Missing Number</div>
+        <div class="guide-activity-desc">Fill in the blank in a sequence: 3, 5, ?, 9. Covers skip-counting and sequences.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten through 2nd Grade &nbsp; ${tag('Math','math')}</div>
       </div>
 
       <div class="guide-activity" style="border-color:#E53935">
@@ -274,16 +403,90 @@ function renderGuide() {
         <div class="guide-activity-detail"><strong>Levels:</strong> 1st–2nd Grade &nbsp; ${tag('Math','math')}</div>
       </div>
 
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🪙 Coin Counter</div>
+        <div class="guide-activity-desc">Count coins and find the matching total — covers penny, nickel, dime, and quarter.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade through 4th Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🎯 Make 10</div>
+        <div class="guide-activity-desc">How many more to make 10 (or 20, or 100)? Builds mental math fluency with complements.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten through 4th–5th Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔗 Number Bond</div>
+        <div class="guide-activity-desc">Find the missing part! Given a whole and one part, figure out the other part.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">📊 Bar Model</div>
+        <div class="guide-activity-desc">Use bar model diagrams to solve word problems — a visual approach to addition and subtraction.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔢 Place Value</div>
+        <div class="guide-activity-desc">What digit is in the tens place? Identify place values from ones to thousands.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 4 · Star Trainer (2nd–3rd Grade)</div>
+
       <div class="guide-activity" style="border-color:#1565C0">
-        <div class="guide-activity-title">🔤 Sight Word Scramble</div>
-        <div class="guide-activity-desc">Unscramble a jumbled sight word — rapid-fire reading practice.</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> 1st–2nd Grade &nbsp; ${tag('Reading','reading')}</div>
+        <div class="guide-activity-title">📐 Syllable Sort</div>
+        <div class="guide-activity-desc">Identify syllable types: Closed, Open, Silent E, R-Controlled, Vowel Team, Consonant-LE.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade, 2nd–3rd Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#7B1FA2">
+        <div class="guide-activity-title">📏 Spelling Rules</div>
+        <div class="guide-activity-desc">Why is this word spelled this way? Logic of English rules.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade, 2nd–3rd Grade &nbsp; ${tag('Spelling','spelling')}</div>
       </div>
 
       <div class="guide-activity" style="border-color:#1565C0">
         <div class="guide-activity-title">📖 Story Sequence</div>
         <div class="guide-activity-desc">Read three short story panels and tap them in the correct order to tell the story.</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> 1st–2nd Grade &nbsp; ${tag('Reading','reading')}</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade, 2nd–3rd Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#7B1FA2">
+        <div class="guide-activity-title">✏️ Pokédex Speller</div>
+        <div class="guide-activity-desc">Unscramble the letters to spell a Pokémon-world word using the given hint.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade, 2nd–3rd Grade &nbsp; ${tag('Spelling','spelling')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#1565C0">
+        <div class="guide-activity-title">🔬 Word Surgeon</div>
+        <div class="guide-activity-desc">Identify prefixes (un-, re-, dis-, mis-, pre-) and suffixes (-ful, -less, -ness, -ing, -ed, -er) in words.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#1565C0">
+        <div class="guide-activity-title">🔍 Vocabulary Detective</div>
+        <div class="guide-activity-desc">Read a sentence with a bolded word, pick its meaning from context. 30 Pokémon-themed sentences.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#00897B">
+        <div class="guide-activity-title">📚 Reading Quest</div>
+        <div class="guide-activity-desc">Level-specific comprehension passages (2nd–3rd grade reading level). 10 passages.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade &nbsp; ${tag('Comprehension','comprehension')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">❓ Missing Number</div>
+        <div class="guide-activity-desc">Fill in the blank in a sequence: 3, 5, ?, 9. Covers skip-counting and sequences.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten through 2nd Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🧪 Potion Mixer</div>
+        <div class="guide-activity-desc">Solve fraction and division word problems to mix the right Pokémon potions.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st–2nd Grade &nbsp; ${tag('Math','math')}</div>
       </div>
 
       <div class="guide-activity" style="border-color:#E53935">
@@ -292,35 +495,15 @@ function renderGuide() {
         <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade through 4th Grade &nbsp; ${tag('Math','math')}</div>
       </div>
 
-      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 4–5 · 2nd–3rd / 4th–5th Grade</div>
-
       <div class="guide-activity" style="border-color:#FF6B35">
         <div class="guide-activity-title">⚔️ Type Advantage Quiz</div>
         <div class="guide-activity-desc">Which type is super effective? Tests deep knowledge of all Pokémon type matchups.</div>
         <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Strategy','strategy')}</div>
       </div>
 
-      <div class="guide-activity" style="border-color:#00897B">
-        <div class="guide-activity-title">🌍 Habitat Match</div>
-        <div class="guide-activity-desc">Match a Pokémon to its natural habitat — forest, ocean, cave, volcano, and more!</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Science','science')}</div>
-      </div>
-
       <div class="guide-activity" style="border-color:#E53935">
         <div class="guide-activity-title">💪 Multiply Power-Up</div>
         <div class="guide-activity-desc">Power up your Pokémon by solving multiplication challenges — tables up to 12!</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Math','math')}</div>
-      </div>
-
-      <div class="guide-activity" style="border-color:#1565C0">
-        <div class="guide-activity-title">📚 Reading Quest</div>
-        <div class="guide-activity-desc">Read a multi-sentence Pokémon passage then answer a comprehension question.</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Reading','reading')}</div>
-      </div>
-
-      <div class="guide-activity" style="border-color:#E53935">
-        <div class="guide-activity-title">🎯 Estimation Station</div>
-        <div class="guide-activity-desc">Enter your best estimate! Correct if you're within a generous tolerance range.</div>
         <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Math','math')}</div>
       </div>
 
@@ -330,7 +513,73 @@ function renderGuide() {
         <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Science','science')}</div>
       </div>
 
-      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 5 · Master Trainer (4th–5th Grade only)</div>
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🎯 Make 10</div>
+        <div class="guide-activity-desc">How many more to make 10 (or 20, or 100)? Builds mental math fluency with complements.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten through 4th–5th Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔗 Number Bond</div>
+        <div class="guide-activity-desc">Find the missing part! Given a whole and one part, figure out the other part.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">📊 Bar Model</div>
+        <div class="guide-activity-desc">Use bar model diagrams to solve word problems — a visual approach to addition and subtraction.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔢 Place Value</div>
+        <div class="guide-activity-desc">What digit is in the tens place? Identify place values from ones to thousands.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div style="font-weight:700;font-size:13px;color:#888;text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Level 5 · Master Trainer (4th–5th Grade)</div>
+
+      <div class="guide-activity" style="border-color:#1565C0">
+        <div class="guide-activity-title">🌳 Root Explorer</div>
+        <div class="guide-activity-desc">Learn Latin/Greek roots (aqua=water, bio=life, etc), pick which word uses the root. 20 roots.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 4th–5th Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#00897B">
+        <div class="guide-activity-title">🧠 Inference Lab</div>
+        <div class="guide-activity-desc">Read a passage, answer a question that requires inference (not directly stated). 12 passages.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 4th–5th Grade &nbsp; ${tag('Comprehension','comprehension')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#00897B">
+        <div class="guide-activity-title">🎯 Main Idea Matcher</div>
+        <div class="guide-activity-desc">Read a passage, pick the best main idea. 8 passages.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 4th–5th Grade &nbsp; ${tag('Comprehension','comprehension')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#1565C0">
+        <div class="guide-activity-title">📖 Vocab in Context</div>
+        <div class="guide-activity-desc">Advanced vocabulary from context clues. Words like "nocturnal", "symbiotic", "resilience". 12 sentences.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 4th–5th Grade &nbsp; ${tag('Reading','reading')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🪙 Coin Counter</div>
+        <div class="guide-activity-desc">Count coins and find the matching total — covers penny, nickel, dime, and quarter.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 1st Grade through 4th Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#FF6B35">
+        <div class="guide-activity-title">⚔️ Type Advantage Quiz</div>
+        <div class="guide-activity-desc">Which type is super effective? Tests deep knowledge of all Pokémon type matchups.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Strategy','strategy')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">💪 Multiply Power-Up</div>
+        <div class="guide-activity-desc">Power up your Pokémon by solving multiplication challenges — tables up to 12!</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
 
       <div class="guide-activity" style="border-color:#E53935">
         <div class="guide-activity-title">🥚 Breeder Fractions</div>
@@ -344,22 +593,40 @@ function renderGuide() {
         <div class="guide-activity-detail"><strong>Levels:</strong> 4th–5th Grade &nbsp; ${tag('Science','science')}</div>
       </div>
 
-      <div class="guide-activity" style="border-color:#FF6B35">
-        <div class="guide-activity-title">🧠 Battle Strategy</div>
-        <div class="guide-activity-desc">Logic puzzles framed as battle decisions — choose the optimal move from multi-step reasoning.</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> 4th–5th Grade &nbsp; ${tag('Strategy','strategy')}</div>
-      </div>
-
-      <div class="guide-activity" style="border-color:#6A1B9A">
-        <div class="guide-activity-title">✍️ Creative Writing</div>
-        <div class="guide-activity-desc">Write at least a sentence about a Pokémon prompt — open-ended, no wrong answers!</div>
-        <div class="guide-activity-detail"><strong>Levels:</strong> 4th–5th Grade &nbsp; ${tag('Writing','writing')}</div>
+      <div class="guide-activity" style="border-color:#00897B">
+        <div class="guide-activity-title">🔬 Science Lab</div>
+        <div class="guide-activity-desc">Answer real-world science questions — animals, plants, weather, and the solar system.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> 2nd–3rd Grade, 4th–5th Grade &nbsp; ${tag('Science','science')}</div>
       </div>
 
       <div class="guide-activity" style="border-color:#3F51B5">
         <div class="guide-activity-title">🔐 Code Breaker</div>
         <div class="guide-activity-desc">Decode a secret message using a simple cipher and choose the correct hidden word.</div>
         <div class="guide-activity-detail"><strong>Levels:</strong> 4th–5th Grade &nbsp; ${tag('Logic','logic')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🎯 Make 10</div>
+        <div class="guide-activity-desc">How many more to make 10 (or 20, or 100)? Builds mental math fluency with complements.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> Kindergarten through 4th–5th Grade &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔗 Number Bond</div>
+        <div class="guide-activity-desc">Find the missing part! Given a whole and one part, figure out the other part.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">📊 Bar Model</div>
+        <div class="guide-activity-desc">Use bar model diagrams to solve word problems — a visual approach to addition and subtraction.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
+      </div>
+
+      <div class="guide-activity" style="border-color:#E53935">
+        <div class="guide-activity-title">🔢 Place Value</div>
+        <div class="guide-activity-desc">What digit is in the tens place? Identify place values from ones to thousands.</div>
+        <div class="guide-activity-detail"><strong>Levels:</strong> All levels &nbsp; ${tag('Math','math')}</div>
       </div>
 
     </div>
@@ -440,8 +707,8 @@ function renderGuide() {
             <td><strong>Little Trainer</strong></td>
             <td>Pre-K<br>(Ages 4–5)</td>
             <td>
-              ${tag('Counting','math')} ${tag('Number Comparison','math')} ${tag('CVC Words','cvc')}<br>
-              <em style="font-size:11px;color:#888;">+ New: Sound Safari, Counting Catch, Shape Sorting, Color Match, Pattern Path, More or Less</em>
+              ${tag('Counting','math')} ${tag('Number Comparison','math')} ${tag('Phonics','phonics')}<br>
+              <em style="font-size:11px;color:#888;">+ Sound Spotter, Rhyme Catcher, Letter Sound Safari, First Sound Match, Counting Catch, Pattern Path, More or Less, Number Bond, Bar Model, Place Value</em>
             </td>
           </tr>
           <tr>
@@ -449,8 +716,8 @@ function renderGuide() {
             <td><strong>Rookie Trainer</strong></td>
             <td>Kindergarten<br>(Ages 5–6)</td>
             <td>
-              ${tag('Add/Sub ≤10','math')} ${tag('CVC Words','cvc')} ${tag('Reading','reading')}<br>
-              <em style="font-size:11px;color:#888;">+ New: Sound Safari, Counting Catch, Shape Sorting, Color Match, Pattern Path, More or Less, Blend-a-Mon, Rhyme Battle, Number Line Race, Missing Number</em>
+              ${tag('Add/Sub ≤10','math')} ${tag('Phonics','phonics')} ${tag('Reading','reading')}<br>
+              <em style="font-size:11px;color:#888;">+ Word Builder, Consonant Teams, Vowel Sound Sort, Blend &amp; Read, Sight Word Flash, Counting Catch, Pattern Path, Number Line Race, Missing Number, Make 10, Number Bond, Bar Model, Place Value</em>
             </td>
           </tr>
           <tr>
@@ -458,8 +725,8 @@ function renderGuide() {
             <td><strong>Junior Trainer</strong></td>
             <td>1st Grade<br>(Ages 6–7)</td>
             <td>
-              ${tag('Add/Sub ≤20','math')} ${tag('Reading','reading')} ${tag('Spelling','spelling')}<br>
-              <em style="font-size:11px;color:#888;">+ New: Counting Catch, Pattern Path, Blend-a-Mon, Rhyme Battle, Pokédex Speller, Number Line Race, Missing Number, Potion Mixer, Sight Word Scramble, Story Sequence, Coin Counter</em>
+              ${tag('Add/Sub ≤20','math')} ${tag('Phonics','phonics')} ${tag('Reading','reading')} ${tag('Spelling','spelling')}<br>
+              <em style="font-size:11px;color:#888;">+ Phonogram Match, Syllable Sort, Spelling Rules, Speed Read, Story Sequence, Pokédex Speller, Counting Catch, Pattern Path, Number Line Race, Missing Number, Potion Mixer, Coin Counter, Make 10, Number Bond, Bar Model, Place Value</em>
             </td>
           </tr>
           <tr>
@@ -468,7 +735,7 @@ function renderGuide() {
             <td>2nd–3rd Grade<br>(Ages 7–9)</td>
             <td>
               ${tag('Multiply Intro','math')} ${tag('Reading','reading')} ${tag('Spelling','spelling')} ${tag('Comprehension','comprehension')}<br>
-              <em style="font-size:11px;color:#888;">+ New: Pokédex Speller, Missing Number, Potion Mixer, Sight Word Scramble, Story Sequence, Coin Counter, Type Advantage Quiz, Habitat Match, Multiply Power-Up, Reading Quest, Estimation Station, Science Lab</em>
+              <em style="font-size:11px;color:#888;">+ Syllable Sort, Spelling Rules, Story Sequence, Pokédex Speller, Word Surgeon, Vocabulary Detective, Reading Quest, Missing Number, Potion Mixer, Coin Counter, Type Advantage Quiz, Multiply Power-Up, Science Lab, Make 10, Number Bond, Bar Model, Place Value</em>
             </td>
           </tr>
           <tr>
@@ -476,8 +743,8 @@ function renderGuide() {
             <td><strong>Master Trainer</strong></td>
             <td>4th–5th Grade<br>(Ages 9–11)</td>
             <td>
-              ${tag('Multiply/Divide','math')} ${tag('Big Numbers','math')} ${tag('Reading','reading')} ${tag('Spelling','spelling')} ${tag('Comprehension','comprehension')}<br>
-              <em style="font-size:11px;color:#888;">+ New: Coin Counter, Type Advantage Quiz, Habitat Match, Multiply Power-Up, Reading Quest, Estimation Station, Science Lab, Breeder Fractions, Geography Explorer, Battle Strategy, Creative Writing, Code Breaker</em>
+              ${tag('Multiply/Divide','math')} ${tag('Big Numbers','math')} ${tag('Reading','reading')} ${tag('Comprehension','comprehension')}<br>
+              <em style="font-size:11px;color:#888;">+ Root Explorer, Inference Lab, Main Idea Matcher, Vocab in Context, Coin Counter, Type Advantage Quiz, Multiply Power-Up, Breeder Fractions, Geography Explorer, Science Lab, Code Breaker, Make 10, Number Bond, Bar Model, Place Value</em>
             </td>
           </tr>
         </tbody>
