@@ -183,7 +183,7 @@ Game.goToEncounter = function() {
     cluesUnlocked: 1, // type is always shown
     guessUsed: false,
     ballsLeft: 3,
-    pendingChallenge: null,
+    pendingClue: null,
     challengeTarget: null,
   };
 
@@ -304,6 +304,7 @@ function getAvailableChallengeTypes() {
 
 function pickChallengeType(mode) {
   const types = mode === 'reading' ? getReadingChallengeTypes() : getMathChallengeTypes();
+  if (types.length === 0) return 'math'; // fallback if no activities available for this level
   return types[Math.floor(Math.random() * types.length)];
 }
 
@@ -314,7 +315,7 @@ function startClueChallenge(clueNum) {
     return;
   }
   SFX.pop();
-  State.encounter.pendingChallenge = clueNum;
+  State.encounter.pendingClue = clueNum;
 
   // Encounters use math challenges
   const challengeType = pickChallengeType('math');
@@ -1006,7 +1007,7 @@ window.answerChallenge = function(chosen, context) {
     if (context === 'clue') {
       if (isCorrect) {
         SFX.correct();
-        State.encounter.cluesUnlocked = State.encounter.pendingChallenge;
+        State.encounter.cluesUnlocked = State.encounter.pendingClue;
         document.getElementById('clue-challenge-area').classList.add('hidden');
         addXp(10);
         renderClues(); // this handles sprite visibility
@@ -1022,7 +1023,7 @@ window.answerChallenge = function(chosen, context) {
           return;
         }
         notify(`Not quite! Lost a Poké Ball! (${State.encounter.ballsLeft} left)`, 'error');
-        startClueChallenge(State.encounter.pendingChallenge);
+        startClueChallenge(State.encounter.pendingClue);
       }
     } else if (context === 'activity') {
       // Handled via Game.submitActivityAnswer — this path is for choice buttons
@@ -1071,6 +1072,10 @@ guessInput.addEventListener('input', function() {
 
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.guess-input-wrap')) autocompleteList.innerHTML = '';
+});
+guessInput.addEventListener('blur', () => {
+  // Delay to allow click on autocomplete item to fire first
+  setTimeout(() => autocompleteList.innerHTML = '', 150);
 });
 
 Game.submitGuess = function() {

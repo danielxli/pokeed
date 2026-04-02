@@ -176,7 +176,10 @@ function addXp(amount) {
 }
 
 // ===== SAVE / LOAD STATE =====
-const _store = (function() { try { return window['local'+'Storage']; } catch(e) { return null; } })();
+const _store = (function() { try { const s = window['local'+'Storage']; s.setItem('_test', '1'); s.removeItem('_test'); return s; } catch(e) { return null; } })();
+if (!_store) {
+  setTimeout(() => notify('Private browsing detected — progress will not be saved.', 'error'), 1500);
+}
 function saveState() {
   try {
     if (!_store) return;

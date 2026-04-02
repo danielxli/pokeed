@@ -172,9 +172,6 @@ window.openPokeCenterWordSearch = function() {
   });
 };
 
-// Remove old healAllPokemon (no longer used directly)
-window.healAllPokemon = function() {};
-
 window.closePokeCenterWordSearch = function() {
   const overlay = document.getElementById('pokecenter-ws-overlay');
   if (overlay) overlay.classList.add('hidden');

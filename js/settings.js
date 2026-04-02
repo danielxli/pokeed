@@ -112,5 +112,4 @@ Game.executeReset = function() {
   } else {
     showScene('title');
   }
-  console.log('🎮 Pokemon Educational Adventure loaded!');
 })();

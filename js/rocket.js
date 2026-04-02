@@ -642,6 +642,7 @@ window.removeSentenceWord = function(placedIdx) {
 };
 
 window.checkSentenceOrder = function() {
+  if (State.rocket.puzzle && State.rocket.puzzle.solved) return;
   const sent = State.rocket.puzzle.sentence;
   const placed = State.rocket.sentencePlaced.map(p => p.word).join(' ');
   if (placed === sent.answer) {
@@ -732,15 +733,17 @@ window.answerTimedMath = function(choice) {
 };
 
 function rocketSuccess() {
+  if (State.rocket.puzzle && State.rocket.puzzle.solved) return;
+  if (State.rocket.puzzle) State.rocket.puzzle.solved = true;
   clearInterval(State.rocket.timerInterval);
   SFX.caught();
   launchConfetti();
   addXp(75);
 
-  // Reward: chance to catch a rare pokemon
+  // Reward: rescue a pokemon
   const uncaught = POKEMON_DB.filter(p => !State.caught.includes(p.id));
   let rewardPokemon = null;
-  if (uncaught.length > 0 && Math.random() > 0.3) {
+  if (uncaught.length > 0) {
     rewardPokemon = uncaught[Math.floor(Math.random() * uncaught.length)];
     State.caught.push(rewardPokemon.id);
     initPokemonHp(rewardPokemon.id);
@@ -771,6 +774,8 @@ function rocketSuccess() {
 }
 
 function rocketFail(message) {
+  if (State.rocket.puzzle && State.rocket.puzzle.solved) return;
+  if (State.rocket.puzzle) State.rocket.puzzle.solved = true;
   clearInterval(State.rocket.timerInterval);
   SFX.wrong();
   document.getElementById('rocket-puzzle').classList.add('hidden');
