@@ -34,11 +34,12 @@ Scripts are loaded via `<script>` tags in `index.html` and **must** be in this o
 7. `js/rocket.js` — Team Rocket puzzles (pattern, word search, sentence, timed math)
 8. `js/guide.js` — Trainer's Guide renderer
 9. `js/pokecenter.js` — Pokemon Center (healing, word search)
-10. `js/settings.js` — `LEVEL_DATA` (5 difficulty levels), settings panel, game init
-11. `js/activities.js` — `ACTIVITY_REGISTRY`, math/science/logic activity generators, plus kept reading activities (Story Sequence, Pokédex Speller)
-12. `js/reading-activities.js` — New reading curriculum L1-L2: Sound Spotter, Rhyme Catcher, Letter Sound Safari, First Sound Match, Word Builder, Consonant Teams, Vowel Sound Sort, Blend & Read, Sight Word Flash
-13. `js/reading-activities-advanced.js` — New reading curriculum L3-L5: Phonogram Match, Syllable Sort, Spelling Rules, Speed Read, Word Surgeon, Vocabulary Detective, Reading Quest L4, Root Explorer, Inference Lab, Main Idea Matcher, Vocab in Context
-14. `js/systems.js` — `DDA`, `StreakTracker`, `DailyChallenge`, `Evolution`, `SessionTimer`, `Collab`
+10. `js/training.js` — Training Grounds, flash drill system, `EVOLUTION_MAP`, Pokemon evolution
+11. `js/settings.js` — `LEVEL_DATA` (5 difficulty levels), settings panel, game init
+12. `js/activities.js` — `ACTIVITY_REGISTRY`, math/science/logic activity generators, plus kept reading activities (Story Sequence, Pokédex Speller)
+13. `js/reading-activities.js` — New reading curriculum L1-L2: Sound Spotter, Rhyme Catcher, Letter Sound Safari, First Sound Match, Word Builder, Consonant Teams, Vowel Sound Sort, Blend & Read, Sight Word Flash
+14. `js/reading-activities-advanced.js` — New reading curriculum L3-L5: Phonogram Match, Syllable Sort, Spelling Rules, Speed Read, Word Surgeon, Vocabulary Detective, Reading Quest L4, Root Explorer, Inference Lab, Main Idea Matcher, Vocab in Context
+15. `js/systems.js` — `DDA`, `StreakTracker`, `DailyChallenge`, `Evolution`, `SessionTimer`, `Collab`
 
 ### Key Globals
 

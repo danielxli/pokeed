@@ -96,6 +96,14 @@
         <div class="loc-badge-row"><span class="loc-tag">💖 Heal</span><span class="loc-tag">🔍 Word Search</span></div>
       </div>
     </button>
+    <button class="map-location loc-training" id="loc-training" onclick="Game.goToTraining()">
+      <div class="loc-content">
+        <div class="loc-icon">🏋️</div>
+        <div class="loc-name">Training Grounds</div>
+        <div class="loc-desc">Train Pokémon &amp; evolve them!</div>
+        <div class="loc-badge-row"><span class="loc-tag">⚔️ Battle Drills</span><span class="loc-tag">✨ Evolution</span></div>
+      </div>
+    </button>
   </div>
   <div class="map-secondary">
     <button class="map-location map-location-sm loc-lab" onclick="Game.goToLab()">
@@ -345,6 +353,38 @@
   </div>
 </div>
 
+<!-- TRAINING GROUNDS -->
+<div id="scene-training" class="scene">
+  <div class="training-bg"></div>
+  <div class="training-content">
+    <div class="scene-header">
+      <button class="btn-back" onclick="Game.goToMap()">← Map</button>
+      <h2 class="scene-title">🏋️ Training Grounds</h2>
+    </div>
+    <div id="training-scroll" class="training-scroll"></div>
+  </div>
+  <!-- Drill type picker -->
+  <div id="drill-picker-overlay" class="drill-picker-overlay hidden"></div>
+  <!-- Flash drill overlay -->
+  <div id="training-drill-overlay" class="training-drill-overlay hidden">
+    <div class="drill-header">
+      <div class="drill-timer-bar"><div id="drill-timer-fill" class="drill-timer-fill"></div></div>
+      <div class="drill-stats">
+        <span id="drill-timer-text" class="drill-timer-text">60s</span>
+        <span id="drill-score" class="drill-score">Score: 0</span>
+        <span id="drill-combo" class="drill-combo"></span>
+      </div>
+    </div>
+    <div class="drill-battle-area" id="drill-battle-area">
+      <img id="drill-pokemon-sprite" class="drill-pokemon-sprite" src="" alt="">
+      <div id="drill-dummy" class="drill-dummy">🎯</div>
+    </div>
+    <div id="drill-challenge-area" class="drill-challenge-area"></div>
+  </div>
+  <!-- Evolution overlay -->
+  <div id="evolution-overlay" class="evolution-overlay hidden"></div>
+</div>
+
 <!-- STANDALONE ACTIVITY -->
 <div id="scene-activity" class="scene">
   <div class="activity-bg"></div>
@@ -410,6 +450,7 @@
 <script src="js/rocket.js"></script>
 <script src="js/guide.js"></script>
 <script src="js/pokecenter.js"></script>
+<script src="js/training.js"></script>
 <script src="js/settings.js"></script>
 
 <!-- Activity generators & cross-cutting systems -->

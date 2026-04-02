@@ -977,6 +977,7 @@ function renderChallengeHTML(ch, context) {
 window.answerChallenge = function(chosen, context) {
   const ch = context === 'clue' ? State.encounter.currentChallenge
     : context === 'activity' ? _activitySession.currentChallenge
+    : context === 'training' ? window._trainingChallenge
     : State.gym.pendingChallenge;
   if (!ch) return;
 
@@ -987,6 +988,7 @@ window.answerChallenge = function(chosen, context) {
   // Highlight buttons - support both .btn-choice and .cvc-emoji-btn
   const container = context === 'clue' ? 'clue-challenge-area'
     : context === 'activity' ? 'activity-play-area'
+    : context === 'training' ? 'drill-challenge-area'
     : 'battle-challenge-area';
   const containerEl = document.getElementById(container);
   const hasEmojiBtn = containerEl && containerEl.querySelector('.cvc-emoji-btn');
@@ -1037,10 +1039,12 @@ window.answerChallenge = function(chosen, context) {
       }
       _updateActivityScore();
       setTimeout(() => _renderNextActivityChallenge(), 1500);
+    } else if (context === 'training') {
+      if (typeof window._onTrainingAnswer === 'function') window._onTrainingAnswer(isCorrect);
     } else {
       resolveGymAnswer(isCorrect);
     }
-  }, 800);
+  }, context === 'training' ? 400 : 800);
 };
 
 window.checkSpelling = function(context) {

@@ -2500,3 +2500,283 @@ html, body {
 .scene-transition-overlay.active {
   opacity: 1;
 }
+
+/* ===== TRAINING GROUNDS ===== */
+.training-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  z-index: 0;
+}
+.training-content {
+  position: relative; z-index: 1;
+  max-width: 600px; margin: 0 auto;
+  padding: 16px; min-height: 100vh;
+}
+.training-scroll {
+  padding-bottom: 32px;
+}
+.training-intro {
+  text-align: center; padding: 12px; margin-bottom: 16px;
+  background: rgba(255,255,255,0.08); border-radius: 12px;
+}
+.training-intro-text {
+  color: rgba(255,255,255,0.85); font-size: 15px;
+}
+.training-empty {
+  text-align: center; padding: 40px 20px; color: #fff;
+}
+.loc-training {
+  background: linear-gradient(135deg, #1a1a2e, #0f3460) !important;
+  border-left: 5px solid #FF6B35 !important;
+}
+.loc-training .loc-icon { filter: none; }
+
+/* Pokemon grid */
+.training-pokemon-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.training-pokemon-card {
+  background: rgba(255,255,255,0.1); border-radius: 14px;
+  padding: 14px; text-align: center; cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.15);
+  transition: transform 0.15s, border-color 0.15s;
+}
+.training-pokemon-card:hover, .training-pokemon-card:active {
+  transform: scale(1.03); border-color: #FF6B35;
+}
+.training-pokemon-sprite {
+  width: 72px; height: 72px; image-rendering: pixelated;
+}
+.training-pokemon-name {
+  font-size: 16px; font-weight: 700; color: #fff; margin: 4px 0;
+}
+.training-type-badge {
+  display: inline-block; padding: 2px 10px; border-radius: 8px;
+  font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 8px;
+}
+.training-evo-info {
+  margin-top: 4px;
+}
+.training-evo-arrow {
+  font-size: 13px; color: #FFD600; font-weight: 600; margin-bottom: 4px;
+}
+.training-xp-bar-wrap {
+  width: 100%; height: 8px; background: rgba(255,255,255,0.15);
+  border-radius: 4px; overflow: hidden;
+}
+.training-xp-bar {
+  height: 100%; background: linear-gradient(90deg, #FF6B35, #FFD600);
+  border-radius: 4px; transition: width 0.3s;
+}
+.training-xp-text {
+  font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px;
+}
+.training-max-badge {
+  font-size: 13px; color: #FFD600; font-weight: 600;
+  background: rgba(255,215,0,0.15); padding: 4px 10px;
+  border-radius: 8px; display: inline-block;
+}
+.training-train-btn {
+  margin-top: 8px; padding: 6px 16px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, #FF6B35, #E53935);
+  color: #fff; font-weight: 700; font-size: 14px; cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+}
+.training-train-btn:hover { filter: brightness(1.1); }
+
+/* Drill picker */
+.drill-picker-overlay {
+  position: absolute; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.7); display: flex;
+  align-items: center; justify-content: center;
+}
+.drill-picker-overlay.hidden { display: none; }
+.drill-picker-card {
+  background: #1e293b; border-radius: 20px; padding: 28px;
+  text-align: center; color: #fff; max-width: 340px; width: 90%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.drill-picker-buttons {
+  display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px;
+}
+.drill-picker-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 16px; border: 2px solid rgba(255,255,255,0.2); border-radius: 14px;
+  background: rgba(255,255,255,0.08); color: #fff; cursor: pointer;
+  font-family: 'Fredoka', sans-serif; transition: transform 0.15s, border-color 0.15s;
+}
+.drill-picker-btn:hover { transform: scale(1.03); }
+.drill-picker-math:hover { border-color: #FF6B35; }
+.drill-picker-reading:hover { border-color: #6890F0; }
+.drill-picker-cancel {
+  background: none; border: none; color: rgba(255,255,255,0.5);
+  font-family: 'Fredoka', sans-serif; font-size: 14px; cursor: pointer;
+  padding: 8px;
+}
+
+/* Flash drill overlay */
+.training-drill-overlay {
+  position: absolute; inset: 0; z-index: 200;
+  background: linear-gradient(135deg, #0a0a1a, #1a1a3e);
+  display: flex; flex-direction: column;
+}
+.training-drill-overlay.hidden { display: none; }
+
+.drill-header {
+  padding: 12px 16px;
+}
+.drill-timer-bar {
+  width: 100%; height: 8px; background: rgba(255,255,255,0.15);
+  border-radius: 4px; overflow: hidden;
+}
+.drill-timer-fill {
+  height: 100%; width: 100%; border-radius: 4px;
+  transition: width 1s linear, background 0.3s;
+}
+.drill-stats {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 8px; color: #fff; font-weight: 700;
+}
+.drill-timer-text { font-size: 18px; color: #FFD600; }
+.drill-score { font-size: 16px; }
+.drill-combo { font-size: 16px; color: #FF6B35; transition: transform 0.15s; }
+.drill-combo.on-fire { animation: combo-pulse 0.4s ease infinite; color: #FF4500; }
+@keyframes combo-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Battle area */
+.drill-battle-area {
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; padding: 8px 16px; position: relative;
+  min-height: 100px;
+}
+.drill-pokemon-sprite {
+  width: 80px; height: 80px; image-rendering: pixelated;
+  transition: transform 0.15s;
+}
+.drill-pokemon-sprite.drill-attack {
+  animation: drill-attack 0.3s ease;
+}
+@keyframes drill-attack {
+  0% { transform: translateX(0); }
+  30% { transform: translateX(30px) scale(1.1); }
+  100% { transform: translateX(0); }
+}
+.drill-dummy {
+  font-size: 48px; transition: transform 0.15s;
+}
+.drill-dummy.drill-dummy-hit {
+  animation: dummy-shake 0.3s ease;
+}
+@keyframes dummy-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(8px); }
+  75% { transform: translateX(-8px); }
+}
+.drill-xp-float {
+  position: absolute; right: 20%; top: 10px;
+  color: #FFD600; font-size: 20px; font-weight: 700;
+  animation: xp-float 0.8s ease-out forwards;
+  pointer-events: none;
+}
+@keyframes xp-float {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
+.drill-miss-float {
+  position: absolute; right: 20%; top: 10px;
+  color: #E53935; font-size: 18px; font-weight: 700;
+  animation: xp-float 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+/* Challenge area in drill */
+.drill-challenge-area {
+  flex: 1; overflow-y: auto; padding: 8px 16px 16px;
+  color: #fff;
+}
+.drill-challenge-area .challenge-title { color: #FFD600; }
+.drill-challenge-area .btn-choice {
+  min-height: 52px; font-size: 18px;
+}
+
+/* Countdown */
+.drill-countdown {
+  text-align: center; font-size: 72px; font-weight: 900;
+  color: #FFD600; padding: 40px; animation: countdown-pop 0.5s ease;
+}
+@keyframes countdown-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Results */
+.drill-results {
+  text-align: center; padding: 20px;
+}
+.drill-results-title {
+  font-size: 28px; font-weight: 900; color: #FFD600; margin-bottom: 12px;
+}
+.drill-results-pokemon {
+  margin-bottom: 16px;
+}
+.drill-results-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;
+}
+.drill-stat {
+  background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px;
+}
+.drill-stat-num {
+  display: block; font-size: 24px; font-weight: 900; color: #FFD600;
+}
+.drill-stat-label {
+  font-size: 12px; color: rgba(255,255,255,0.6);
+}
+.drill-results-xp {
+  background: rgba(255,107,53,0.2); border: 2px solid #FF6B35;
+  border-radius: 12px; padding: 12px; margin-bottom: 8px;
+  color: #fff;
+}
+
+/* Evolution overlay */
+.evolution-overlay {
+  position: fixed; inset: 0; z-index: 9000;
+  background: radial-gradient(circle, #1a237e 0%, #000 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.evolution-overlay.hidden { display: none; }
+.evo-animation {
+  text-align: center; padding: 20px; position: relative;
+}
+.evo-text {
+  font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 20px;
+}
+.evo-sprite-area {
+  position: relative; width: 160px; height: 160px; margin: 0 auto;
+}
+.evo-sprite {
+  width: 160px; height: 160px; image-rendering: pixelated;
+  position: absolute; top: 0; left: 0;
+  transition: opacity 0.5s;
+}
+.evo-sprite-hidden { opacity: 0; }
+.evo-pulse {
+  animation: evo-pulse 0.6s ease infinite;
+}
+@keyframes evo-pulse {
+  0%, 100% { filter: brightness(1); transform: scale(1); }
+  50% { filter: brightness(2) saturate(0); transform: scale(1.05); }
+}
+.evo-flash {
+  position: fixed; inset: 0; background: #fff;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.evo-flash-active { opacity: 1; }
+.evo-done-btn {
+  margin-top: 24px; animation: countdown-pop 0.5s ease;
+}

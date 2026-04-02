@@ -7,6 +7,7 @@ const State = {
   xp: 0,
   caught: [],         // array of pokemon IDs
   pokemonHp: {},       // { pokemonId: currentHp } — persistent HP tracker
+  pokemonXp: {},       // { pokemonId: trainingXp } — training XP for evolution
   badges: [],          // array of gym IDs earned
   eliteFourDefeated: [], // array of Elite Four indices defeated
   currentScene: 'title',
@@ -46,7 +47,7 @@ const State = {
 };
 
 // ===== SCENE MANAGEMENT =====
-const MAJOR_SCENES = ['map', 'encounter', 'gym', 'rocket', 'pokecenter', 'lab', 'guide'];
+const MAJOR_SCENES = ['map', 'encounter', 'gym', 'rocket', 'pokecenter', 'lab', 'guide', 'training'];
 
 function showScene(id) {
   const old = document.querySelector('.scene.active');
@@ -189,6 +190,7 @@ function saveState() {
       xp: State.xp,
       caught: State.caught,
       pokemonHp: State.pokemonHp,
+      pokemonXp: State.pokemonXp,
       badges: State.badges,
       eliteFourDefeated: State.eliteFourDefeated,
       settingsLevel: State.settings.level,
@@ -212,6 +214,7 @@ function loadState() {
     if (data.xp != null) State.xp = data.xp;
     if (Array.isArray(data.caught)) State.caught = data.caught;
     if (data.pokemonHp) State.pokemonHp = data.pokemonHp;
+    if (data.pokemonXp) State.pokemonXp = data.pokemonXp;
     if (Array.isArray(data.badges)) State.badges = data.badges;
     if (Array.isArray(data.eliteFourDefeated)) State.eliteFourDefeated = data.eliteFourDefeated;
     if (data.settingsLevel != null) State.settings.level = data.settingsLevel;
