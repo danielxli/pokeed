@@ -846,14 +846,8 @@ function renderChallengeHTML(ch, context) {
     }
 
   } else if (ch.type === 'blendAndRead') {
-    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">Blend the letters to read the word!</div>`;
-    const letters = ch.letters || ch.question.split('');
-    html += `<div class="letter-tiles" style="margin-bottom:14px;">`;
-    letters.forEach((l, i) => {
-      html += `<div class="letter-tile tile-display ${tileColor(i)}" style="font-size:28px;">${l.toUpperCase()}</div>`;
-    });
-    html += `</div>`;
-    if (ch.emoji) html += `<div style="font-size:36px;text-align:center;margin-bottom:10px;">${ch.emoji}</div>`;
+    html += `<div style="font-size:14px;font-weight:600;color:var(--pk-blue,#1565C0);margin-bottom:8px;">What word matches this picture?</div>`;
+    if (ch.emoji) html += `<div style="font-size:64px;text-align:center;margin-bottom:14px;">${ch.emoji}</div>`;
     html += `<div class="challenge-choices">`;
     (ch.choices || []).forEach(c => {
       html += `<button class="btn-choice" style="font-size:17px;" onclick="answerChallenge('${c.replace(/'/g,"\\'")}', '${context}')">${c}</button>`;

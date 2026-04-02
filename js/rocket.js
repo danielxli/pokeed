@@ -51,55 +51,133 @@ function renderRocketPuzzle(type) {
 }
 
 // ===== PATTERNS BY LEVEL =====
-const PATTERNS_BY_LEVEL = {
-  1: [
-    { seq: [1, 2, 3, 4], answer: 5, choices: [5, 6, 4, 7], rule: 'Count up by 1' },
-    { seq: [2, 4, 6, 8], answer: 10, choices: [10, 9, 11, 12], rule: 'Count up by 2' },
-    { seq: [5, 10, 15, 20], answer: 25, choices: [25, 22, 30, 24], rule: 'Count up by 5' },
-    { seq: [10, 20, 30, 40], answer: 50, choices: [50, 45, 55, 48], rule: 'Count up by 10' },
-    { seq: [1, 3, 5, 7], answer: 9, choices: [9, 8, 10, 11], rule: 'Count up by 2' },
-    { seq: [3, 6, 9, 12], answer: 15, choices: [15, 13, 18, 14], rule: 'Count up by 3' },
-  ],
-  2: [
-    { seq: [2, 4, 6, 8], answer: 10, choices: [10, 9, 11, 12], rule: 'Add 2 each time' },
-    { seq: [5, 10, 15, 20], answer: 25, choices: [25, 22, 30, 24], rule: 'Add 5 each time' },
-    { seq: [3, 6, 9, 12], answer: 15, choices: [15, 13, 18, 14], rule: 'Add 3 each time' },
-    { seq: [10, 20, 30, 40], answer: 50, choices: [50, 45, 55, 48], rule: 'Add 10 each time' },
-    { seq: [100, 90, 80, 70], answer: 60, choices: [60, 65, 55, 50], rule: 'Subtract 10 each time' },
-    { seq: [20, 18, 16, 14], answer: 12, choices: [12, 10, 13, 11], rule: 'Subtract 2 each time' },
-    { seq: [4, 8, 12, 16], answer: 20, choices: [20, 18, 22, 24], rule: 'Add 4 each time' },
-  ],
-  3: [
-    { seq: [2, 4, 8, 16], answer: 32, choices: [32, 30, 28, 24], rule: 'Multiply by 2 each time' },
-    { seq: [1, 2, 4, 8], answer: 16, choices: [16, 12, 14, 10], rule: 'Multiply by 2 each time' },
-    { seq: [100, 90, 80, 70], answer: 60, choices: [60, 65, 55, 50], rule: 'Subtract 10 each time' },
-    { seq: [7, 14, 21, 28], answer: 35, choices: [35, 32, 36, 42], rule: 'Add 7 each time' },
-    { seq: [50, 45, 40, 35], answer: 30, choices: [30, 25, 28, 32], rule: 'Subtract 5 each time' },
-    { seq: [11, 22, 33, 44], answer: 55, choices: [55, 50, 66, 48], rule: 'Add 11 each time' },
-    { seq: [1, 4, 7, 10], answer: 13, choices: [13, 12, 14, 11], rule: 'Add 3 each time' },
-    { seq: [3, 9, 27, 81], answer: 243, choices: [243, 162, 108, 200], rule: 'Multiply by 3 each time' },
-  ],
-  4: [
-    { seq: [1, 1, 2, 3, 5], answer: 8, choices: [8, 7, 6, 9], rule: 'Add the two previous numbers (Fibonacci)' },
-    { seq: [2, 6, 18, 54], answer: 162, choices: [162, 108, 150, 200], rule: 'Multiply by 3 each time' },
-    { seq: [1, 4, 9, 16], answer: 25, choices: [25, 20, 24, 36], rule: 'Square numbers: 1², 2², 3², 4², 5²' },
-    { seq: [256, 128, 64, 32], answer: 16, choices: [16, 8, 24, 12], rule: 'Divide by 2 each time' },
-    { seq: [2, 3, 5, 7], answer: 11, choices: [11, 9, 10, 13], rule: 'Prime numbers' },
-    { seq: [1, 3, 6, 10], answer: 15, choices: [15, 12, 14, 16], rule: 'Triangle numbers: add 2, 3, 4, 5...' },
-    { seq: [5, 10, 20, 40], answer: 80, choices: [80, 60, 50, 100], rule: 'Multiply by 2 each time' },
-    { seq: [100, 81, 64, 49], answer: 36, choices: [36, 25, 40, 32], rule: 'Square numbers counting down: 10², 9², 8², 7², 6²' },
-  ],
-  5: [
-    { seq: [1, 1, 2, 3, 5, 8], answer: 13, choices: [13, 11, 12, 14], rule: 'Fibonacci: each is sum of previous two' },
-    { seq: [1, 4, 9, 16, 25], answer: 36, choices: [36, 30, 35, 49], rule: 'Perfect squares: n²' },
-    { seq: [1, 8, 27, 64], answer: 125, choices: [125, 100, 81, 216], rule: 'Perfect cubes: n³' },
-    { seq: [2, 3, 5, 7, 11], answer: 13, choices: [13, 12, 14, 15], rule: 'Prime numbers' },
-    { seq: [1, 3, 6, 10, 15], answer: 21, choices: [21, 18, 20, 25], rule: 'Triangle numbers' },
-    { seq: [2, 6, 12, 20, 30], answer: 42, choices: [42, 36, 40, 48], rule: 'n × (n+1): oblong numbers' },
-    { seq: [1024, 512, 256, 128], answer: 64, choices: [64, 32, 96, 48], rule: 'Divide by 2 (powers of 2 descending)' },
-    { seq: [0, 1, 1, 2, 3, 5], answer: 8, choices: [8, 7, 6, 9], rule: 'Fibonacci sequence starting at 0' },
-  ],
-};
+// Dynamic pattern generator — creates unique patterns every time
+function generatePattern(level) {
+  var r = Math.random;
+  function pick(arr) { return arr[Math.floor(r() * arr.length)]; }
+  function distractors(answer, count) {
+    var d = [], offsets = [-3, -2, -1, 1, 2, 3, 5, -5];
+    while (d.length < count) {
+      var off = pick(offsets);
+      var val = answer + off;
+      if (val !== answer && val > 0 && d.indexOf(val) === -1) d.push(val);
+    }
+    return d;
+  }
+  function shuffleArr(a) { var b = a.slice(); for (var i = b.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)); var t = b[i]; b[i] = b[j]; b[j] = t; } return b; }
+  function makePattern(seq, answer, rule) {
+    var d = distractors(answer, 3);
+    return { seq: seq, answer: answer, choices: shuffleArr([answer].concat(d)), rule: rule };
+  }
+
+  // Level 1: simple counting up
+  if (level <= 1) {
+    var step = pick([1, 2, 3, 5, 10]);
+    var start = step === 1 ? Math.floor(r() * 10) + 1 : step === 10 ? pick([10, 20, 30]) : Math.floor(r() * 5) + 1;
+    var seq = []; for (var i = 0; i < 4; i++) seq.push(start + step * i);
+    return makePattern(seq, start + step * 4, 'Count up by ' + step);
+  }
+  // Level 2: add or subtract
+  if (level === 2) {
+    var isAdd = r() < 0.65;
+    var step = pick([2, 3, 4, 5, 10]);
+    if (isAdd) {
+      var start = Math.floor(r() * 10) + 1;
+      var seq = []; for (var i = 0; i < 4; i++) seq.push(start + step * i);
+      return makePattern(seq, start + step * 4, 'Add ' + step + ' each time');
+    } else {
+      var start = step * (Math.floor(r() * 4) + 6);
+      var seq = []; for (var i = 0; i < 4; i++) seq.push(start - step * i);
+      return makePattern(seq, start - step * 4, 'Subtract ' + step + ' each time');
+    }
+  }
+  // Level 3: add, subtract, or multiply by 2/3
+  if (level === 3) {
+    var type = pick(['add', 'sub', 'mul']);
+    if (type === 'add') {
+      var step = pick([3, 4, 6, 7, 8, 9, 11, 12]);
+      var start = Math.floor(r() * 10) + 1;
+      var seq = []; for (var i = 0; i < 4; i++) seq.push(start + step * i);
+      return makePattern(seq, start + step * 4, 'Add ' + step + ' each time');
+    } else if (type === 'sub') {
+      var step = pick([5, 10, 15]);
+      var start = step * (Math.floor(r() * 3) + 7);
+      var seq = []; for (var i = 0; i < 4; i++) seq.push(start - step * i);
+      return makePattern(seq, start - step * 4, 'Subtract ' + step + ' each time');
+    } else {
+      var mult = pick([2, 3]);
+      var start = mult === 2 ? pick([1, 2, 3]) : pick([1, 2, 3]);
+      var seq = [start]; for (var i = 1; i < 4; i++) seq.push(seq[i - 1] * mult);
+      return makePattern(seq, seq[3] * mult, 'Multiply by ' + mult + ' each time');
+    }
+  }
+  // Level 4: multiply, squares, triangles, Fibonacci
+  if (level === 4) {
+    var type = pick(['mul', 'square', 'triangle', 'fib', 'div']);
+    if (type === 'mul') {
+      var mult = pick([2, 3, 4]);
+      var start = pick([2, 3, 5]);
+      var seq = [start]; for (var i = 1; i < 4; i++) seq.push(seq[i - 1] * mult);
+      return makePattern(seq, seq[3] * mult, 'Multiply by ' + mult + ' each time');
+    } else if (type === 'square') {
+      var offset = Math.floor(r() * 5) + 1;
+      var seq = []; for (var i = 0; i < 4; i++) seq.push((offset + i) * (offset + i));
+      var ans = (offset + 4) * (offset + 4);
+      return makePattern(seq, ans, 'Perfect squares');
+    } else if (type === 'triangle') {
+      var offset = Math.floor(r() * 4) + 1;
+      var seq = []; var sum = 0; for (var i = offset; i < offset + 4; i++) { sum += i; seq.push(sum); }
+      return makePattern(seq, sum + offset + 4, 'Add one more each time');
+    } else if (type === 'fib') {
+      var a = pick([1, 2, 3]), b = pick([1, 2, 3]);
+      var seq = [a, b]; for (var i = 2; i < 5; i++) seq.push(seq[i - 1] + seq[i - 2]);
+      return makePattern(seq, seq[3] + seq[4], 'Add the two previous numbers');
+    } else {
+      var div = pick([2, 4]);
+      var start = div === 2 ? pick([128, 256, 512]) : pick([256, 1024]);
+      var seq = [start]; for (var i = 1; i < 4; i++) seq.push(seq[i - 1] / div);
+      return makePattern(seq, seq[3] / div, 'Divide by ' + div + ' each time');
+    }
+  }
+  // Level 5: advanced sequences
+  var type = pick(['cube', 'fib', 'square', 'oblong', 'power', 'triangle']);
+  if (type === 'cube') {
+    var offset = Math.floor(r() * 3) + 1;
+    var seq = []; for (var i = 0; i < 4; i++) seq.push(Math.pow(offset + i, 3));
+    return makePattern(seq, Math.pow(offset + 4, 3), 'Perfect cubes: n³');
+  } else if (type === 'fib') {
+    var a = pick([0, 1, 2]), b = pick([1, 2, 3]);
+    var seq = [a, b]; for (var i = 2; i < 5; i++) seq.push(seq[i - 1] + seq[i - 2]);
+    return makePattern(seq.slice(0, 5), seq[3] + seq[4], 'Each number is the sum of the two before it');
+  } else if (type === 'square') {
+    var desc = r() < 0.5;
+    var start = desc ? Math.floor(r() * 4) + 7 : Math.floor(r() * 5) + 1;
+    var seq = []; for (var i = 0; i < 5; i++) { var n = desc ? start - i : start + i; seq.push(n * n); }
+    return makePattern(seq, (desc ? start - 5 : start + 5) * (desc ? start - 5 : start + 5), 'Perfect squares');
+  } else if (type === 'oblong') {
+    var offset = Math.floor(r() * 4) + 1;
+    var seq = []; for (var i = offset; i < offset + 4; i++) seq.push(i * (i + 1));
+    return makePattern(seq, (offset + 4) * (offset + 5), 'n × (n+1): oblong numbers');
+  } else if (type === 'power') {
+    var base = pick([2, 3]);
+    var startExp = pick([0, 1]);
+    var seq = []; for (var i = 0; i < 4; i++) seq.push(Math.pow(base, startExp + i));
+    return makePattern(seq, Math.pow(base, startExp + 4), 'Powers of ' + base);
+  } else {
+    var offset = Math.floor(r() * 4) + 1;
+    var seq = []; var sum = 0; for (var i = offset; i < offset + 5; i++) { sum += i; seq.push(sum); }
+    return makePattern(seq, sum + offset + 5, 'Triangle numbers');
+  }
+}
+
+// Proxy for legacy access — generates a fresh pattern each time
+const PATTERNS_BY_LEVEL = new Proxy({}, {
+  get(_, level) {
+    var lvl = parseInt(level);
+    if (lvl >= 1 && lvl <= 5) return [generatePattern(lvl)];
+    return [generatePattern(3)];
+  }
+});
 
 function renderPatternPuzzle(content) {
   document.getElementById('puzzle-timer-wrap').classList.remove('hidden');
