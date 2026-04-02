@@ -1042,12 +1042,12 @@ const GYMS = [
 
 // ===== ELITE FOUR + CHAMPION =====
 const ELITE_FOUR = [
-  { idx: 0, name: 'Lorelei', title: 'Elite Four',  type: 'Ice',      icon: '❄️', color: '#7AC5CD', spriteId: 131, difficulty: 10, hpMult: 1.5,  quote: "No one can best me when it comes to icy Pokémon!" },
-  { idx: 1, name: 'Bruno',   title: 'Elite Four',  type: 'Fighting',  icon: '💪', color: '#C03028', spriteId: 68,  difficulty: 11, hpMult: 1.5,  quote: "My Fighting Pokémon are the strongest!" },
-  { idx: 2, name: 'Agatha',  title: 'Elite Four',  type: 'Ghost',     icon: '👻', color: '#705898', spriteId: 94,  difficulty: 12, hpMult: 1.5,  quote: "I'll show you how a real trainer battles!" },
-  { idx: 3, name: 'Lance',   title: 'Elite Four',  type: 'Dragon',    icon: '🐉', color: '#7038F8', spriteId: 149, difficulty: 13, hpMult: 1.75, quote: "You dare challenge the Dragon Master?" },
-  { idx: 4, name: 'Blue',    title: 'Champion',     type: 'Psychic',   icon: '👑', color: '#DAA520', spriteId: 150, difficulty: 14, hpMult: 2.0,  quote: "I am the Pokémon Champion! You'll never beat me!" },
-  { idx: 5, name: 'Ash',     title: 'Grand Master',  type: 'Fire',      icon: '🔥', color: '#FF4500', spriteId: 6,   difficulty: 15, hpMult: 2.5,  quote: "I've traveled every region and never lost! Let's see what you've got!" },
+  { idx: 0, name: 'Lorelei', title: 'Elite Four',  type: 'Ice',      icon: '❄️', color: '#7AC5CD', spriteId: 131, difficulty: 10, hpMult: 1.5,  img: 'assets/elite-lorelei.webp', quote: "No one can best me when it comes to icy Pokémon!" },
+  { idx: 1, name: 'Bruno',   title: 'Elite Four',  type: 'Fighting',  icon: '💪', color: '#C03028', spriteId: 68,  difficulty: 11, hpMult: 1.5,  img: 'assets/elite-bruno.webp',   quote: "My Fighting Pokémon are the strongest!" },
+  { idx: 2, name: 'Agatha',  title: 'Elite Four',  type: 'Ghost',     icon: '👻', color: '#705898', spriteId: 94,  difficulty: 12, hpMult: 1.5,  img: 'assets/elite-agatha.webp',  quote: "I'll show you how a real trainer battles!" },
+  { idx: 3, name: 'Lance',   title: 'Elite Four',  type: 'Dragon',    icon: '🐉', color: '#7038F8', spriteId: 149, difficulty: 13, hpMult: 1.75, img: 'assets/elite-lance.webp',   quote: "You dare challenge the Dragon Master?" },
+  { idx: 4, name: 'Blue',    title: 'Champion',     type: 'Psychic',   icon: '👑', color: '#DAA520', spriteId: 150, difficulty: 14, hpMult: 2.0,  img: 'assets/elite-blue.webp',    quote: "I am the Pokémon Champion! You'll never beat me!" },
+  { idx: 5, name: 'Ash',     title: 'Grand Master',  type: 'Fire',      icon: '🔥', color: '#FF4500', spriteId: 6,   difficulty: 15, hpMult: 2.5,  img: 'assets/trainer-ash.webp',   quote: "I've traveled every region and never lost! Let's see what you've got!" },
 ];
 
 // ===== TEAM ROCKET DIALOGUES =====

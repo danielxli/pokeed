@@ -94,7 +94,9 @@ function renderGymList() {
       card.style.borderColor = defeated ? '#FFD600' : member.color;
 
       card.innerHTML = `
-        <div class="elite-four-icon" style="background:${member.color}">${member.icon}</div>
+        ${member.img
+          ? `<img class="gym-leader-portrait" src="${member.img}" alt="${member.name}" style="border-color:${member.color}">`
+          : `<div class="elite-four-icon" style="background:${member.color}">${member.icon}</div>`}
         <div class="gym-leader-name">${member.name}</div>
         <div class="elite-four-title-badge">${member.title}</div>
         <div class="gym-type-badge" style="background:${member.color}">${member.icon} ${member.type}</div>
@@ -650,7 +652,7 @@ function eliteFourVictory() {
         // Ash / Grand Master victory — ultimate celebration
         result.innerHTML = `
           <div class="result-title champion-victory-title">🔥 GRAND MASTER! 🔥</div>
-          <div class="champion-crown">🏆</div>
+          ${member.img ? `<img src="${member.img}" alt="${member.name}" style="width:96px;height:96px;border-radius:50%;border:3px solid #FFD700;margin:8px auto;display:block;">` : `<div class="champion-crown">🏆</div>`}
           <div class="result-desc" style="font-size:22px;color:#FFD700;">You defeated <strong>Ash</strong> and became the <strong>Grand Pokémon Master</strong>!</div>
           <div style="color:rgba(255,255,255,0.8);font-size:16px;margin-top:8px;">Ash: "Wow... you really are the very best! I'm proud of you!"</div>
           <div style="margin-top:14px;padding:12px 18px;background:rgba(255,68,0,0.2);border:2px solid #FF4500;border-radius:12px;color:#FFD700;font-size:17px;font-weight:700;text-align:center;">
@@ -662,7 +664,7 @@ function eliteFourVictory() {
         // Blue / Champion victory screen
         result.innerHTML = `
           <div class="result-title champion-victory-title">👑 CHAMPION! 👑</div>
-          <div class="champion-crown">🏆</div>
+          ${member.img ? `<img src="${member.img}" alt="${member.name}" style="width:96px;height:96px;border-radius:50%;border:3px solid #FFD700;margin:8px auto;display:block;">` : `<div class="champion-crown">🏆</div>`}
           <div class="result-desc" style="font-size:22px;color:#FFD700;">You defeated ${member.name} and became the <strong>Pokémon Champion</strong>!</div>
           <div style="color:rgba(255,255,255,0.8);font-size:16px;margin-top:8px;">${member.name}: "Incredible... you truly are the greatest trainer!"</div>
           <div style="margin-top:14px;padding:12px 18px;background:rgba(255,215,0,0.2);border:2px solid #FFD700;border-radius:12px;color:#FFD700;font-size:17px;font-weight:700;text-align:center;">
@@ -678,7 +680,7 @@ function eliteFourVictory() {
           : '';
         result.innerHTML = `
           <div class="result-title">🏆 Victory! 🏆</div>
-          <div style="font-size:64px;margin:8px 0;">${member.icon}</div>
+          ${member.img ? `<img src="${member.img}" alt="${member.name}" style="width:80px;height:80px;border-radius:50%;border:3px solid ${member.color};margin:8px auto;display:block;">` : `<div style="font-size:64px;margin:8px 0;">${member.icon}</div>`}
           <div class="result-desc">You defeated <strong>${member.title} ${member.name}</strong>!</div>
           <div style="color:rgba(255,255,255,0.8);font-size:16px;">${member.name}: "You are stronger than I expected!"</div>
           ${nextMsg ? `<div style="margin-top:14px;padding:12px 18px;background:rgba(255,215,0,0.2);border:2px solid #FFD700;border-radius:12px;color:#FFD700;font-size:17px;font-weight:700;text-align:center;">${nextMsg}</div>` : ''}
@@ -709,7 +711,7 @@ function eliteFourDefeat() {
       result.style.background = 'rgba(0,0,0,0.5)';
       result.innerHTML = `
         <div class="result-title">💔 Defeated!</div>
-        <div style="font-size:64px;margin:8px 0;">${member.icon}</div>
+        ${member.img ? `<img src="${member.img}" alt="${member.name}" style="width:80px;height:80px;border-radius:50%;border:3px solid ${member.color};margin:8px auto;display:block;">` : `<div style="font-size:64px;margin:8px 0;">${member.icon}</div>`}
         <div style="font-size:40px">😔</div>
         <div class="result-desc">${member.name}: "You'll need to train harder to beat the ${member.title}!"</div>
         <div style="color:rgba(255,255,255,0.7);font-size:14px;margin-top:8px;">🏥 Visit the Pokémon Center to heal your Pokémon!</div>
