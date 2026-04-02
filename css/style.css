@@ -740,10 +740,16 @@ html, body {
 }
 .elite-four-card {
   border: 3px solid;
-  background: linear-gradient(135deg, var(--pk-card), rgba(50,30,80,0.15));
+  background: linear-gradient(135deg, var(--pk-card), #e8dff5);
+}
+.elite-four-card.locked {
+  background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(200,190,220,0.3));
 }
 .champion-card {
-  background: linear-gradient(135deg, var(--pk-card), rgba(218,165,32,0.15));
+  background: linear-gradient(135deg, var(--pk-card), #faf0d0);
+}
+.champion-card.locked {
+  background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(218,165,32,0.2));
 }
 .champion-card:not(.locked):not(.completed) {
   animation: champion-glow 2s ease-in-out infinite;
