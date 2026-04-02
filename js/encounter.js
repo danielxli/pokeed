@@ -438,7 +438,7 @@ function renderChallengeHTML(ch, context) {
     potionMixer: '\ud83e\uddea Potion Mixer', sightWordScramble: '\ud83d\udd24 Sight Word',
     storySequence: '\ud83d\udcd6 Story Sequence', coinCounter: '\ud83e\ude99 Coin Counter',
     missingNumber: '\u2753 Missing Number', typeAdvantageQuiz: '\u2694\ufe0f Type Quiz',
-    multiPowerup: '\ud83d\udcaa Multiply',
+    multiPowerup: '\ud83d\udcaa Multiply', timesTable: '✖️ Times Tables',
     readingPassage: '\ud83d\udcda Reading Quest',
     breederFractions: '\ud83e\udd5a Fractions', geographyExplorer: '\ud83d\uddfa\ufe0f Geography',
     scienceLab: '\ud83d\udd2c Science Lab',

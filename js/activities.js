@@ -2034,7 +2034,80 @@ function genMultiplicationPowerup(difficulty) {
 }
 
 // ---------------------------------------------------------------------------
-// 19. genReadingPassageQuiz — Reading comprehension with passage
+// 19. genTimesTable — Focused times table drill
+// ---------------------------------------------------------------------------
+function genTimesTable(difficulty) {
+  difficulty = difficulty || 2;
+
+  // Which tables to drill per difficulty level
+  const tablesForLevel = {
+    2: [2, 5, 10],
+    3: [2, 3, 4, 5, 10],
+    4: [2, 3, 4, 5, 6, 7, 8, 9],
+    5: [3, 4, 6, 7, 8, 9, 11, 12],
+  };
+  const tables = tablesForLevel[difficulty] || tablesForLevel[3];
+  const table = randItem(tables);
+
+  // Pick which multiplier (1-12)
+  const maxMult = difficulty <= 2 ? 10 : 12;
+  const mult = 1 + Math.floor(Math.random() * maxMult);
+  const product = table * mult;
+
+  // Randomly pick a question format
+  const formats = ['forward'];
+  if (difficulty >= 3) formats.push('reverse', 'missing');
+  const format = randItem(formats);
+
+  if (format === 'reverse') {
+    // "What is __ ÷ table?" (division as inverse of times table)
+    const qText = `${product} ÷ ${table} = ?`;
+    const answer = mult;
+    const wrongs = wrongNumbers(answer, 3, Math.max(3, Math.ceil(answer / 2)));
+    return {
+      type: 'timesTable',
+      question: qText,
+      answer: String(answer),
+      choices: buildChoices(answer, wrongs.map(String)),
+      hint: `Think: ${table} × ? = ${product}`,
+      table, mult, product,
+    };
+  }
+
+  if (format === 'missing') {
+    // "? × mult = product" or "table × ? = product"
+    const missingFirst = Math.random() < 0.5;
+    const missing = missingFirst ? table : mult;
+    const shown = missingFirst ? mult : table;
+    const qText = missingFirst
+      ? `? × ${shown} = ${product}`
+      : `${shown} × ? = ${product}`;
+    const wrongs = wrongNumbers(missing, 3, Math.max(3, Math.ceil(missing / 2)));
+    return {
+      type: 'timesTable',
+      question: qText,
+      answer: String(missing),
+      choices: buildChoices(missing, wrongs.map(String)),
+      hint: `What times ${shown} equals ${product}?`,
+      table, mult, product,
+    };
+  }
+
+  // Default: forward "table × mult = ?"
+  const qText = `${table} × ${mult} = ?`;
+  const wrongs = wrongNumbers(product, 3, Math.max(3, table + mult));
+  return {
+    type: 'timesTable',
+    question: qText,
+    answer: String(product),
+    choices: buildChoices(product, wrongs.map(String)),
+    hint: `Add ${table} together ${mult} times!`,
+    table, mult, product,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 20. genReadingPassageQuiz — Reading comprehension with passage
 // ---------------------------------------------------------------------------
 function genReadingPassageQuiz(difficulty) {
   difficulty = difficulty || 4;
@@ -3512,6 +3585,7 @@ const ACTIVITY_REGISTRY = {
   coinCounter:       { name: 'Coin Counter',        icon: '🪙', levels: [3, 4, 5],    skill: 'math',      generator: genCoinCounter },
   missingNumber:     { name: 'Missing Number',      icon: '❓', levels: [2, 3, 4],    skill: 'math',      generator: genMissingNumber },
   multiPowerup:      { name: 'Multiply Power-Up',   icon: '💪', levels: [4, 5],       skill: 'math',      generator: genMultiplicationPowerup },
+  timesTable:        { name: 'Times Tables',        icon: '✖️', levels: [2, 3, 4, 5], skill: 'math',      generator: genTimesTable },
   breederFractions:  { name: 'Breeder Fractions',   icon: '🥚', levels: [5],          skill: 'math',      generator: genBreederFractions },
   numberBond:        { name: 'Number Bond',         icon: '🔗', levels: [1, 2, 3, 4, 5], skill: 'math',  generator: genNumberBond },
   makeTen:           { name: 'Make 10',             icon: '🎯', levels: [2, 3, 4, 5],    skill: 'math',  generator: genMakeTen },
