@@ -180,33 +180,36 @@ window.checkPatternAnswer = function(choice) {
 
 // ===== WORD SEARCH (shared renderer — used by Pokemon Center) =====
 // Word sets by level with scaling grid size
-const WS_WORDS_BY_LEVEL = {
-  1: [
-    { words: ['CAT', 'DOG', 'SUN'], gridSize: 6 },
-    { words: ['RUN', 'BIG', 'RED'], gridSize: 6 },
-    { words: ['HAT', 'CUP', 'PIG'], gridSize: 6 },
-  ],
-  2: [
-    { words: ['FIRE', 'RAIN', 'TREE'], gridSize: 6 },
-    { words: ['FISH', 'BIRD', 'SWIM'], gridSize: 6 },
-    { words: ['BOOK', 'PLAY', 'JUMP'], gridSize: 6 },
-  ],
-  3: [
-    { words: ['WATER', 'GRASS', 'STONE', 'FLAME'], gridSize: 8 },
-    { words: ['LIGHT', 'EARTH', 'CLOUD', 'STORM'], gridSize: 8 },
-    { words: ['TRAIN', 'BADGE', 'POWER', 'CATCH'], gridSize: 8 },
-  ],
-  4: [
-    { words: ['BATTLE', 'ENERGY', 'SHIELD', 'STRIKE'], gridSize: 8 },
-    { words: ['DRAGON', 'SPIRIT', 'MASTER', 'FLYING'], gridSize: 8 },
-    { words: ['ATTACK', 'DEFEND', 'EVOLVE', 'ABSORB'], gridSize: 8 },
-  ],
-  5: [
-    { words: ['POKEMON', 'THUNDER', 'PSYCHIC', 'TRAINER'], gridSize: 10 },
-    { words: ['PIKACHU', 'CHARIZD', 'MONSTER', 'ELEMENT'], gridSize: 10 },
-    { words: ['SPECIAL', 'PROTECT', 'ANCIENT', 'VOLCANO'], gridSize: 10 },
-  ],
+// Word pools per level — word sets are randomly generated each time
+const WS_WORD_POOLS = {
+  1: { pool: ['CAT','DOG','SUN','RUN','BIG','RED','HAT','CUP','PIG','BAT','BUS','MAP','PEN','BED','HOP','SIT','MOP','FAN','JAM','WET','HOT','TOP','LOG','MUD','BUG','ANT','HEN','COW','FOX','OWL','FIN','PAW','FUR','EGG','NET','JAR','BOX','DIG','HUG','NAP','ZIP','WAX','YAK','GUM','JOG','DEN','RUG','TUB','VAN','WIG'], count: 3, gridSize: 6 },
+  2: { pool: ['FIRE','RAIN','TREE','FISH','BIRD','SWIM','BOOK','PLAY','JUMP','FROG','LAKE','NEST','SEED','WAVE','ROCK','SAND','MOON','STAR','WIND','BEAR','DEER','CRAB','FERN','VINE','CAVE','HILL','BOLT','GLOW','POKE','BALL','HEAL','RING','BELL','DRUM','LEAF','BARK','POND','SURF','DIVE','SING','PUFF','CLAM','TAIL','CLAW','HORN','WING','BEAM','MIST','HAZE','GUST'], count: 3, gridSize: 6 },
+  3: { pool: ['WATER','GRASS','STONE','FLAME','LIGHT','EARTH','CLOUD','STORM','TRAIN','BADGE','POWER','CATCH','OCEAN','RIVER','MOUNT','PLANT','SPEED','GHOST','FAIRY','STEEL','MOUSE','SNAKE','SHELL','BERRY','ROUTE','TOWER','QUEST','SKILL','SPARK','FROST','SLEEP','CHARM','FLARE','SWIFT','BRAVE','SHARP','TOUGH','ROUND','TOXIC','SUNNY','EMBER','SLASH','POUND','GROWL','GUARD','FOCUS','PUNCH','PULSE','RAPID','BLADE'], count: 4, gridSize: 8 },
+  4: { pool: ['BATTLE','ENERGY','SHIELD','STRIKE','DRAGON','SPIRIT','MASTER','FLYING','ATTACK','DEFEND','EVOLVE','ABSORB','POISON','GROUND','NORMAL','SAFARI','TUNNEL','BRIDGE','ISLAND','CANYON','FOREST','FROZEN','ROCKET','LEADER','SWITCH','SPLASH','TACKLE','POISON','VORTEX','RIPPLE','FLURRY','QUARTZ','BREEZE','MAGNET','SHADOW','MIRROR','RESCUE','PATROL','RANGER','TRAVEL','MYTHIC','LEGEND','DIVINE','TROPHY','HARBOR','METEOR','STREAM','MEADOW','SUMMIT','TEMPLE'], count: 4, gridSize: 8 },
+  5: { pool: ['POKEMON','THUNDER','PSYCHIC','TRAINER','PIKACHU','MONSTER','ELEMENT','SPECIAL','PROTECT','ANCIENT','VOLCANO','ELECTRIC','FIGHTER','BOULDER','CASCADE','RAINBOW','POKEDEX','CAPTURE','DIAMOND','CRYSTAL','MYSTERY','JOURNEY','DESTINY','COURAGE','BALANCE','RESOLVE','WILDFIRE','BLIZZARD','CURRENT','CYCLONE','GRANITE','TITANIUM','SCARLET','CRIMSON','EMERALD','SAPPHIRE','CIRCUIT','HARMONY','PHOENIX','ECLIPSE','GLACIER','TORNADO','LEAFEON','FLAREON','VAPOREO','JOLTEON','ESPEON','UMBREON','EEVEE','SNORLAX'], count: 4, gridSize: 10 },
 };
+
+// Dynamically generate a word set by picking random words from the pool
+function generateWordSet(level) {
+  const config = WS_WORD_POOLS[level] || WS_WORD_POOLS[3];
+  const pool = [...config.pool];
+  const words = [];
+  const count = config.count;
+  while (words.length < count && pool.length > 0) {
+    const idx = Math.floor(Math.random() * pool.length);
+    words.push(pool.splice(idx, 1)[0]);
+  }
+  return { words, gridSize: config.gridSize };
+}
+
+// Legacy accessor — returns array with one dynamically generated set
+const WS_WORDS_BY_LEVEL = new Proxy({}, {
+  get(_, level) {
+    const lvl = parseInt(level);
+    if (lvl >= 1 && lvl <= 5) return [generateWordSet(lvl)];
+    return [generateWordSet(3)];
+  }
+});
 
 // Shared word search state — used by both rocket (legacy) and pokecenter
 const WordSearchState = {
