@@ -59,8 +59,7 @@ function renderGymList() {
       ${earned ? `<div class="gym-earned-row">
         <img class="gym-badge-icon" src="${gym.badge}" alt="${gym.name}">
         <span class="gym-earned-label">Badge Earned!</span>
-      </div>
-      <div class="gym-status" style="color:${gym.color}">⚔️ Rematch!</div>` : `<div class="gym-status" style="color:${locked ? '#999' : gym.color}">
+      </div>` : `<div class="gym-status" style="color:${locked ? '#999' : gym.color}">
         ${locked ? '🔒 Complete Previous Gym' : '⚔️ Challenge!'}
       </div>`}
     `;
@@ -102,8 +101,7 @@ function renderGymList() {
         ${defeated ? `<div class="gym-earned-row">
           <span style="font-size:28px;">${isFinalBoss ? '🔥' : isChampion ? '👑' : '🏆'}</span>
           <span class="gym-earned-label">${isFinalBoss ? 'Grand Master Defeated!' : isChampion ? 'Champion Defeated!' : 'Defeated!'}</span>
-        </div>
-        <div class="gym-status" style="color:${member.color}">⚔️ Rematch!</div>` : `<div class="gym-status" style="color:${locked ? '#999' : member.color}">
+        </div>` : `<div class="gym-status" style="color:${locked ? '#999' : member.color}">
           ${locked ? '🔒 Defeat Previous Challenger' : '⚔️ Challenge!'}
         </div>`}
       `;
