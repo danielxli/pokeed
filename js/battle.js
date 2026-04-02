@@ -83,7 +83,13 @@ function renderGymList() {
     `;
     list.appendChild(header);
 
-    ELITE_FOUR.forEach((member, i) => {
+    // Elite Four members (idx 0-3)
+    const eliteMembers = ELITE_FOUR.filter(m => m.title === 'Elite Four');
+    const champion = ELITE_FOUR.find(m => m.title === 'Champion');
+    const grandMaster = ELITE_FOUR.find(m => m.title === 'Grand Master');
+
+    function renderEliteCard(member) {
+      const i = member.idx;
       const defeated = State.eliteFourDefeated.includes(i);
       const locked = i > 0 && !State.eliteFourDefeated.includes(i - 1);
       const isFinalBoss = member.title === 'Grand Master';
@@ -110,8 +116,36 @@ function renderGymList() {
       if (!locked) {
         card.addEventListener('click', () => startEliteFourBattle(i));
       }
-      list.appendChild(card);
-    });
+      return card;
+    }
+
+    eliteMembers.forEach(m => list.appendChild(renderEliteCard(m)));
+
+    // Champion section (Blue)
+    if (champion) {
+      const champHeader = document.createElement('div');
+      champHeader.className = 'elite-four-header';
+      champHeader.innerHTML = `
+        <div class="elite-four-divider"></div>
+        <div class="elite-four-title">👑 The Champion</div>
+        <div class="elite-four-subtitle">Defeat the Elite Four to face the Champion!</div>
+      `;
+      list.appendChild(champHeader);
+      list.appendChild(renderEliteCard(champion));
+    }
+
+    // Grand Master section (Ash)
+    if (grandMaster) {
+      const ashHeader = document.createElement('div');
+      ashHeader.className = 'elite-four-header';
+      ashHeader.innerHTML = `
+        <div class="elite-four-divider"></div>
+        <div class="elite-four-title">🔥 The Grand Master</div>
+        <div class="elite-four-subtitle">The ultimate battle awaits the true Champion!</div>
+      `;
+      list.appendChild(ashHeader);
+      list.appendChild(renderEliteCard(grandMaster));
+    }
   } else {
     // Teaser when not all badges earned
     const teaser = document.createElement('div');
