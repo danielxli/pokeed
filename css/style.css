@@ -719,6 +719,71 @@ html, body {
 .gym-type { font-size: 14px; font-weight: 600; color: #666; }
 .gym-status { font-size: 13px; font-weight: 600; margin-top: 6px; }
 
+/* Elite Four Section */
+.elite-four-header {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 12px 0 4px;
+}
+.elite-four-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255,215,0,0.6), transparent);
+  margin-bottom: 12px;
+}
+.elite-four-title {
+  font-size: 24px; font-weight: 700; color: #FFD700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+  letter-spacing: 1px;
+}
+.elite-four-subtitle {
+  font-size: 14px; color: rgba(255,255,255,0.7); margin-top: 2px;
+}
+.elite-four-card {
+  border: 3px solid;
+  background: linear-gradient(135deg, var(--pk-card), rgba(50,30,80,0.15));
+}
+.champion-card {
+  background: linear-gradient(135deg, var(--pk-card), rgba(218,165,32,0.15));
+}
+.champion-card:not(.locked):not(.completed) {
+  animation: champion-glow 2s ease-in-out infinite;
+}
+@keyframes champion-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(218,165,32,0.3); }
+  50% { box-shadow: 0 0 20px rgba(218,165,32,0.6); }
+}
+.elite-four-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin: 0 auto 6px;
+  border: 3px solid rgba(255,255,255,0.3);
+}
+.elite-four-title-badge {
+  font-size: 11px; font-weight: 700; color: #999;
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;
+}
+.elite-four-teaser {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 8px 0;
+}
+.elite-four-teaser-text {
+  font-size: 16px; color: rgba(255,255,255,0.5); font-weight: 600;
+  padding: 16px; border-radius: var(--pk-radius);
+  background: rgba(0,0,0,0.2); border: 2px dashed rgba(255,215,0,0.3);
+}
+.champion-victory-title {
+  font-size: 48px !important; color: #FFD700 !important;
+  animation: champion-pulse 1s ease-in-out infinite alternate;
+}
+@keyframes champion-pulse {
+  from { transform: scale(1); text-shadow: 3px 3px 0 rgba(0,0,0,0.4); }
+  to { transform: scale(1.05); text-shadow: 3px 3px 10px rgba(218,165,32,0.6); }
+}
+.champion-crown {
+  font-size: 80px; animation: bounceIn 0.5s;
+}
+
 /* Battle Arena */
 .gym-battle { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: var(--sp-sm); }
 .battle-trainer-name { font-size: 14px; font-weight: 700; color: var(--pk-yellow); margin-bottom: 2px; }

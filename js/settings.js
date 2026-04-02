@@ -74,6 +74,7 @@ Game.executeReset = function() {
   State.caught = [];
   State.pokemonHp = {};
   State.badges = [];
+  State.eliteFourDefeated = [];
   State.settings.level = 3;
   State.streak = null;
   State.evolution = null;

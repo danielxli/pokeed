@@ -8,6 +8,7 @@ const State = {
   caught: [],         // array of pokemon IDs
   pokemonHp: {},       // { pokemonId: currentHp } — persistent HP tracker
   badges: [],          // array of gym IDs earned
+  eliteFourDefeated: [], // array of Elite Four indices defeated
   currentScene: 'title',
   settings: {
     level: 3,         // default = 1st Grade / "Junior Trainer"
@@ -186,6 +187,7 @@ function saveState() {
       caught: State.caught,
       pokemonHp: State.pokemonHp,
       badges: State.badges,
+      eliteFourDefeated: State.eliteFourDefeated,
       settingsLevel: State.settings.level,
       evolution: State.evolution || null,
       streak: State.streak || null,
@@ -208,6 +210,7 @@ function loadState() {
     if (Array.isArray(data.caught)) State.caught = data.caught;
     if (data.pokemonHp) State.pokemonHp = data.pokemonHp;
     if (Array.isArray(data.badges)) State.badges = data.badges;
+    if (Array.isArray(data.eliteFourDefeated)) State.eliteFourDefeated = data.eliteFourDefeated;
     if (data.settingsLevel != null) State.settings.level = data.settingsLevel;
     if (data.evolution) State.evolution = data.evolution;
     if (data.streak) State.streak = data.streak;

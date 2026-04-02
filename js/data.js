@@ -1040,6 +1040,15 @@ const GYMS = [
   { id: 7, name: 'Earth Badge',   leader: 'Giovanni', type: 'Ground',   icon: '🌍', color: '#C8A878', spriteId: 112, rounds: 5, difficulty: 8, img: 'assets/leader-giovanni.webp', badge: 'assets/badge-earth.webp' },
 ];
 
+// ===== ELITE FOUR + CHAMPION =====
+const ELITE_FOUR = [
+  { idx: 0, name: 'Lorelei', title: 'Elite Four',  type: 'Ice',      icon: '❄️', color: '#7AC5CD', spriteId: 131, difficulty: 10, hpMult: 1.5,  quote: "No one can best me when it comes to icy Pokémon!" },
+  { idx: 1, name: 'Bruno',   title: 'Elite Four',  type: 'Fighting',  icon: '💪', color: '#C03028', spriteId: 68,  difficulty: 11, hpMult: 1.5,  quote: "My Fighting Pokémon are the strongest!" },
+  { idx: 2, name: 'Agatha',  title: 'Elite Four',  type: 'Ghost',     icon: '👻', color: '#705898', spriteId: 94,  difficulty: 12, hpMult: 1.5,  quote: "I'll show you how a real trainer battles!" },
+  { idx: 3, name: 'Lance',   title: 'Elite Four',  type: 'Dragon',    icon: '🐉', color: '#7038F8', spriteId: 149, difficulty: 13, hpMult: 1.75, quote: "You dare challenge the Dragon Master?" },
+  { idx: 4, name: 'Blue',    title: 'Champion',     type: 'Psychic',   icon: '👑', color: '#DAA520', spriteId: 150, difficulty: 14, hpMult: 2.0,  quote: "I am the Pokémon Champion! You'll never beat me!" },
+];
+
 // ===== TEAM ROCKET DIALOGUES =====
 const ROCKET_DIALOGUES = [
   { jessie: "Prepare for trouble!", james: "And make it double! We're stealing all the Pokémon! Solve our puzzle to stop us... if you can!" },
