@@ -751,6 +751,19 @@ html, body {
 .champion-card.locked {
   background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(218,165,32,0.2));
 }
+.grand-master-card {
+  background: linear-gradient(135deg, var(--pk-card), #ffe0cc);
+}
+.grand-master-card.locked {
+  background: linear-gradient(135deg, rgba(255,255,255,0.5), rgba(255,69,0,0.15));
+}
+.grand-master-card:not(.locked):not(.completed) {
+  animation: grandmaster-glow 2s ease-in-out infinite;
+}
+@keyframes grandmaster-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(255,69,0,0.3); }
+  50% { box-shadow: 0 0 24px rgba(255,69,0,0.6); }
+}
 .champion-card:not(.locked):not(.completed) {
   animation: champion-glow 2s ease-in-out infinite;
 }

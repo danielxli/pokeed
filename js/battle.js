@@ -88,20 +88,21 @@ function renderGymList() {
     ELITE_FOUR.forEach((member, i) => {
       const defeated = State.eliteFourDefeated.includes(i);
       const locked = i > 0 && !State.eliteFourDefeated.includes(i - 1);
-      const isChampion = member.title === 'Champion';
+      const isFinalBoss = member.title === 'Grand Master';
+      const isChampion = member.title === 'Champion' || isFinalBoss;
       const card = document.createElement('div');
-      card.className = `gym-card elite-four-card ${isChampion ? 'champion-card' : ''} ${defeated ? 'completed' : ''} ${locked ? 'locked' : ''}`;
+      const cardClass = isFinalBoss ? 'grand-master-card' : isChampion ? 'champion-card' : '';
+      card.className = `gym-card elite-four-card ${cardClass} ${defeated ? 'completed' : ''} ${locked ? 'locked' : ''}`;
       card.style.borderColor = defeated ? '#FFD600' : member.color;
 
-      const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${member.spriteId}.png`;
       card.innerHTML = `
         <div class="elite-four-icon" style="background:${member.color}">${member.icon}</div>
         <div class="gym-leader-name">${member.name}</div>
         <div class="elite-four-title-badge">${member.title}</div>
         <div class="gym-type-badge" style="background:${member.color}">${member.icon} ${member.type}</div>
         ${defeated ? `<div class="gym-earned-row">
-          <span style="font-size:28px;">${isChampion ? '👑' : '🏆'}</span>
-          <span class="gym-earned-label">${isChampion ? 'Champion Defeated!' : 'Defeated!'}</span>
+          <span style="font-size:28px;">${isFinalBoss ? '🔥' : isChampion ? '👑' : '🏆'}</span>
+          <span class="gym-earned-label">${isFinalBoss ? 'Grand Master Defeated!' : isChampion ? 'Champion Defeated!' : 'Defeated!'}</span>
         </div>` : `<div class="gym-status" style="color:${locked ? '#999' : member.color}">
           ${locked ? '🔒 Defeat Previous Challenger' : '⚔️ Challenge!'}
         </div>`}
@@ -618,11 +619,12 @@ function eliteFourVictory() {
   SFX.badge();
   const member = State.gym.opponent;
   const memberIdx = State.gym.selected;
-  const isChampion = member.title === 'Champion';
+  const isFinalBoss = member.title === 'Grand Master';
+      const isChampion = member.title === 'Champion' || isFinalBoss;
 
   if (!State.eliteFourDefeated.includes(memberIdx)) {
     State.eliteFourDefeated.push(memberIdx);
-    addXp(isChampion ? 500 : 200);
+    addXp(isFinalBoss ? 1000 : isChampion ? 500 : 200);
   }
   // Save remaining HP to persistent state
   const chosenId = State.gym.chosenPokemon.id;
@@ -648,8 +650,20 @@ function eliteFourVictory() {
 
       const spriteUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${member.spriteId}.png`;
 
-      if (isChampion) {
-        // Special champion victory screen
+      if (isFinalBoss) {
+        // Ash / Grand Master victory — ultimate celebration
+        result.innerHTML = `
+          <div class="result-title champion-victory-title">🔥 GRAND MASTER! 🔥</div>
+          <div class="champion-crown">🏆</div>
+          <div class="result-desc" style="font-size:22px;color:#FFD700;">You defeated <strong>Ash</strong> and became the <strong>Grand Pokémon Master</strong>!</div>
+          <div style="color:rgba(255,255,255,0.8);font-size:16px;margin-top:8px;">Ash: "Wow... you really are the very best! I'm proud of you!"</div>
+          <div style="margin-top:14px;padding:12px 18px;background:rgba(255,68,0,0.2);border:2px solid #FF4500;border-radius:12px;color:#FFD700;font-size:17px;font-weight:700;text-align:center;">
+            🎉 Congratulations, Grand Master ${State.trainerName}! You completed the ultimate challenge! 🎉
+          </div>
+          <button class="btn-primary btn-xl" style="margin-top:20px;background:linear-gradient(135deg,#FF4500,#FFD700);" onclick="Game.goToGym()">Back to Gyms</button>
+        `;
+      } else if (isChampion) {
+        // Blue / Champion victory screen
         result.innerHTML = `
           <div class="result-title champion-victory-title">👑 CHAMPION! 👑</div>
           <div class="champion-crown">🏆</div>
@@ -658,7 +672,7 @@ function eliteFourVictory() {
           <div style="margin-top:14px;padding:12px 18px;background:rgba(255,215,0,0.2);border:2px solid #FFD700;border-radius:12px;color:#FFD700;font-size:17px;font-weight:700;text-align:center;">
             🎉 Congratulations, Champion ${State.trainerName}! 🎉
           </div>
-          <button class="btn-primary btn-xl" style="margin-top:20px;background:linear-gradient(135deg,#DAA520,#FFD700);" onclick="Game.goToGym()">Back to Gyms</button>
+          <button class="btn-primary btn-xl" style="margin-top:20px;background:linear-gradient(135deg,#DAA520,#FFD700);" onclick="Game.goToGym()">Continue</button>
         `;
       } else {
         // Regular Elite Four victory

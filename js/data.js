@@ -1047,6 +1047,7 @@ const ELITE_FOUR = [
   { idx: 2, name: 'Agatha',  title: 'Elite Four',  type: 'Ghost',     icon: '👻', color: '#705898', spriteId: 94,  difficulty: 12, hpMult: 1.5,  quote: "I'll show you how a real trainer battles!" },
   { idx: 3, name: 'Lance',   title: 'Elite Four',  type: 'Dragon',    icon: '🐉', color: '#7038F8', spriteId: 149, difficulty: 13, hpMult: 1.75, quote: "You dare challenge the Dragon Master?" },
   { idx: 4, name: 'Blue',    title: 'Champion',     type: 'Psychic',   icon: '👑', color: '#DAA520', spriteId: 150, difficulty: 14, hpMult: 2.0,  quote: "I am the Pokémon Champion! You'll never beat me!" },
+  { idx: 5, name: 'Ash',     title: 'Grand Master',  type: 'Fire',      icon: '🔥', color: '#FF4500', spriteId: 6,   difficulty: 15, hpMult: 2.5,  quote: "I've traveled every region and never lost! Let's see what you've got!" },
 ];
 
 // ===== TEAM ROCKET DIALOGUES =====
