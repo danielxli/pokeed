@@ -5,113 +5,113 @@
 // ===== EVOLUTION DATA =====
 const EVOLUTION_MAP = {
   // Bulbasaur line
-  1: { into: 2, xp: 100 }, 2: { into: 3, xp: 200 },
+  1: { into: 2, xp: 200 }, 2: { into: 3, xp: 400 },
   // Charmander line
-  4: { into: 5, xp: 100 }, 5: { into: 6, xp: 200 },
+  4: { into: 5, xp: 200 }, 5: { into: 6, xp: 400 },
   // Squirtle line
-  7: { into: 8, xp: 100 }, 8: { into: 9, xp: 200 },
+  7: { into: 8, xp: 200 }, 8: { into: 9, xp: 400 },
   // Caterpie line
-  10: { into: 11, xp: 50 }, 11: { into: 12, xp: 100 },
+  10: { into: 11, xp: 100 }, 11: { into: 12, xp: 200 },
   // Weedle line
-  13: { into: 14, xp: 50 }, 14: { into: 15, xp: 100 },
+  13: { into: 14, xp: 100 }, 14: { into: 15, xp: 200 },
   // Pidgey line
-  16: { into: 17, xp: 100 }, 17: { into: 18, xp: 200 },
+  16: { into: 17, xp: 200 }, 17: { into: 18, xp: 400 },
   // Rattata → Raticate
-  19: { into: 20, xp: 100 },
+  19: { into: 20, xp: 200 },
   // Spearow → Fearow
-  21: { into: 22, xp: 100 },
+  21: { into: 22, xp: 200 },
   // Ekans → Arbok
-  23: { into: 24, xp: 100 },
+  23: { into: 24, xp: 200 },
   // Pikachu → Raichu
-  25: { into: 26, xp: 150 },
+  25: { into: 26, xp: 300 },
   // Sandshrew → Sandslash
-  27: { into: 28, xp: 150 },
+  27: { into: 28, xp: 300 },
   // Nidoran♀ line
-  29: { into: 30, xp: 100 }, 30: { into: 31, xp: 200 },
+  29: { into: 30, xp: 200 }, 30: { into: 31, xp: 400 },
   // Nidoran♂ line
-  32: { into: 33, xp: 100 }, 33: { into: 34, xp: 200 },
+  32: { into: 33, xp: 200 }, 33: { into: 34, xp: 400 },
   // Clefairy → Clefable
-  35: { into: 36, xp: 150 },
+  35: { into: 36, xp: 300 },
   // Vulpix → Ninetales
-  37: { into: 38, xp: 150 },
+  37: { into: 38, xp: 300 },
   // Jigglypuff → Wigglytuff
-  39: { into: 40, xp: 150 },
+  39: { into: 40, xp: 300 },
   // Zubat → Golbat
-  41: { into: 42, xp: 100 },
+  41: { into: 42, xp: 200 },
   // Oddish line
-  43: { into: 44, xp: 100 }, 44: { into: 45, xp: 200 },
+  43: { into: 44, xp: 200 }, 44: { into: 45, xp: 400 },
   // Paras → Parasect
-  46: { into: 47, xp: 100 },
+  46: { into: 47, xp: 200 },
   // Venonat → Venomoth
-  48: { into: 49, xp: 100 },
+  48: { into: 49, xp: 200 },
   // Diglett → Dugtrio
-  50: { into: 51, xp: 100 },
+  50: { into: 51, xp: 200 },
   // Meowth → Persian
-  52: { into: 53, xp: 100 },
+  52: { into: 53, xp: 200 },
   // Psyduck → Golduck
-  54: { into: 55, xp: 150 },
+  54: { into: 55, xp: 300 },
   // Mankey → Primeape
-  56: { into: 57, xp: 100 },
+  56: { into: 57, xp: 200 },
   // Growlithe → Arcanine
-  58: { into: 59, xp: 150 },
+  58: { into: 59, xp: 300 },
   // Poliwag line
-  60: { into: 61, xp: 100 }, 61: { into: 62, xp: 200 },
+  60: { into: 61, xp: 200 }, 61: { into: 62, xp: 400 },
   // Abra line
-  63: { into: 64, xp: 100 }, 64: { into: 65, xp: 200 },
+  63: { into: 64, xp: 200 }, 64: { into: 65, xp: 400 },
   // Machop line
-  66: { into: 67, xp: 100 }, 67: { into: 68, xp: 200 },
+  66: { into: 67, xp: 200 }, 67: { into: 68, xp: 400 },
   // Bellsprout line
-  69: { into: 70, xp: 100 }, 70: { into: 71, xp: 200 },
+  69: { into: 70, xp: 200 }, 70: { into: 71, xp: 400 },
   // Tentacool → Tentacruel
-  72: { into: 73, xp: 150 },
+  72: { into: 73, xp: 300 },
   // Geodude line
-  74: { into: 75, xp: 100 }, 75: { into: 76, xp: 200 },
+  74: { into: 75, xp: 200 }, 75: { into: 76, xp: 400 },
   // Ponyta → Rapidash
-  77: { into: 78, xp: 150 },
+  77: { into: 78, xp: 300 },
   // Slowpoke → Slowbro
-  79: { into: 80, xp: 150 },
+  79: { into: 80, xp: 300 },
   // Magnemite → Magneton
-  81: { into: 82, xp: 150 },
+  81: { into: 82, xp: 300 },
   // Doduo → Dodrio
-  84: { into: 85, xp: 150 },
+  84: { into: 85, xp: 300 },
   // Seel → Dewgong
-  86: { into: 87, xp: 150 },
+  86: { into: 87, xp: 300 },
   // Grimer → Muk
-  88: { into: 89, xp: 150 },
+  88: { into: 89, xp: 300 },
   // Shellder → Cloyster
-  90: { into: 91, xp: 150 },
+  90: { into: 91, xp: 300 },
   // Gastly line
-  92: { into: 93, xp: 100 }, 93: { into: 94, xp: 200 },
+  92: { into: 93, xp: 200 }, 93: { into: 94, xp: 400 },
   // Drowzee → Hypno
-  96: { into: 97, xp: 150 },
+  96: { into: 97, xp: 300 },
   // Krabby → Kingler
-  98: { into: 99, xp: 150 },
+  98: { into: 99, xp: 300 },
   // Voltorb → Electrode
-  100: { into: 101, xp: 150 },
+  100: { into: 101, xp: 300 },
   // Exeggcute → Exeggutor
-  102: { into: 103, xp: 150 },
+  102: { into: 103, xp: 300 },
   // Cubone → Marowak
-  104: { into: 105, xp: 150 },
+  104: { into: 105, xp: 300 },
   // Koffing → Weezing
-  109: { into: 110, xp: 150 },
+  109: { into: 110, xp: 300 },
   // Rhyhorn → Rhydon
-  111: { into: 112, xp: 150 },
+  111: { into: 112, xp: 300 },
   // Horsea → Seadra
-  116: { into: 117, xp: 150 },
+  116: { into: 117, xp: 300 },
   // Goldeen → Seaking
-  118: { into: 119, xp: 150 },
+  118: { into: 119, xp: 300 },
   // Staryu → Starmie
-  120: { into: 121, xp: 150 },
+  120: { into: 121, xp: 300 },
   // Magikarp → Gyarados
-  129: { into: 130, xp: 200 },
+  129: { into: 130, xp: 400 },
   // Eevee → random Eeveelution
-  133: { into: [134, 135, 136], xp: 150 },
+  133: { into: [134, 135, 136], xp: 300 },
   // Omanyte → Omastar
-  138: { into: 139, xp: 150 },
+  138: { into: 139, xp: 300 },
   // Kabuto → Kabutops
-  140: { into: 141, xp: 150 },
+  140: { into: 141, xp: 300 },
   // Dratini line
-  147: { into: 148, xp: 150 }, 148: { into: 149, xp: 300 },
+  147: { into: 148, xp: 300 }, 148: { into: 149, xp: 600 },
 };
 
 const DRILL_DURATION = 60; // seconds

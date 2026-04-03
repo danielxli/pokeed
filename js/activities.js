@@ -2533,54 +2533,6 @@ function genReadingPassageQuiz(difficulty) {
   };
 }
 
-// ---------------------------------------------------------------------------
-// 20. genEstimationStation — Estimate a quantity within 20%
-// ---------------------------------------------------------------------------
-function genEstimationStation(difficulty) {
-  difficulty = difficulty || 4;
-
-  const scenarios = [
-    { template: (n) => `About how many Zubat are in this cave cluster?\n${'🦇'.repeat(Math.min(n, 30))}${n > 30 ? '...' : ''}`, min: 10, max: 50, label: 'Zubat' },
-    { template: (n) => `Approximately how many berries are on this bush?\n${'🍓'.repeat(Math.min(n, 25))}${n > 25 ? '...' : ''}`, min: 8, max: 40, label: 'berries' },
-    { template: (n) => `About how many Poke Balls are in this pile?\n${'⚾'.repeat(Math.min(n, 20))}${n > 20 ? '...' : ''}`, min: 5, max: 30, label: 'Poke Balls' },
-    { template: (n) => `Roughly how many Magikarp are in the pond?\n${'🐟'.repeat(Math.min(n, 20))}${n > 20 ? '...' : ''}`, min: 10, max: 60, label: 'Magikarp' },
-    { template: (n) => `About how many coins did Ash find?\n${'🪙'.repeat(Math.min(n, 25))}${n > 25 ? '...' : ''}`, min: 15, max: 80, label: 'coins' },
-    { template: (n) => `How many stars can you see in the night sky?\n${'⭐'.repeat(Math.min(n, 30))}${n > 30 ? '...' : ''}`, min: 10, max: 50, label: 'stars' },
-    { template: (n) => `About how many Caterpie are on this tree?\n${'🐛'.repeat(Math.min(n, 25))}${n > 25 ? '...' : ''}`, min: 8, max: 40, label: 'Caterpie' },
-    { template: (n) => `Roughly how many apples fell from the tree?\n${'🍎'.repeat(Math.min(n, 25))}${n > 25 ? '...' : ''}`, min: 5, max: 35, label: 'apples' },
-    { template: (n) => `About how many footprints are on this trail?\n${'🐾'.repeat(Math.min(n, 25))}${n > 25 ? '...' : ''}`, min: 10, max: 50, label: 'footprints' },
-    { template: (n) => `How many Voltorb are in the Power Plant?\n${'⚡'.repeat(Math.min(n, 20))}${n > 20 ? '...' : ''}`, min: 8, max: 45, label: 'Voltorb' },
-  ];
-
-  const ranges = {
-    1: [5, 15],
-    2: [10, 25],
-    3: [15, 40],
-    4: [20, 60],
-    5: [30, 100],
-  };
-  const [lo, hi] = ranges[difficulty] || [20, 60];
-  const scenario = randItem(scenarios);
-  const actual = lo + Math.floor(Math.random() * (Math.min(hi, scenario.max) - Math.max(lo, scenario.min) + 1));
-
-  // Generate choices all within reasonable range
-  const tolerance = 0.2;
-  const goodRange = Math.ceil(actual * tolerance);
-  const wrongNums = wrongNumbers(actual, 3, Math.max(goodRange + 5, 10));
-  const choices = buildChoices(actual, wrongNums.map(String));
-
-  return {
-    type: 'estimationStation',
-    question: scenario.template(actual),
-    answer: actual,
-    choices,
-    hint: `Your guess just needs to be within 20% of the real answer!`,
-    tolerance,
-    actual,
-    label: scenario.label,
-  };
-}
-
 // =============================================================================
 // SECTION 5 — 4TH-5TH GRADE ACTIVITIES (Level 5)
 // =============================================================================
