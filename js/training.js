@@ -632,6 +632,7 @@ window.drillAnswer = function(chosen) {
   } else {
     _drillSession.wrong++;
     _drillSession.streak = 0;
+    _drillSession.xpEarned = Math.max(0, _drillSession.xpEarned - 3);
     showDrillMiss();
     SFX.wrong();
   }
