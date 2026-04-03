@@ -2752,12 +2752,12 @@ html, body {
 
 /* Evolution overlay */
 .evolution-overlay {
-  position: fixed; inset: 0; z-index: 9000;
+  position: fixed !important; inset: 0; z-index: 9000 !important;
   background: radial-gradient(ellipse at center, #1a237e 0%, #0d1333 40%, #000 100%);
   display: flex; align-items: center; justify-content: center;
   overflow: hidden;
 }
-.evolution-overlay.hidden { display: none; }
+.evolution-overlay.hidden { display: none !important; }
 .evo-animation {
   text-align: center; padding: 20px; position: relative; z-index: 2;
   max-width: 360px; width: 100%;

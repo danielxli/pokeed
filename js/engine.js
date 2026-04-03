@@ -5,7 +5,8 @@ const State = {
   trainerName: 'Trainer',
   level: 1,
   xp: 0,
-  caught: [],         // array of pokemon IDs
+  caught: [],         // array of pokemon IDs (active roster)
+  seen: [],            // array of pokemon IDs ever caught/owned (for Pokedex)
   pokemonHp: {},       // { pokemonId: currentHp } — persistent HP tracker
   pokemonXp: {},       // { pokemonId: trainingXp } — training XP for evolution
   badges: [],          // array of gym IDs earned
@@ -137,9 +138,9 @@ function launchConfetti() {
 function updateTrainerBar() {
   document.getElementById('trainer-name-display').textContent = State.trainerName;
   document.getElementById('trainer-level').textContent = State.level;
-  document.getElementById('caught-count').textContent = State.caught.length;
+  document.getElementById('caught-count').textContent = State.seen.length;
   const caughtTag = document.getElementById('caught-tag');
-  if (caughtTag) caughtTag.textContent = `${State.caught.length}/151 Caught`;
+  if (caughtTag) caughtTag.textContent = `${State.seen.length}/151 Caught`;
   const slots = document.querySelectorAll('.badge-slot');
   slots.forEach((s, i) => {
     if (State.badges.includes(i)) {
@@ -148,6 +149,11 @@ function updateTrainerBar() {
     }
   });
   saveState();
+}
+
+// Mark a Pokemon as seen in the Pokedex (idempotent)
+function markSeen(pokemonId) {
+  if (!State.seen.includes(pokemonId)) State.seen.push(pokemonId);
 }
 
 // Initialize HP for a newly caught Pokemon
@@ -189,6 +195,7 @@ function saveState() {
       level: State.level,
       xp: State.xp,
       caught: State.caught,
+      seen: State.seen,
       pokemonHp: State.pokemonHp,
       pokemonXp: State.pokemonXp,
       badges: State.badges,
@@ -213,6 +220,9 @@ function loadState() {
     if (data.level != null) State.level = data.level;
     if (data.xp != null) State.xp = data.xp;
     if (Array.isArray(data.caught)) State.caught = data.caught;
+    if (Array.isArray(data.seen)) State.seen = data.seen;
+    // Backfill seen from caught for saves before seen was added
+    if (!State.seen.length && State.caught.length) State.seen = [...State.caught];
     if (data.pokemonHp) State.pokemonHp = data.pokemonHp;
     if (data.pokemonXp) State.pokemonXp = data.pokemonXp;
     if (Array.isArray(data.badges)) State.badges = data.badges;

@@ -746,6 +746,7 @@ function rocketSuccess() {
   if (uncaught.length > 0) {
     rewardPokemon = uncaught[Math.floor(Math.random() * uncaught.length)];
     State.caught.push(rewardPokemon.id);
+    markSeen(rewardPokemon.id);
     initPokemonHp(rewardPokemon.id);
     updateTrainerBar();
   }

@@ -5,10 +5,10 @@ Game.goToPokedex = function() {
   SFX.pop();
   const grid = document.getElementById('pokedex-grid');
   grid.innerHTML = '';
-  document.getElementById('completion-badge').textContent = `${State.caught.length}/151`;
+  document.getElementById('completion-badge').textContent = `${State.seen.length}/151`;
 
   POKEMON_DB.forEach((p, idx) => {
-    const isCaught = State.caught.includes(p.id);
+    const isCaught = State.seen.includes(p.id);
     const entry = document.createElement('div');
     entry.className = `pokedex-entry ${isCaught ? 'caught' : ''}`;
     entry.innerHTML = `
@@ -66,12 +66,12 @@ function renderLabHub(tab) {
 
   if (_labActiveTab === 'pokedex') {
     // Render pokedex grid inline in the lab
-    const countBadge = `<div style="font-size:13px;color:#888;margin-bottom:10px;">Caught: ${State.caught.length} / 151</div>`;
+    const countBadge = `<div style="font-size:13px;color:#888;margin-bottom:10px;">Caught: ${State.seen.length} / 151</div>`;
     area.innerHTML = countBadge;
     const grid = document.createElement('div');
     grid.className = 'pokedex-grid';
     POKEMON_DB.forEach((p, idx) => {
-      const isCaught = State.caught.includes(p.id);
+      const isCaught = State.seen.includes(p.id);
       const entry = document.createElement('div');
       entry.className = `pokedex-entry ${isCaught ? 'caught' : ''}`;
       entry.innerHTML = `

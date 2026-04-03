@@ -1278,6 +1278,7 @@ function setupThrowMiniGame(pokemon) {
             document.getElementById('throw-status').textContent = `🎉 Gotcha! ${pokemon.name} was caught!`;
             if (!State.caught.includes(pokemon.id)) {
               State.caught.push(pokemon.id);
+              markSeen(pokemon.id);
               initPokemonHp(pokemon.id);
               addXp(50);
             }

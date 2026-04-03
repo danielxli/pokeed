@@ -182,6 +182,7 @@ const DailyChallenge = (function () {
     if (uncaught.length > 0) {
       const rare = uncaught[Math.floor(Math.random() * uncaught.length)];
       State.caught.push(rare.id);
+      markSeen(rare.id);
       initPokemonHp(rare.id);
       launchConfetti();
       SFX.caught();
@@ -435,6 +436,7 @@ const Evolution = (function () {
       // Add evolved Pokémon to caught list
       if (!State.caught.includes(evolvedId)) {
         State.caught.push(evolvedId);
+        markSeen(evolvedId);
         initPokemonHp(evolvedId);
       }
 

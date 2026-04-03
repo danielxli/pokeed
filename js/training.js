@@ -726,11 +726,13 @@ function evolve(oldId, newId) {
   const evo = EVOLUTION_MAP[oldId];
   const excess = Math.max(0, (State.pokemonXp[oldId] || 0) - evo.xp);
 
-  // Replace in caught array
+  // Replace in caught array (active roster)
   const idx = State.caught.indexOf(oldId);
   if (idx !== -1) {
     State.caught[idx] = newId;
   }
+  // Mark evolved form as seen in Pokedex (old form already there from catch)
+  markSeen(newId);
   // Remove duplicate if new form already caught
   const dupes = State.caught.filter(id => id === newId);
   if (dupes.length > 1) {

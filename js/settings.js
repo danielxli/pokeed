@@ -72,6 +72,7 @@ Game.executeReset = function() {
   State.level = 1;
   State.xp = 0;
   State.caught = [];
+  State.seen = [];
   State.pokemonHp = {};
   State.pokemonXp = {};
   State.badges = [];
