@@ -79,7 +79,7 @@ html, body {
 .pokecenter-bg { background-image: url('../assets/loc-pokecenter.webp'); }
 
 /* overlay darken for readability */
-.scene > *:not(.title-bg):not(.map-bg):not(.encounter-bg):not(.throw-bg):not(.pokedex-bg):not(.battle-bg):not(.rocket-bg):not(.guide-bg):not(.pokecenter-bg) {
+.scene > *:not(.title-bg):not(.map-bg):not(.encounter-bg):not(.throw-bg):not(.pokedex-bg):not(.battle-bg):not(.rocket-bg):not(.guide-bg):not(.pokecenter-bg):not(.training-bg) {
   position: relative; z-index: 1;
 }
 
@@ -2587,7 +2587,7 @@ html, body {
 
 /* Drill picker */
 .drill-picker-overlay {
-  position: absolute; inset: 0; z-index: 100;
+  position: absolute; inset: 0; z-index: 100 !important;
   background: rgba(0,0,0,0.7); display: flex;
   align-items: center; justify-content: center;
 }
@@ -2617,7 +2617,7 @@ html, body {
 
 /* Flash drill overlay */
 .training-drill-overlay {
-  position: absolute; inset: 0; z-index: 200;
+  position: absolute; inset: 0; z-index: 200 !important;
   background: linear-gradient(135deg, #0a0a1a, #1a1a3e);
   display: flex; flex-direction: column;
 }
