@@ -2753,40 +2753,158 @@ html, body {
 /* Evolution overlay */
 .evolution-overlay {
   position: fixed; inset: 0; z-index: 9000;
-  background: radial-gradient(circle, #1a237e 0%, #000 100%);
+  background: radial-gradient(ellipse at center, #1a237e 0%, #0d1333 40%, #000 100%);
   display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
 }
 .evolution-overlay.hidden { display: none; }
 .evo-animation {
-  text-align: center; padding: 20px; position: relative;
+  text-align: center; padding: 20px; position: relative; z-index: 2;
+  max-width: 360px; width: 100%;
 }
 .evo-text {
-  font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 20px;
+  font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 16px;
+  text-shadow: 0 0 20px rgba(100,150,255,0.5);
+  transition: text-shadow 0.5s;
 }
-.evo-sprite-area {
-  position: relative; width: 160px; height: 160px; margin: 0 auto;
+.evo-text-glow {
+  text-shadow: 0 0 30px rgba(150,200,255,0.8), 0 0 60px rgba(100,150,255,0.4);
 }
+
+/* Sprite container with glow */
+.evo-sprite-container {
+  position: relative; width: 180px; height: 180px; margin: 0 auto 12px;
+}
+.evo-glow {
+  position: absolute; inset: -30px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(100,150,255,0) 0%, rgba(100,150,255,0) 100%);
+  transition: all 1s;
+}
+.evo-glow-active {
+  background: radial-gradient(circle, rgba(100,150,255,0.3) 0%, rgba(100,150,255,0) 70%);
+  animation: glow-breathe 1s ease infinite;
+}
+.evo-glow-gold {
+  background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, rgba(255,215,0,0) 70%) !important;
+  animation: glow-breathe-gold 1.5s ease infinite !important;
+}
+@keyframes glow-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+@keyframes glow-breathe-gold {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
 .evo-sprite {
-  width: 160px; height: 160px; image-rendering: pixelated;
+  width: 180px; height: 180px; image-rendering: pixelated;
   position: absolute; top: 0; left: 0;
-  transition: opacity 0.5s;
+  transition: opacity 0.3s;
 }
+.evo-sprite-active { opacity: 1; }
 .evo-sprite-hidden { opacity: 0; }
+
+/* Pulse animation */
 .evo-pulse {
-  animation: evo-pulse 0.6s ease infinite;
+  animation: evo-pulse 0.5s ease infinite;
 }
 @keyframes evo-pulse {
   0%, 100% { filter: brightness(1); transform: scale(1); }
-  50% { filter: brightness(2) saturate(0); transform: scale(1.05); }
+  50% { filter: brightness(2.5) saturate(0); transform: scale(1.08); }
 }
+
+/* Flicker between old and new */
+.evo-flicker {
+  animation: evo-flicker 0.15s steps(1) infinite;
+}
+.evo-flicker-alt {
+  animation: evo-flicker-alt 0.15s steps(1) infinite;
+}
+@keyframes evo-flicker {
+  0%, 49% { opacity: 1; filter: brightness(2) saturate(0); }
+  50%, 100% { opacity: 0; }
+}
+@keyframes evo-flicker-alt {
+  0%, 49% { opacity: 0; }
+  50%, 100% { opacity: 1; filter: brightness(2) saturate(0); }
+}
+
+/* New pokemon reveal */
+.evo-new-reveal {
+  animation: evo-reveal 0.6s ease-out;
+  filter: none !important;
+}
+@keyframes evo-reveal {
+  0% { transform: scale(1.3); filter: brightness(3) saturate(0); }
+  100% { transform: scale(1); filter: brightness(1) saturate(1); }
+}
+
+/* Name tag */
+.evo-name-tag {
+  font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 8px;
+  transition: all 0.5s;
+}
+.evo-name-reveal {
+  font-size: 32px; font-weight: 900; color: #FFD600;
+  text-shadow: 0 0 20px rgba(255,215,0,0.6);
+  animation: name-pop 0.5s ease-out;
+}
+@keyframes name-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Stat reveal */
+.evo-stats-reveal {
+  background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px; padding: 12px 16px; margin-top: 12px;
+}
+.evo-stats-reveal.hidden { display: none; }
+.evo-stats-animate {
+  animation: stats-slide 0.5s ease-out;
+}
+@keyframes stats-slide {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.evo-stat-row {
+  display: flex; justify-content: space-between; padding: 3px 0;
+  font-size: 14px; color: rgba(255,255,255,0.7); font-weight: 600;
+}
+.evo-stat-val { color: #fff; }
+.evo-stat-up { color: #4CAF50; font-weight: 700; }
+
+/* Floating particles */
+.evo-particles {
+  position: fixed; inset: 0; pointer-events: none; z-index: 1;
+}
+.evo-particle {
+  position: absolute; bottom: -10px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(150,200,255,0.8);
+  animation: particle-rise linear forwards;
+  box-shadow: 0 0 6px rgba(150,200,255,0.6);
+}
+.evo-particle:nth-child(odd) { background: rgba(255,215,0,0.8); box-shadow: 0 0 6px rgba(255,215,0,0.6); }
+.evo-particle:nth-child(3n) { width: 4px; height: 4px; }
+@keyframes particle-rise {
+  0% { transform: translateY(0) scale(1); opacity: 0.8; }
+  100% { transform: translateY(-100vh) scale(0); opacity: 0; }
+}
+
+/* Flash */
 .evo-flash {
   position: fixed; inset: 0; background: #fff;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s;
+  opacity: 0; pointer-events: none; z-index: 10;
+  transition: opacity 0.15s;
 }
-.evo-flash-active { opacity: 1; }
+.evo-flash-active { opacity: 1; transition: opacity 0.05s; }
+
 .evo-done-btn {
-  margin-top: 24px; animation: countdown-pop 0.5s ease;
+  margin-top: 20px; animation: countdown-pop 0.5s ease;
+  background: linear-gradient(135deg, #FFD600, #FF6B35) !important;
 }
 
 /* Settings guide button */

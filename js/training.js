@@ -114,7 +114,7 @@ const EVOLUTION_MAP = {
   147: { into: 148, xp: 150 }, 148: { into: 149, xp: 300 },
 };
 
-const DRILL_DURATION = 60; // seconds
+const DRILL_DURATION = 30; // seconds
 
 // ===== TRAINING SESSION STATE =====
 let _drillSession = null;
@@ -757,52 +757,103 @@ function showEvolutionAnimation(oldPkmn, newPkmn, onComplete) {
   const overlay = document.getElementById('evolution-overlay');
   overlay.classList.remove('hidden');
 
+  // Stat comparison for later
+  const statUp = (stat) => newPkmn[stat] - oldPkmn[stat];
+
   overlay.innerHTML = `
-    <div class="evo-animation">
-      <div class="evo-text" id="evo-text">What? ${oldPkmn.name} is evolving!</div>
-      <div class="evo-sprite-area">
-        <img id="evo-old-sprite" class="evo-sprite" src="${spriteUrl(oldPkmn.id)}" alt="${oldPkmn.name}">
+    <div class="evo-animation" id="evo-animation">
+      <div class="evo-particles" id="evo-particles"></div>
+      <div class="evo-text" id="evo-text">What?</div>
+      <div class="evo-sprite-container" id="evo-sprite-container">
+        <div class="evo-glow" id="evo-glow"></div>
+        <img id="evo-old-sprite" class="evo-sprite evo-sprite-active" src="${spriteUrl(oldPkmn.id)}" alt="${oldPkmn.name}">
         <img id="evo-new-sprite" class="evo-sprite evo-sprite-hidden" src="${spriteUrl(newPkmn.id)}" alt="${newPkmn.name}">
+      </div>
+      <div class="evo-name-tag" id="evo-name-tag">${oldPkmn.name}</div>
+      <div class="evo-stats-reveal hidden" id="evo-stats-reveal">
+        <div class="evo-stat-row"><span>HP</span><span class="evo-stat-val">${oldPkmn.hp} → ${newPkmn.hp} <span class="evo-stat-up">+${statUp('hp')}</span></span></div>
+        <div class="evo-stat-row"><span>ATK</span><span class="evo-stat-val">${oldPkmn.atk} → ${newPkmn.atk} <span class="evo-stat-up">+${statUp('atk')}</span></span></div>
+        <div class="evo-stat-row"><span>DEF</span><span class="evo-stat-val">${oldPkmn.def} → ${newPkmn.def} <span class="evo-stat-up">+${statUp('def')}</span></span></div>
+        <div class="evo-stat-row"><span>SPD</span><span class="evo-stat-val">${oldPkmn.spd} → ${newPkmn.spd} <span class="evo-stat-up">+${statUp('spd')}</span></span></div>
       </div>
       <div class="evo-flash" id="evo-flash"></div>
     </div>`;
 
+  // Spawn floating particles
+  const particleContainer = document.getElementById('evo-particles');
+  function spawnParticles() {
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'evo-particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDelay = Math.random() * 2 + 's';
+      p.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      particleContainer.appendChild(p);
+    }
+  }
+
+  // Phase 1: "What?" text, then name (0.8s)
   SFX.pop();
-
-  // Phase 1: Old sprite pulses (1.5s)
-  const oldSprite = document.getElementById('evo-old-sprite');
-  oldSprite.classList.add('evo-pulse');
-
   setTimeout(() => {
-    // Phase 2: Flash
-    const flash = document.getElementById('evo-flash');
-    flash.classList.add('evo-flash-active');
-    SFX.badge();
+    document.getElementById('evo-text').textContent = `${oldPkmn.name} is evolving!`;
+    document.getElementById('evo-text').classList.add('evo-text-glow');
+    spawnParticles();
+
+    // Phase 2: Sprite starts pulsing, glow intensifies (1.5s)
+    const oldSprite = document.getElementById('evo-old-sprite');
+    const glow = document.getElementById('evo-glow');
+    oldSprite.classList.add('evo-pulse');
+    glow.classList.add('evo-glow-active');
 
     setTimeout(() => {
-      // Phase 3: Swap sprites
-      oldSprite.classList.add('evo-sprite-hidden');
+      // Phase 3: Rapid flicker between old and new (1s)
+      oldSprite.classList.remove('evo-pulse');
+      oldSprite.classList.add('evo-flicker');
       const newSprite = document.getElementById('evo-new-sprite');
       newSprite.classList.remove('evo-sprite-hidden');
+      newSprite.classList.add('evo-flicker-alt');
 
-      document.getElementById('evo-text').textContent =
-        `${oldPkmn.name} evolved into ${newPkmn.name}!`;
-
-      flash.classList.remove('evo-flash-active');
-      launchConfetti();
-      launchConfetti();
-
-      // Phase 4: Show complete button
       setTimeout(() => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-primary btn-xl evo-done-btn';
-        btn.textContent = `🎉 ${newPkmn.name}!`;
-        btn.onclick = () => {
-          overlay.classList.add('hidden');
-          onComplete();
-        };
-        overlay.querySelector('.evo-animation').appendChild(btn);
+        // Phase 4: Big flash + swap
+        const flash = document.getElementById('evo-flash');
+        flash.classList.add('evo-flash-active');
+        SFX.badge();
+
+        setTimeout(() => {
+          // Reveal new Pokemon
+          oldSprite.classList.add('evo-sprite-hidden');
+          oldSprite.classList.remove('evo-flicker');
+          newSprite.classList.remove('evo-flicker-alt');
+          newSprite.classList.add('evo-sprite-active', 'evo-new-reveal');
+          flash.classList.remove('evo-flash-active');
+          glow.classList.add('evo-glow-gold');
+
+          document.getElementById('evo-text').textContent = `${oldPkmn.name} evolved into`;
+          document.getElementById('evo-name-tag').textContent = newPkmn.name + '!';
+          document.getElementById('evo-name-tag').classList.add('evo-name-reveal');
+
+          launchConfetti();
+          launchConfetti();
+
+          // Phase 5: Show stats after a beat
+          setTimeout(() => {
+            document.getElementById('evo-stats-reveal').classList.remove('hidden');
+            document.getElementById('evo-stats-reveal').classList.add('evo-stats-animate');
+
+            // Phase 6: Done button
+            setTimeout(() => {
+              const btn = document.createElement('button');
+              btn.className = 'btn-primary btn-xl evo-done-btn';
+              btn.innerHTML = `<span style="font-size:24px;">✨</span> Amazing!`;
+              btn.onclick = () => {
+                overlay.classList.add('hidden');
+                onComplete();
+              };
+              document.getElementById('evo-animation').appendChild(btn);
+            }, 800);
+          }, 600);
+        }, 500);
       }, 1000);
-    }, 600);
-  }, 1800);
+    }, 1500);
+  }, 800);
 }
