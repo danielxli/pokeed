@@ -2795,3 +2795,31 @@ html, body {
   cursor: pointer; transition: background 0.15s;
 }
 .settings-guide-btn:hover { background: rgba(255,255,255,0.15); }
+
+/* Drill evolution progress bar */
+.drill-evo-bar {
+  padding: 4px 16px 8px;
+}
+.drill-evo-bar.hidden { display: none; }
+.drill-evo-label {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 4px;
+}
+.drill-evo-label span {
+  font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.8);
+}
+#drill-evo-xp-text { color: #FFD600; }
+.drill-evo-track {
+  width: 100%; height: 12px; background: rgba(255,255,255,0.12);
+  border-radius: 6px; position: relative; overflow: hidden;
+}
+.drill-evo-fill-base {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: rgba(255,255,255,0.25); border-radius: 6px;
+  transition: width 0.3s;
+}
+.drill-evo-fill-earned {
+  position: absolute; top: 0; height: 100%;
+  background: linear-gradient(90deg, #FF6B35, #FFD600);
+  border-radius: 6px; transition: width 0.3s, left 0.3s;
+}

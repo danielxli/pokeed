@@ -272,6 +272,19 @@ window.startDrill = function(pokemonId, drillType) {
   // Set pokemon sprite
   document.getElementById('drill-pokemon-sprite').src = spriteUrl(pokemonId);
 
+  // Set up evolution progress bar
+  const evo = getEvolutionInfo(pokemonId);
+  const evoBar = document.getElementById('drill-evo-bar');
+  if (evo) {
+    evoBar.classList.remove('hidden');
+    const evolvedNames = Array.isArray(EVOLUTION_MAP[pokemonId].into)
+      ? EVOLUTION_MAP[pokemonId].into.map(id => POKEMON_DB.find(p => p.id === id)).filter(Boolean).map(p => p.name).join('/')
+      : evo.evolvedName;
+    document.getElementById('drill-evo-name').textContent = '→ ' + evolvedNames;
+  } else {
+    evoBar.classList.add('hidden');
+  }
+
   // Reset UI
   updateDrillUI();
 
@@ -324,6 +337,22 @@ function updateDrillUI() {
   if (combo) {
     combo.textContent = _drillSession.streak > 0 ? '\uD83D\uDD25 ' + _drillSession.streak : '';
     combo.className = 'drill-combo' + (_drillSession.streak >= 5 ? ' on-fire' : '');
+  }
+
+  // Evolution progress bar
+  const evo = getEvolutionInfo(_drillSession.pokemonId);
+  if (evo) {
+    const baseXp = evo.currentXp;
+    const earned = _drillSession.xpEarned;
+    const needed = evo.xpNeeded;
+    const basePct = Math.min(100, Math.round((baseXp / needed) * 100));
+    const earnedPct = Math.min(100 - basePct, Math.round((earned / needed) * 100));
+    const baseEl = document.getElementById('drill-evo-fill-base');
+    const earnedEl = document.getElementById('drill-evo-fill-earned');
+    const textEl = document.getElementById('drill-evo-xp-text');
+    if (baseEl) baseEl.style.width = basePct + '%';
+    if (earnedEl) { earnedEl.style.left = basePct + '%'; earnedEl.style.width = earnedPct + '%'; }
+    if (textEl) textEl.textContent = (baseXp + earned) + ' / ' + needed + ' XP';
   }
 }
 
