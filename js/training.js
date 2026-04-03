@@ -607,16 +607,15 @@ window.drillAnswer = function(chosen) {
 
   const isCorrect = chosen === q.answer;
 
-  // Highlight buttons
-  const btns = document.querySelectorAll('#drill-challenge-area .drill-choice-btn');
-  btns.forEach(b => {
-    b.disabled = true;
-    b.style.pointerEvents = 'none';
-    if (b.textContent === q.answer) b.classList.add('drill-btn-correct');
-    else if (b.textContent === chosen && !isCorrect) b.classList.add('drill-btn-wrong');
-  });
-
   if (isCorrect) {
+    // Disable all buttons and highlight correct
+    const btns = document.querySelectorAll('#drill-challenge-area .drill-choice-btn');
+    btns.forEach(b => {
+      b.disabled = true;
+      b.style.pointerEvents = 'none';
+      if (b.textContent === q.answer) b.classList.add('drill-btn-correct');
+    });
+
     _drillSession.correct++;
     _drillSession.streak++;
     if (_drillSession.streak > _drillSession.maxStreak) _drillSession.maxStreak = _drillSession.streak;
@@ -629,19 +628,30 @@ window.drillAnswer = function(chosen) {
 
     showDrillHit(xp);
     SFX.correct();
+    updateDrillUI();
+
+    setTimeout(() => {
+      if (_drillSession && _drillSession.active) nextDrillQuestion();
+    }, 250);
   } else {
+    // Disable only the wrong button — must find the right answer
+    const btns = document.querySelectorAll('#drill-challenge-area .drill-choice-btn');
+    btns.forEach(b => {
+      if (b.textContent === chosen) {
+        b.disabled = true;
+        b.style.pointerEvents = 'none';
+        b.classList.add('drill-btn-wrong');
+      }
+    });
+
     _drillSession.wrong++;
     _drillSession.streak = 0;
     _drillSession.xpEarned = Math.max(0, _drillSession.xpEarned - 3);
     showDrillMiss();
     SFX.wrong();
+    updateDrillUI();
+    // Don't advance — kid must pick again
   }
-
-  updateDrillUI();
-
-  setTimeout(() => {
-    if (_drillSession && _drillSession.active) nextDrillQuestion();
-  }, isCorrect ? 250 : 400);
 };
 
 function showDrillHit(xp) {
