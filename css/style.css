@@ -2504,7 +2504,7 @@ html, body {
 /* ===== TRAINING GROUNDS ===== */
 .training-bg {
   position: absolute; inset: 0;
-  background: url('../assets/training-ground.webp') center/cover no-repeat,
+  background: url('../assets/training-bg.webp') center/cover no-repeat,
               linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   z-index: 0;
 }
@@ -2527,8 +2527,12 @@ html, body {
   text-align: center; padding: 40px 20px; color: #fff;
 }
 .loc-training {
-  background: linear-gradient(135deg, #1a1a2e, #0f3460) !important;
+  background: url('../assets/training-ground.webp') center/cover no-repeat !important;
   border-left: 5px solid #FF6B35 !important;
+}
+.loc-training .loc-content {
+  background: rgba(0,0,0,0.55); border-radius: inherit;
+  padding: 16px; width: 100%;
 }
 .loc-training .loc-icon { filter: none; }
 
