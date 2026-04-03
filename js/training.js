@@ -404,6 +404,15 @@ const WORD_PICTURE_POOL = [
   { word: 'island', emoji: '🏝️', level: 4 }, { word: 'desert', emoji: '🏜️', level: 4 },
   { word: 'snake', emoji: '🐍', level: 4 }, { word: 'crab', emoji: '🦀', level: 4 },
   { word: 'parrot', emoji: '🦜', level: 4 }, { word: 'tiger', emoji: '🐅', level: 4 },
+  // Level 5: Multi-syllable / advanced
+  { word: 'telescope', emoji: '🔭', level: 5 }, { word: 'microscope', emoji: '🔬', level: 5 },
+  { word: 'satellite', emoji: '🛰️', level: 5 }, { word: 'ambulance', emoji: '🚑', level: 5 },
+  { word: 'helicopter', emoji: '🚁', level: 5 }, { word: 'pineapple', emoji: '🍍', level: 5 },
+  { word: 'crocodile', emoji: '🐊', level: 5 }, { word: 'scorpion', emoji: '🦂', level: 5 },
+  { word: 'flamingo', emoji: '🦩', level: 5 }, { word: 'gorilla', emoji: '🦍', level: 5 },
+  { word: 'rhinoceros', emoji: '🦏', level: 5 }, { word: 'kangaroo', emoji: '🦘', level: 5 },
+  { word: 'accordion', emoji: '🪗', level: 5 }, { word: 'broccoli', emoji: '🥦', level: 5 },
+  { word: 'mushroom', emoji: '🍄', level: 5 }, { word: 'parachute', emoji: '🪂', level: 5 },
 ];
 
 // ===== MATH DRILL GENERATOR =====
@@ -495,7 +504,7 @@ function generateMathDrill(level) {
 // ===== READING DRILL GENERATOR =====
 function generateReadingDrill(level) {
   // Filter words appropriate for level (include easier words too)
-  const pool = WORD_PICTURE_POOL.filter(w => w.level <= Math.max(level, 2));
+  const pool = WORD_PICTURE_POOL.filter(w => w.level <= level);
   const target = pool[Math.floor(Math.random() * pool.length)];
 
   // Pick 3 distractor emojis (different from target)
