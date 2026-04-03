@@ -356,48 +356,222 @@ function updateDrillUI() {
   }
 }
 
+// ===== WORD-PICTURE POOL =====
+const WORD_PICTURE_POOL = [
+  // Level 1-2: Simple CVC / common words
+  { word: 'cat', emoji: '🐱', level: 1 }, { word: 'dog', emoji: '🐕', level: 1 },
+  { word: 'fish', emoji: '🐟', level: 1 }, { word: 'bird', emoji: '🐦', level: 1 },
+  { word: 'sun', emoji: '☀️', level: 1 }, { word: 'moon', emoji: '🌙', level: 1 },
+  { word: 'star', emoji: '⭐', level: 1 }, { word: 'tree', emoji: '🌳', level: 1 },
+  { word: 'rain', emoji: '🌧️', level: 1 }, { word: 'car', emoji: '🚗', level: 1 },
+  { word: 'bus', emoji: '🚌', level: 1 }, { word: 'hat', emoji: '🎩', level: 1 },
+  { word: 'cup', emoji: '☕', level: 1 }, { word: 'book', emoji: '📖', level: 1 },
+  { word: 'ball', emoji: '⚽', level: 1 }, { word: 'frog', emoji: '🐸', level: 1 },
+  { word: 'bear', emoji: '🐻', level: 1 }, { word: 'pig', emoji: '🐷', level: 1 },
+  { word: 'cow', emoji: '🐄', level: 1 }, { word: 'duck', emoji: '🐤', level: 1 },
+  { word: 'bee', emoji: '🐝', level: 1 }, { word: 'bug', emoji: '🐛', level: 1 },
+  { word: 'ant', emoji: '🐜', level: 1 }, { word: 'egg', emoji: '🥚', level: 1 },
+  { word: 'bed', emoji: '🛏️', level: 1 }, { word: 'key', emoji: '🔑', level: 1 },
+  { word: 'bell', emoji: '🔔', level: 1 }, { word: 'fire', emoji: '🔥', level: 1 },
+  { word: 'eye', emoji: '👁️', level: 1 }, { word: 'ear', emoji: '👂', level: 1 },
+  { word: 'nose', emoji: '👃', level: 1 }, { word: 'hand', emoji: '✋', level: 1 },
+  { word: 'apple', emoji: '🍎', level: 2 }, { word: 'cake', emoji: '🍰', level: 2 },
+  { word: 'house', emoji: '🏠', level: 2 }, { word: 'boat', emoji: '⛵', level: 2 },
+  { word: 'horse', emoji: '🐴', level: 2 }, { word: 'sheep', emoji: '🐑', level: 2 },
+  { word: 'flower', emoji: '🌸', level: 2 }, { word: 'heart', emoji: '❤️', level: 2 },
+  { word: 'clock', emoji: '🕐', level: 2 }, { word: 'drum', emoji: '🥁', level: 2 },
+  { word: 'corn', emoji: '🌽', level: 2 }, { word: 'leaf', emoji: '🍃', level: 2 },
+  { word: 'snow', emoji: '❄️', level: 2 }, { word: 'cloud', emoji: '☁️', level: 2 },
+  { word: 'baby', emoji: '👶', level: 2 }, { word: 'door', emoji: '🚪', level: 2 },
+  { word: 'lamp', emoji: '💡', level: 2 }, { word: 'train', emoji: '🚂', level: 2 },
+  { word: 'plane', emoji: '✈️', level: 2 }, { word: 'bike', emoji: '🚲', level: 2 },
+  { word: 'milk', emoji: '🥛', level: 2 }, { word: 'king', emoji: '👑', level: 2 },
+  { word: 'ring', emoji: '💍', level: 2 }, { word: 'bone', emoji: '🦴', level: 2 },
+  { word: 'wave', emoji: '🌊', level: 2 }, { word: 'rock', emoji: '🪨', level: 2 },
+  // Level 3-5: Harder words
+  { word: 'rainbow', emoji: '🌈', level: 3 }, { word: 'volcano', emoji: '🌋', level: 3 },
+  { word: 'mountain', emoji: '⛰️', level: 3 }, { word: 'castle', emoji: '🏰', level: 3 },
+  { word: 'rocket', emoji: '🚀', level: 3 }, { word: 'robot', emoji: '🤖', level: 3 },
+  { word: 'ghost', emoji: '👻', level: 3 }, { word: 'dragon', emoji: '🐉', level: 3 },
+  { word: 'dolphin', emoji: '🐬', level: 3 }, { word: 'whale', emoji: '🐋', level: 3 },
+  { word: 'shark', emoji: '🦈', level: 3 }, { word: 'octopus', emoji: '🐙', level: 3 },
+  { word: 'butterfly', emoji: '🦋', level: 3 }, { word: 'turtle', emoji: '🐢', level: 3 },
+  { word: 'spider', emoji: '🕷️', level: 3 }, { word: 'elephant', emoji: '🐘', level: 4 },
+  { word: 'lion', emoji: '🦁', level: 3 }, { word: 'monkey', emoji: '🐒', level: 3 },
+  { word: 'penguin', emoji: '🐧', level: 3 }, { word: 'eagle', emoji: '🦅', level: 3 },
+  { word: 'owl', emoji: '🦉', level: 3 }, { word: 'snail', emoji: '🐌', level: 3 },
+  { word: 'unicorn', emoji: '🦄', level: 4 }, { word: 'tornado', emoji: '🌪️', level: 4 },
+  { word: 'island', emoji: '🏝️', level: 4 }, { word: 'desert', emoji: '🏜️', level: 4 },
+  { word: 'snake', emoji: '🐍', level: 4 }, { word: 'crab', emoji: '🦀', level: 4 },
+  { word: 'parrot', emoji: '🦜', level: 4 }, { word: 'tiger', emoji: '🐅', level: 4 },
+];
+
+// ===== MATH DRILL GENERATOR =====
+function generateMathDrill(level) {
+  const ops = [];
+  let a, b, answer, question;
+
+  if (level <= 2) {
+    ops.push('+', '-');
+    const max = level === 1 ? 10 : 20;
+    const op = ops[Math.floor(Math.random() * ops.length)];
+    if (op === '+') {
+      a = Math.floor(Math.random() * max) + 1;
+      b = Math.floor(Math.random() * (max - a)) + 1;
+      answer = a + b;
+    } else {
+      a = Math.floor(Math.random() * max) + 2;
+      b = Math.floor(Math.random() * (a - 1)) + 1;
+      answer = a - b;
+    }
+    question = `${a} ${op} ${b}`;
+  } else if (level === 3) {
+    const r = Math.random();
+    if (r < 0.3) {
+      a = Math.floor(Math.random() * 40) + 5;
+      b = Math.floor(Math.random() * 30) + 1;
+      answer = a + b; question = `${a} + ${b}`;
+    } else if (r < 0.6) {
+      a = Math.floor(Math.random() * 40) + 10;
+      b = Math.floor(Math.random() * a) + 1;
+      answer = a - b; question = `${a} − ${b}`;
+    } else {
+      a = Math.floor(Math.random() * 5) + 2;
+      b = Math.floor(Math.random() * 5) + 2;
+      answer = a * b; question = `${a} × ${b}`;
+    }
+  } else if (level === 4) {
+    const r = Math.random();
+    if (r < 0.4) {
+      a = Math.floor(Math.random() * 10) + 2;
+      b = Math.floor(Math.random() * 10) + 2;
+      answer = a * b; question = `${a} × ${b}`;
+    } else if (r < 0.7) {
+      b = Math.floor(Math.random() * 8) + 2;
+      answer = Math.floor(Math.random() * 10) + 1;
+      a = b * answer;
+      question = `${a} ÷ ${b}`;
+    } else {
+      a = Math.floor(Math.random() * 50) + 10;
+      b = Math.floor(Math.random() * 30) + 5;
+      const op = Math.random() < 0.5 ? '+' : '-';
+      if (op === '-' && b > a) { const t = a; a = b; b = t; }
+      answer = op === '+' ? a + b : a - b;
+      question = `${a} ${op === '-' ? '−' : '+'} ${b}`;
+    }
+  } else {
+    const r = Math.random();
+    if (r < 0.35) {
+      a = Math.floor(Math.random() * 12) + 2;
+      b = Math.floor(Math.random() * 12) + 2;
+      answer = a * b; question = `${a} × ${b}`;
+    } else if (r < 0.65) {
+      b = Math.floor(Math.random() * 10) + 2;
+      answer = Math.floor(Math.random() * 12) + 1;
+      a = b * answer;
+      question = `${a} ÷ ${b}`;
+    } else {
+      a = Math.floor(Math.random() * 80) + 20;
+      b = Math.floor(Math.random() * 50) + 10;
+      const op = Math.random() < 0.5 ? '+' : '-';
+      if (op === '-' && b > a) { const t = a; a = b; b = t; }
+      answer = op === '+' ? a + b : a - b;
+      question = `${a} ${op === '-' ? '−' : '+'} ${b}`;
+    }
+  }
+
+  // Generate distractors close to the answer
+  const distractors = new Set();
+  while (distractors.size < 3) {
+    const offset = Math.floor(Math.random() * 5) + 1;
+    const d = Math.random() < 0.5 ? answer + offset : answer - offset;
+    if (d !== answer && d >= 0) distractors.add(d);
+  }
+
+  const choices = [...distractors, answer].sort(() => Math.random() - 0.5);
+  return { question, answer: String(answer), choices: choices.map(String), type: 'math' };
+}
+
+// ===== READING DRILL GENERATOR =====
+function generateReadingDrill(level) {
+  // Filter words appropriate for level (include easier words too)
+  const pool = WORD_PICTURE_POOL.filter(w => w.level <= Math.max(level, 2));
+  const target = pool[Math.floor(Math.random() * pool.length)];
+
+  // Pick 3 distractor emojis (different from target)
+  const others = pool.filter(w => w.emoji !== target.emoji);
+  const distractors = [];
+  const used = new Set([target.emoji]);
+  while (distractors.length < 3 && others.length > 0) {
+    const idx = Math.floor(Math.random() * others.length);
+    const pick = others[idx];
+    if (!used.has(pick.emoji)) {
+      distractors.push(pick.emoji);
+      used.add(pick.emoji);
+    }
+    others.splice(idx, 1);
+  }
+
+  const choices = [target.emoji, ...distractors].sort(() => Math.random() - 0.5);
+  return { question: target.word, answer: target.emoji, choices, type: 'reading' };
+}
+
+// ===== DRILL QUESTION RENDERING =====
 function nextDrillQuestion() {
   if (!_drillSession || !_drillSession.active) return;
 
-  const types = _drillSession.challengeTypes;
-  const type = types[Math.floor(Math.random() * types.length)];
-  const difficulty = State.settings.level;
+  const level = State.settings.level;
+  const q = _drillSession.drillType === 'math'
+    ? generateMathDrill(level)
+    : generateReadingDrill(level);
 
-  const ch = getChallenge(type, difficulty);
-  if (!ch) {
-    // fallback to math
-    window._trainingChallenge = getChallenge('math', difficulty);
-  } else {
-    window._trainingChallenge = ch;
-  }
+  _drillSession.currentQuestion = q;
 
-  // Set up answer callback
-  window._onTrainingAnswer = function(isCorrect) {
-    if (!_drillSession || !_drillSession.active) return;
-    handleDrillAnswer(isCorrect);
-  };
-
-  // Render challenge
   const area = document.getElementById('drill-challenge-area');
-  area.innerHTML = renderChallengeHTML(window._trainingChallenge, 'training');
+  if (q.type === 'math') {
+    area.innerHTML = `
+      <div class="drill-question-math">${q.question} = ?</div>
+      <div class="drill-choices">
+        ${q.choices.map(c => `<button class="drill-choice-btn" onclick="drillAnswer('${c}')">${c}</button>`).join('')}
+      </div>`;
+  } else {
+    area.innerHTML = `
+      <div class="drill-question-word">${q.question}</div>
+      <div class="drill-choices drill-choices-emoji">
+        ${q.choices.map(c => `<button class="drill-choice-btn drill-choice-emoji" onclick="drillAnswer('${c}')">${c}</button>`).join('')}
+      </div>`;
+  }
 }
 
-function handleDrillAnswer(isCorrect) {
+// ===== DRILL ANSWER HANDLER =====
+window.drillAnswer = function(chosen) {
   if (!_drillSession || !_drillSession.active) return;
+
+  const q = _drillSession.currentQuestion;
+  if (!q) return;
+
+  const isCorrect = chosen === q.answer;
+
+  // Highlight buttons
+  const btns = document.querySelectorAll('#drill-challenge-area .drill-choice-btn');
+  btns.forEach(b => {
+    b.disabled = true;
+    b.style.pointerEvents = 'none';
+    if (b.textContent === q.answer) b.classList.add('drill-btn-correct');
+    else if (b.textContent === chosen && !isCorrect) b.classList.add('drill-btn-wrong');
+  });
 
   if (isCorrect) {
     _drillSession.correct++;
     _drillSession.streak++;
     if (_drillSession.streak > _drillSession.maxStreak) _drillSession.maxStreak = _drillSession.streak;
 
-    // XP with streak bonus
     let xp = 5;
     if (_drillSession.streak >= 10) xp = 15;
     else if (_drillSession.streak >= 5) xp = 10;
     else if (_drillSession.streak >= 3) xp = 7;
     _drillSession.xpEarned += xp;
 
-    // Attack animation
     showDrillHit(xp);
     SFX.correct();
   } else {
@@ -409,11 +583,10 @@ function handleDrillAnswer(isCorrect) {
 
   updateDrillUI();
 
-  // Next question after brief delay
   setTimeout(() => {
     if (_drillSession && _drillSession.active) nextDrillQuestion();
-  }, isCorrect ? 400 : 600);
-}
+  }, isCorrect ? 250 : 400);
+};
 
 function showDrillHit(xp) {
   const sprite = document.getElementById('drill-pokemon-sprite');

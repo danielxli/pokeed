@@ -2823,3 +2823,40 @@ html, body {
   background: linear-gradient(90deg, #FF6B35, #FFD600);
   border-radius: 6px; transition: width 0.3s, left 0.3s;
 }
+
+/* Drill question styles */
+.drill-question-math {
+  text-align: center; font-size: 42px; font-weight: 900;
+  color: #fff; padding: 16px 0 12px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.drill-question-word {
+  text-align: center; font-size: 48px; font-weight: 900;
+  color: #FFD600; padding: 16px 0 12px; text-transform: uppercase;
+  letter-spacing: 4px; text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.drill-choices {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  padding: 0 8px; max-width: 400px; margin: 0 auto;
+}
+.drill-choice-btn {
+  padding: 16px 8px; border: 3px solid rgba(255,255,255,0.25);
+  border-radius: 14px; background: rgba(255,255,255,0.1);
+  color: #fff; font-size: 24px; font-weight: 700; cursor: pointer;
+  font-family: 'Fredoka', sans-serif;
+  transition: transform 0.1s, background 0.1s;
+}
+.drill-choice-btn:active { transform: scale(0.95); }
+.drill-choice-btn:hover { background: rgba(255,255,255,0.2); }
+.drill-btn-correct {
+  background: rgba(76,175,80,0.5) !important;
+  border-color: #4CAF50 !important;
+}
+.drill-btn-wrong {
+  background: rgba(229,57,53,0.5) !important;
+  border-color: #E53935 !important;
+}
+.drill-choices-emoji { grid-template-columns: 1fr 1fr; }
+.drill-choice-emoji {
+  font-size: 40px; padding: 12px; min-height: 72px;
+}
