@@ -114,7 +114,7 @@ const EVOLUTION_MAP = {
   147: { into: 148, xp: 150 }, 148: { into: 149, xp: 300 },
 };
 
-const DRILL_DURATION = 30; // seconds
+const DRILL_DURATION = 60; // seconds
 
 // ===== TRAINING SESSION STATE =====
 let _drillSession = null;
