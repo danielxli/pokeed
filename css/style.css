@@ -2588,11 +2588,11 @@ html, body {
 
 /* Drill picker */
 .drill-picker-overlay {
-  position: absolute; inset: 0; z-index: 100 !important;
+  position: absolute !important; inset: 0; z-index: 100 !important;
   background: rgba(0,0,0,0.7); display: flex;
   align-items: center; justify-content: center;
 }
-.drill-picker-overlay.hidden { display: none; }
+.drill-picker-overlay.hidden { display: none !important; }
 .drill-picker-card {
   background: #1e293b; border-radius: 20px; padding: 28px;
   text-align: center; color: #fff; max-width: 340px; width: 90%;
@@ -2618,11 +2618,11 @@ html, body {
 
 /* Flash drill overlay */
 .training-drill-overlay {
-  position: absolute; inset: 0; z-index: 200 !important;
+  position: absolute !important; inset: 0; z-index: 200 !important;
   background: linear-gradient(135deg, #0a0a1a, #1a1a3e);
   display: flex; flex-direction: column;
 }
-.training-drill-overlay.hidden { display: none; }
+.training-drill-overlay.hidden { display: none !important; }
 
 .drill-header {
   padding: 12px 16px;
