@@ -2967,7 +2967,9 @@ html, body {
   transition: transform 0.1s, background 0.1s;
 }
 .drill-choice-btn:active { transform: scale(0.95); }
-.drill-choice-btn:hover { background: rgba(255,255,255,0.2); }
+@media (hover: hover) {
+  .drill-choice-btn:hover { background: rgba(255,255,255,0.2); }
+}
 .drill-btn-correct {
   background: rgba(76,175,80,0.5) !important;
   border-color: #4CAF50 !important;
