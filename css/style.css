@@ -2518,7 +2518,8 @@ html, body {
 }
 .training-intro {
   text-align: center; padding: 12px; margin-bottom: 16px;
-  background: rgba(255,255,255,0.08); border-radius: 12px;
+  background: rgba(15,15,35,0.8); border-radius: 12px;
+  backdrop-filter: blur(8px);
 }
 .training-intro-text {
   color: rgba(255,255,255,0.85); font-size: 15px;
@@ -2542,9 +2543,10 @@ html, body {
   gap: 12px;
 }
 .training-pokemon-card {
-  background: rgba(255,255,255,0.1); border-radius: 14px;
+  background: rgba(15,15,35,0.88); border-radius: 14px;
   padding: 14px; text-align: center; cursor: pointer;
-  border: 2px solid rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(8px);
   transition: transform 0.15s, border-color 0.15s;
 }
 .training-pokemon-card:hover, .training-pokemon-card:active {
