@@ -2528,7 +2528,7 @@ html, body {
 }
 .loc-training {
   background: url('../assets/training-ground.webp') center/cover no-repeat !important;
-  border-left: 5px solid #FF6B35 !important;
+  border-left: none !important;
 }
 .loc-training .loc-content {
   background: rgba(0,0,0,0.55); border-radius: inherit;
@@ -2786,3 +2786,12 @@ html, body {
 .evo-done-btn {
   margin-top: 24px; animation: countdown-pop 0.5s ease;
 }
+
+/* Settings guide button */
+.settings-guide-btn {
+  width: 100%; padding: 12px 16px; border: 2px solid rgba(255,255,255,0.2);
+  border-radius: 12px; background: rgba(255,255,255,0.08); color: #fff;
+  font-family: 'Fredoka', sans-serif; font-size: 16px; font-weight: 600;
+  cursor: pointer; transition: background 0.15s;
+}
+.settings-guide-btn:hover { background: rgba(255,255,255,0.15); }

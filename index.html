@@ -88,14 +88,6 @@
         <div class="loc-badge-row"><span class="loc-tag">🧩 Puzzles</span><span class="loc-tag">🔤 Words</span></div>
       </div>
     </button>
-    <button class="map-location loc-pokecenter" id="loc-pokecenter" onclick="Game.goToPokeCenter()">
-      <div class="loc-content">
-        <div class="loc-icon">🏥</div>
-        <div class="loc-name">Pokémon Center</div>
-        <div class="loc-desc">Heal your Pokémon &amp; play games!</div>
-        <div class="loc-badge-row"><span class="loc-tag">💖 Heal</span><span class="loc-tag">🔍 Word Search</span></div>
-      </div>
-    </button>
     <button class="map-location loc-training" id="loc-training" onclick="Game.goToTraining()">
       <div class="loc-content">
         <div class="loc-icon">🏋️</div>
@@ -106,18 +98,18 @@
     </button>
   </div>
   <div class="map-secondary">
+    <button class="map-location map-location-sm loc-pokecenter" id="loc-pokecenter" onclick="Game.goToPokeCenter()">
+      <div class="loc-content">
+        <div class="loc-icon">🏥</div>
+        <div class="loc-name">Pokémon Center</div>
+        <div class="loc-badge-row"><span class="loc-tag">💖 Heal</span><span class="loc-tag">🔍 Word Search</span></div>
+      </div>
+    </button>
     <button class="map-location map-location-sm loc-lab" onclick="Game.goToLab()">
       <div class="loc-content">
         <div class="loc-icon">🔬</div>
         <div class="loc-name">Pokémon Lab</div>
         <div class="loc-badge-row"><span class="loc-tag">🎯 Activities</span><span class="loc-tag" id="caught-tag">0/151 Caught</span></div>
-      </div>
-    </button>
-    <button class="map-location map-location-sm loc-guide-sm" onclick="Game.goToGuide()">
-      <div class="loc-content">
-        <div class="loc-icon">📚</div>
-        <div class="loc-name">Trainer's Guide</div>
-        <div class="loc-badge-row"><span class="loc-tag">⭐ Levels</span><span class="loc-tag">📋 Info</span></div>
       </div>
     </button>
   </div>
@@ -410,6 +402,9 @@
       <div class="settings-label">Learning Level</div>
       <div class="settings-subtitle">Choose the right level for your trainer!</div>
       <div id="level-cards" class="level-cards"></div>
+    </div>
+    <div class="settings-section">
+      <button class="settings-guide-btn" onclick="Game.closeSettings(); Game.goToGuide();">📚 Trainer's Guide</button>
     </div>
     <div class="settings-section settings-danger">
       <div class="settings-label">⚠️ Danger Zone</div>
