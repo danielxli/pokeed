@@ -2504,7 +2504,8 @@ html, body {
 /* ===== TRAINING GROUNDS ===== */
 .training-bg {
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: url('../assets/training-ground.webp') center/cover no-repeat,
+              linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   z-index: 0;
 }
 .training-content {
@@ -2666,7 +2667,8 @@ html, body {
   100% { transform: translateX(0); }
 }
 .drill-dummy {
-  font-size: 48px; transition: transform 0.15s;
+  width: 80px; height: 80px; object-fit: contain;
+  image-rendering: pixelated; transition: transform 0.15s;
 }
 .drill-dummy.drill-dummy-hit {
   animation: dummy-shake 0.3s ease;

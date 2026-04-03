@@ -393,11 +393,15 @@ function showDrillHit(xp) {
     setTimeout(() => sprite.classList.remove('drill-attack'), 300);
   }
 
-  // Damage number
+  // Damage number + hit sprite
   const dummy = document.getElementById('drill-dummy');
   if (dummy) {
     dummy.classList.add('drill-dummy-hit');
-    setTimeout(() => dummy.classList.remove('drill-dummy-hit'), 300);
+    dummy.src = 'assets/training-dummy-hit.webp';
+    setTimeout(() => {
+      dummy.classList.remove('drill-dummy-hit');
+      dummy.src = 'assets/training-dummy.webp';
+    }, 300);
   }
 
   // Floating XP number
