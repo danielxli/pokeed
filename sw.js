@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pokeed-v4';
+const CACHE_NAME = 'pokeed-v5';
 
 // All 151 Pokemon sprite URLs
 const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
@@ -65,7 +65,7 @@ const PRECACHE_URLS = [
   './assets/training-bg.webp',
 ];
 
-// Install: precache app shell and assets, then sprites (individual failures won't block)
+// Install: precache app shell and assets, then sprites
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
@@ -78,7 +78,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activate: clean old caches
+// Activate: clean old caches and take control immediately
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -87,13 +87,26 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch: cache-first for everything (we precache it all)
+// Fetch handler
 self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+
+  // HTML pages: network-first (so updates show immediately), fall back to cache offline
+  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+    event.respondWith(
+      fetch(event.request).then(response => {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        return response;
+      }).catch(() => caches.match(event.request, { ignoreSearch: true }))
+    );
+    return;
+  }
+
+  // Everything else (JS, CSS, images, sprites): cache-first
   event.respondWith(
-    // ignoreSearch so style.css?v=3 matches cached style.css
     caches.match(event.request, { ignoreSearch: true }).then(cached => {
       if (cached) return cached;
-      // Not in cache — fetch from network and cache for next time
       return fetch(event.request).then(response => {
         if (response.ok) {
           const clone = response.clone();
