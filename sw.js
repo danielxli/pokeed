@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pokeed-v3';
+const CACHE_NAME = 'pokeed-v4';
 
 // All 151 Pokemon sprite URLs
 const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
@@ -90,7 +90,8 @@ self.addEventListener('activate', event => {
 // Fetch: cache-first for everything (we precache it all)
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(cached => {
+    // ignoreSearch so style.css?v=3 matches cached style.css
+    caches.match(event.request, { ignoreSearch: true }).then(cached => {
       if (cached) return cached;
       // Not in cache — fetch from network and cache for next time
       return fetch(event.request).then(response => {
