@@ -1,0 +1,24 @@
+{
+  "name": "Pokémon Educational Adventure",
+  "short_name": "PokéEd",
+  "description": "A Pokémon-themed educational game for kids — catch, battle, and learn!",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ee1515",
+  "theme_color": "#ee1515",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/pokeball-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/pokeball-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

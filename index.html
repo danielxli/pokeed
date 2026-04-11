@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Pokemon Educational Adventure!</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ee1515">
+  <link rel="icon" href="assets/pokeball-icon.svg" type="image/svg+xml">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PokéEd">
+  <link rel="apple-touch-icon" href="assets/pokeball-icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -463,6 +470,11 @@
 <script src="js/reading-activities.js"></script>
 <script src="js/reading-activities-advanced.js"></script>
 <script src="js/systems.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js');
+  }
+</script>
 
 </body>
 </html>
