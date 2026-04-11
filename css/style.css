@@ -2388,6 +2388,12 @@ html, body {
   background: #c62828;
   color: #fff;
 }
+.settings-version {
+  text-align: center;
+  color: #bbb;
+  font-size: 12px;
+  margin-top: 16px;
+}
 
 /* Reset Confirmation Overlay */
 .reset-confirm-overlay {
