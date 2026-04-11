@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pokeed-v5';
+const CACHE_NAME = 'pokeed-v6';
 
 // All 151 Pokemon sprite URLs
 const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
@@ -24,6 +24,7 @@ const PRECACHE_URLS = [
   './js/reading-activities-advanced.js',
   './js/systems.js',
   './assets/pokeball-icon.svg',
+  './assets/pokeball-icon-180.png',
   './manifest.json',
   // Local assets
   './assets/grass-bg.webp',
@@ -89,10 +90,8 @@ self.addEventListener('activate', event => {
 
 // Fetch handler
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-
-  // HTML pages: network-first (so updates show immediately), fall back to cache offline
-  if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+  // HTML navigation: network-first, cache fallback for offline
+  if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request).then(response => {
         const clone = response.clone();
@@ -103,17 +102,36 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Everything else (JS, CSS, images, sprites): cache-first
+  // Sprites (external CDN): cache-first, they never change
+  if (event.request.url.includes('raw.githubusercontent.com')) {
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).then(response => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          }
+          return response;
+        });
+      })
+    );
+    return;
+  }
+
+  // JS, CSS, local assets: stale-while-revalidate
+  // Serve cached version immediately, fetch update in background
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true }).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request).then(response => {
+      const fetchPromise = fetch(event.request).then(response => {
         if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }
         return response;
-      });
+      }).catch(() => cached);
+
+      return cached || fetchPromise;
     })
   );
 });
