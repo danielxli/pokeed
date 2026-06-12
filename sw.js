@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pokeed-v6';
+const CACHE_NAME = 'pokeed-v7';
 
 // All 151 Pokemon sprite URLs
 const SPRITE_BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';

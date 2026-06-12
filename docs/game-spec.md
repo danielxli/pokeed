@@ -89,7 +89,7 @@ After correctly guessing:
    - **Pattern recognition:** What comes next? 2, 4, 6, 8, __
    - **Word search:** Find 5 hidden words in a grid
    - **Sentence ordering:** Put these words in the right order to make a sentence
-   - **Quick math:** Solve 5 problems in 60 seconds (timed challenge)
+   - **Quick math:** Solve 5 problems at your own pace
 4. Success → Free the stolen Pokemon (bonus: catch a rare Pokemon)
 5. Failure → Team Rocket escapes (can retry)
 

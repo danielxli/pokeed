@@ -84,9 +84,9 @@ function renderGuide() {
         </div>
         <div class="guide-activity-detail">
           <strong>Puzzle types:</strong><br>
-          • ${tag('Pattern Blitz','pattern')} — Solve 5 number patterns before time runs out (90 sec, need 4/5)!<br>
+          • ${tag('Pattern Challenge','pattern')} — Solve 5 number patterns at your own pace (need 4/5)!<br>
           • ${tag('Sentence Ordering','sentence')} — Drag words into the correct order to form a sentence<br>
-          • ${tag('Quick Math','timedmath')} — Solve 5 math problems before time runs out (60 sec, need 4/5)!
+          • ${tag('Math Challenge','timedmath')} — Solve 5 math problems at your own pace (need 4/5)!
         </div>
       </div>
 
