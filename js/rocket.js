@@ -1,5 +1,5 @@
 // ===== TEAM ROCKET =====
-// Team Rocket encounters, puzzles (pattern, sentence, timed math)
+// Team Rocket encounters, puzzles (pattern, sentence, math)
 // Word search moved to Pokemon Center — rendering functions kept here for shared use
 
 // ===== TEAM ROCKET SCENE =====
@@ -26,7 +26,7 @@ Game.startRocketPuzzle = function() {
   const level = State.settings.level;
   const puzzleTypes = [];
   puzzleTypes.push('pattern');     // all levels
-  puzzleTypes.push('timedmath');   // all levels
+  puzzleTypes.push('timedmath');   // all levels (untimed quick math)
   if (level >= 2) puzzleTypes.push('sentence'); // sentence from level 2+
 
   const type = puzzleTypes[Math.floor(Math.random() * puzzleTypes.length)];
@@ -41,7 +41,7 @@ function renderRocketPuzzle(type) {
   const content = document.getElementById('puzzle-content');
   document.getElementById('puzzle-type-label').textContent =
     type === 'pattern' ? '🔢 Pattern Recognition' :
-    type === 'sentence' ? '📝 Sentence Ordering' : '⚡ Quick Math Challenge';
+    type === 'sentence' ? '📝 Sentence Ordering' : '🧮 Math Challenge';
 
   content.innerHTML = '';
 
@@ -180,29 +180,12 @@ const PATTERNS_BY_LEVEL = new Proxy({}, {
 });
 
 function renderPatternPuzzle(content) {
-  document.getElementById('puzzle-timer-wrap').classList.remove('hidden');
+  document.getElementById('puzzle-timer-wrap').classList.add('hidden');
   State.rocket.patternScore = 0;
   State.rocket.patternTotal = 5;
   State.rocket.patternAnswered = 0;
-
-  let timeLeft = 90;
-  document.getElementById('puzzle-timer').textContent = timeLeft;
-  document.getElementById('puzzle-timer').className = 'puzzle-timer';
-
   clearInterval(State.rocket.timerInterval);
-  State.rocket.timerInterval = setInterval(() => {
-    timeLeft--;
-    document.getElementById('puzzle-timer').textContent = timeLeft;
-    if (timeLeft <= 10) document.getElementById('puzzle-timer').className = 'puzzle-timer urgent';
-    if (timeLeft <= 0) {
-      clearInterval(State.rocket.timerInterval);
-      if (State.rocket.patternScore >= 4) {
-        rocketSuccess();
-      } else {
-        rocketFail(`Time's up! You only got ${State.rocket.patternScore}/5 correct.`);
-      }
-    }
-  }, 1000);
+  State.rocket.timerInterval = null;
 
   showNextPattern(content);
 }
@@ -660,29 +643,12 @@ window.checkSentenceOrder = function() {
 
 // Timed math puzzle
 function renderTimedMathPuzzle(content) {
-  document.getElementById('puzzle-timer-wrap').classList.remove('hidden');
+  document.getElementById('puzzle-timer-wrap').classList.add('hidden');
   State.rocket.timedScore = 0;
   State.rocket.timedTotal = 5;
   State.rocket.timedAnswered = 0;
-
-  let timeLeft = 60;
-  document.getElementById('puzzle-timer').textContent = timeLeft;
-  document.getElementById('puzzle-timer').className = 'puzzle-timer';
-
   clearInterval(State.rocket.timerInterval);
-  State.rocket.timerInterval = setInterval(() => {
-    timeLeft--;
-    document.getElementById('puzzle-timer').textContent = timeLeft;
-    if (timeLeft <= 10) document.getElementById('puzzle-timer').className = 'puzzle-timer urgent';
-    if (timeLeft <= 0) {
-      clearInterval(State.rocket.timerInterval);
-      if (State.rocket.timedScore >= 4) {
-        rocketSuccess();
-      } else {
-        rocketFail(`Time's up! You only got ${State.rocket.timedScore}/5 correct.`);
-      }
-    }
-  }, 1000);
+  State.rocket.timerInterval = null;
 
   showNextTimedMath(content);
 }

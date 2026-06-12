@@ -31,7 +31,7 @@ Scripts are loaded via `<script>` tags in `index.html` and **must** be in this o
 4. `js/encounter.js` — Wild encounter flow, clues, challenges, pokeball throw mini-game
 5. `js/pokedex.js` — Pokedex viewer, Pokemon Lab hub, activity sessions
 6. `js/battle.js` — Gym battles, turn-based combat, type effectiveness damage calc
-7. `js/rocket.js` — Team Rocket puzzles (pattern, word search, sentence, timed math)
+7. `js/rocket.js` — Team Rocket puzzles (pattern, word search, sentence, math)
 8. `js/guide.js` — Trainer's Guide renderer
 9. `js/pokecenter.js` — Pokemon Center (healing, word search)
 10. `js/training.js` — Training Grounds, flash drill system, `EVOLUTION_MAP`, Pokemon evolution

@@ -16,7 +16,7 @@ pokemon-game/
 │   ├── encounter.js        # Wild encounters, clues, challenges, letter tiles, pokeball throw
 │   ├── pokedex.js          # Pokedex viewer, Pokemon Lab hub, activity sessions
 │   ├── battle.js           # Gym battles, turn-based combat, type effectiveness
-│   ├── rocket.js           # Team Rocket puzzles (pattern, word search, sentence, timed math)
+│   ├── rocket.js           # Team Rocket puzzles (pattern, word search, sentence, math)
 │   ├── guide.js            # Trainer's Guide (in-game help and reference)
 │   ├── settings.js         # Level selection, settings panel, initialization
 │   ├── activities.js       # 26 educational activity generators + ACTIVITY_REGISTRY
