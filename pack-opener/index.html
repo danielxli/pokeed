@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#171338">
+<title>Pack Rip! — Pokémon Card Pack Opener</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23ff5a5f'/%3E%3Cpath d='M4 50h92' stroke='%2314163a' stroke-width='10'/%3E%3Ccircle cx='50' cy='50' r='15' fill='%23fff' stroke='%2314163a' stroke-width='8'/%3E%3Cpath d='M50 96A46 46 0 0 1 4 50h92A46 46 0 0 1 50 96z' fill='%23f4f4ff'/%3E%3Ccircle cx='50' cy='50' r='15' fill='%23fff' stroke='%2314163a' stroke-width='8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="bg-stars" aria-hidden="true"></div>
+
+<header id="topbar">
+  <h1 id="logo">PACK<span> RIP!</span></h1>
+  <div class="topbar-actions">
+    <button id="btn-coins" class="chip-btn coins-chip" title="Earn coins"><span class="coin" aria-hidden="true"></span><span id="topbar-coins">0</span></button>
+    <button id="btn-binder" class="chip-btn" title="My Binder">📒 <span id="binder-count">0</span></button>
+    <button id="btn-settings" class="chip-btn" title="Settings">⚙️</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ SHOP ============ -->
+  <section id="scene-shop" class="scene active">
+    <p class="shop-tag">Earn coins, then pick a pack and rip it open!</p>
+
+    <button id="btn-earn" class="earn-btn">Earn Poké Coins</button>
+
+    <div class="pack-shelf" id="pack-shelf"></div>
+
+    <div id="pity-wrap" class="hidden">
+      <div class="pity-label">✨ Luck Meter</div>
+      <div class="pity-pips" id="pity-pips"></div>
+      <div class="pity-hint">A HOLO is guaranteed when it fills up!</div>
+    </div>
+
+    <div class="shop-stats" id="shop-stats"></div>
+  </section>
+
+  <!-- ============ OPENING ============ -->
+  <section id="scene-open" class="scene">
+    <button id="btn-open-back" class="chip-btn back-btn">← Back</button>
+
+    <div id="open-stage">
+
+      <!-- The sealed pack -->
+      <div id="big-pack-wrap">
+        <div id="big-pack">
+          <div class="bp-inner" aria-hidden="true"><img src="assets/cardback.jpg" alt="" draggable="false"></div>
+          <img class="bp-img bp-body-img" alt="Booster pack" draggable="false">
+          <div class="bp-torn-edge" aria-hidden="true"></div>
+          <div class="bp-flap" aria-hidden="true">
+            <img class="bp-img bp-tear-img" alt="" draggable="false">
+            <div class="bp-flap-edge"></div>
+          </div>
+          <div class="bp-guide" aria-hidden="true"></div>
+          <div class="bp-spark" aria-hidden="true"></div>
+          <div class="bp-shine" aria-hidden="true"></div>
+        </div>
+        <div id="tear-hint"><span class="hand">👉</span> Slide across to rip it open!</div>
+      </div>
+
+      <!-- The card pile -->
+      <div id="card-stage" class="hidden">
+        <div id="reveal-count"></div>
+        <div id="card-pile"></div>
+        <div id="reveal-hint">Tap the card!</div>
+      </div>
+
+      <!-- Summary -->
+      <div id="summary" class="hidden">
+        <h2 id="summary-title">You got…</h2>
+        <div id="summary-grid"></div>
+        <p id="summary-stats"></p>
+        <div class="summary-actions">
+          <button id="btn-again" class="big-btn primary">🎉 Rip another!</button>
+          <button id="btn-to-binder" class="big-btn">📒 Binder</button>
+          <button id="btn-to-shop" class="big-btn">🏪 Shop</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ BINDER ============ -->
+  <section id="scene-binder" class="scene">
+    <button id="btn-binder-back" class="chip-btn back-btn">← Back</button>
+    <h2 class="scene-title">My Binder</h2>
+    <div class="binder-tabs" id="binder-tabs"></div>
+    <div class="binder-progress">
+      <div class="binder-bar"><div class="binder-bar-fill" id="binder-bar-fill"></div></div>
+      <div class="binder-bar-label" id="binder-bar-label"></div>
+    </div>
+    <div id="binder-grid"></div>
+  </section>
+
+  <!-- ============ QUIZ (earn coins) ============ -->
+  <section id="scene-quiz" class="scene">
+    <button id="btn-quiz-back" class="chip-btn back-btn">← Shop</button>
+    <h2 class="scene-title">Earn Poké Coins</h2>
+
+    <div class="quiz-coinbar">
+      <span class="quiz-coin-total"><span class="coin big" aria-hidden="true"></span><span id="quiz-coins">0</span></span>
+      <span class="quiz-earned" id="quiz-earned"></span>
+    </div>
+
+    <div id="quiz-card">
+      <div id="quiz-passage" class="quiz-passage hidden"></div>
+      <div id="quiz-q" class="quiz-q"></div>
+      <div id="quiz-choices" class="quiz-choices"></div>
+      <div id="quiz-feedback" class="quiz-feedback"></div>
+    </div>
+
+    <p class="quiz-reward-hint"><b>+1</b> coin for a right answer, <b>−1</b> for a wrong one (never below 0)</p>
+  </section>
+
+</main>
+
+<!-- ============ CARD ZOOM MODAL ============ -->
+<div id="modal-card" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-card-stage">
+    <div id="zoom-card" class="card3d zoomed">
+      <div class="flipper flipped">
+        <div class="face back"><img class="cardback-img" src="assets/cardback.jpg" alt="" draggable="false"></div>
+        <div class="face front"><img id="zoom-img" alt="" draggable="false"><div class="holo-fx"></div></div>
+      </div>
+    </div>
+    <div id="zoom-info"></div>
+    <button id="btn-zoom-close" class="big-btn">Close</button>
+  </div>
+</div>
+
+<!-- ============ SETTINGS MODAL ============ -->
+<div id="modal-settings" class="modal hidden">
+  <div class="modal-backdrop"></div>
+  <div class="modal-panel">
+    <h2>Settings</h2>
+
+    <div class="set-group">
+      <div class="set-group-title">Pack Luck</div>
+      <label class="odds-opt">
+        <input type="radio" name="odds" value="generous">
+        <div class="odds-card"><span class="odds-emoji">🍀</span><b>Lucky Mode</b><small>Lots of rares — every pack feels great!</small></div>
+      </label>
+      <label class="odds-opt">
+        <input type="radio" name="odds" value="pity">
+        <div class="odds-card"><span class="odds-emoji">⚡</span><b>Luck Meter</b><small>Lucky odds + a guaranteed HOLO every 5 packs</small></div>
+      </label>
+      <label class="odds-opt">
+        <input type="radio" name="odds" value="realistic">
+        <div class="odds-card"><span class="odds-emoji">🕹️</span><b>Classic 1999</b><small>Real pack odds — 11 cards, holo in ~1 of 3 packs</small></div>
+      </label>
+    </div>
+
+    <div class="set-group">
+      <div class="set-group-title">Question Level</div>
+      <div id="grade-opts" class="grade-opts"></div>
+    </div>
+
+    <div class="set-group">
+      <label class="sound-row">
+        <span class="set-group-title" style="margin:0">Sound</span>
+        <input type="checkbox" id="opt-sound">
+        <span class="toggle"></span>
+      </label>
+    </div>
+
+    <div class="set-group">
+      <button id="btn-reset" class="big-btn danger">🗑️ Reset collection</button>
+    </div>
+
+    <button id="btn-settings-close" class="big-btn primary">Done</button>
+  </div>
+</div>
+
+<div id="fx-flash" aria-hidden="true"></div>
+<div id="fx-layer" aria-hidden="true"></div>
+<div id="holo-splash" class="hidden" aria-hidden="true">✨ HOLO! ✨</div>
+<div id="pk-toast" class="hidden" aria-live="polite"></div>
+
+<a id="home-link" href="../" title="Back to the Adventure">🏠</a>
+
+<script src="data/cards.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/packs.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

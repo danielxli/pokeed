@@ -1195,7 +1195,8 @@ function genMathQuestion(difficulty) {
 
   // Generate wrong choices scaled to answer size
   const wrong = new Set();
-  while (wrong.size < 3) {
+  let guard = 0;
+  while (wrong.size < 3 && guard++ < 60) {
     let w;
     if (answer <= 10) {
       w = answer + Math.floor(Math.random() * 6) - 3;
@@ -1207,6 +1208,10 @@ function genMathQuestion(difficulty) {
       w = answer + Math.floor(Math.random() * 60) - 30;
     }
     if (w !== answer && w >= 0) wrong.add(w);
+  }
+  // Fallback: guarantee 3 distinct distractors when the window is too tight (e.g. answer 0)
+  for (let f = answer + 1; wrong.size < 3; f++) {
+    if (f !== answer && f >= 0) wrong.add(f);
   }
   choices = [...wrong, answer].sort(() => Math.random() - 0.5);
   return { type: 'math', question: q, answer, choices };

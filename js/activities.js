@@ -636,7 +636,7 @@ function genPokedexSpeller(difficulty) {
     const w = word.split('');
     const a = Math.floor(Math.random() * w.length);
     let b = Math.floor(Math.random() * w.length);
-    while (b === a) b = Math.floor(Math.random() * w.length);
+    for (let g = 0; b === a && g < 20; g++) b = Math.floor(Math.random() * w.length);
     [w[a], w[b]] = [w[b], w[a]];
     const candidate = w.join('');
     if (candidate !== word && !wrongWords.includes(candidate)) wrongWords.push(candidate);
@@ -720,15 +720,15 @@ function genMoreOrLess(difficulty) {
   };
   const [min, max] = ranges[difficulty] || [1, 5];
 
-  let a, b;
+  let a, b, g = 0;
   do {
     a = min + Math.floor(Math.random() * (max - min));
     b = min + Math.floor(Math.random() * (max - min));
-  } while (a === b);
+  } while (a === b && g++ < 60);
 
   const emojiA = randItem(groupEmoji);
-  let emojiB;
-  do { emojiB = randItem(groupEmoji); } while (emojiB === emojiA);
+  let emojiB, g2 = 0;
+  do { emojiB = randItem(groupEmoji); } while (emojiB === emojiA && g2++ < 60);
 
   const correctAnswer = a > b ? 'A' : 'B';
 
@@ -3236,12 +3236,12 @@ function genNumberBond(difficulty) {
 
   // Generate wrong choices
   const wrongs = new Set();
-  while (wrongs.size < 3) {
+  for (let g = 0; wrongs.size < 3 && g < 60; g++) {
     const off = Math.floor(Math.random() * 5) + 1;
     const w = answer + (Math.random() < 0.5 ? off : -off);
     if (w > 0 && w !== answer && w < whole) wrongs.add(w);
   }
-  // Fill if needed
+  // Fill if needed (also covers tiny wholes where no in-range distractor exists)
   let fill = 1;
   while (wrongs.size < 3) { if (fill !== answer && fill > 0) wrongs.add(fill); fill++; }
 
@@ -3286,7 +3286,7 @@ function genMakeTen(difficulty) {
   }
 
   const wrongs = new Set();
-  while (wrongs.size < 3) {
+  for (let g = 0; wrongs.size < 3 && g < 60; g++) {
     const off = Math.floor(Math.random() * 5) + 1;
     const w = answer + (Math.random() < 0.5 ? off : -off);
     if (w > 0 && w !== answer && w < target) wrongs.add(w);
@@ -3373,7 +3373,7 @@ function genBarModel(difficulty) {
   }
 
   const wrongs = new Set();
-  while (wrongs.size < 3) {
+  for (let g = 0; wrongs.size < 3 && g < 60; g++) {
     const off = Math.floor(Math.random() * 8) + 1;
     const w = answer + (Math.random() < 0.5 ? off : -off);
     if (w > 0 && w !== answer) wrongs.add(w);
