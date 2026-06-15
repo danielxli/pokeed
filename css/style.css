@@ -288,6 +288,11 @@ html, body {
 .loc-guide-sm {
   background: linear-gradient(135deg, #2E7D32 0%, #4CAF50 50%, #1B5E20 100%);
 }
+.loc-cards {
+  background: linear-gradient(135deg, #4527A0 0%, #7E57C2 48%, #FFB300 100%);
+}
+/* the Card Shop card links to the separate pack-opener app */
+a.map-location { text-decoration: none; color: inherit; }
 .map-location {
   font-family: var(--font);
   position: relative; overflow: hidden;
