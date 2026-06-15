@@ -29,6 +29,12 @@ pokemon-game/
 │   ├── loc-*.png           # Map location cards
 │   ├── leader-*.png        # 8 gym leader portraits
 │   └── rocket-*.png        # Team Rocket portraits
+├── pack-opener/            # Separate card-pack-opening app (see its README)
+│   ├── index.html
+│   ├── css/style.css
+│   ├── data/cards.js       # 228 cards (Base/Jungle/Fossil), bundled
+│   ├── js/                 # audio, packs, main, quiz-worker
+│   └── assets/             # card back + 9 booster packshots
 └── docs/                   # Design specs and architecture notes (not deployed)
     ├── game-spec.md
     ├── architecture-context.md
@@ -36,6 +42,17 @@ pokemon-game/
     ├── systems-spec.md
     └── integration-spec.md
 ```
+
+## Pack Opener (companion app)
+
+`pack-opener/` is a separate, kid-friendly card-pack-opening game hosted at the
+same origin under `/pack-opener/`. Players earn **Poké Coins** by answering math
+and reading questions (reusing the main game's Training Grounds drills via a Web
+Worker), spend them on real 1999 booster packs, rip the foil open, reveal cards
+with holo effects, and fill a collection binder. The main game's map links to it
+via the **Card Shop** card; it links back with a 🏠 button. It keeps its own
+state (`localStorage` key `packrip.save.v1`) and shares no runtime state with the
+main game. See [`pack-opener/README.md`](pack-opener/README.md) for full detail.
 
 ## Script Load Order
 

@@ -67,6 +67,48 @@ Scripts are loaded via `<script>` tags in `index.html` and **must** be in this o
 
 Single file `css/style.css`. Uses CSS custom properties: `--pk-red`, `--pk-blue`, `--pk-yellow`, `--pk-dark`, `--pk-white`, `--pk-card`, `--pk-shadow`, `--pk-radius`, `--pk-radius-sm`.
 
+## Pack Opener (`pack-opener/`)
+
+A **separate app** (own scenes, state, styling) hosted at the same origin under
+`/pack-opener/`. A card-pack-opening game: earn Poké Coins by answering quiz
+questions, buy 1999-era booster packs, finger-tear them open, reveal cards, fill
+a binder. It does **not** share runtime state with the main game. See
+`pack-opener/README.md` for full detail. Key points when touching it:
+
+- **Entry points:** the main map links to it via a "Card Shop" card
+  (`a.loc-cards` → `/pack-opener/` in root `index.html`); the pack-opener links
+  back via a 🏠 button. Uses absolute `/pack-opener/` paths.
+- **Trailing-slash safety:** `pack-opener/index.html` sets
+  `<base href="/pack-opener/">` so relative URLs resolve inside the folder even
+  at `/pack-opener` (no slash). Without it, the deploy loads the main game's CSS.
+- **Question reuse:** the coin quiz reuses the Training Grounds generators
+  (`generateMathDrill` / `generateReadingDrill` from `js/training.js`) **verbatim**
+  via a Web Worker (`pack-opener/js/quiz-worker.js`) that `importScripts` the main
+  game's `js/data.js` + `js/training.js` with stubbed `Game`/`State`/`window`/
+  `document`/`SFX`. The Worker isolates the page from any generator hang (600ms
+  timeout → respawn). It deliberately does NOT reuse `renderChallengeHTML` /
+  `answerChallenge` (too coupled).
+- **Persistence:** own `localStorage` key `packrip.save.v1` (not `pokemon-edu-save`).
+
+## Question generators: avoid infinite loops
+
+Several challenge generators build distractors with `while (set.size < N) { …random… }`.
+If the valid pool is smaller than N (e.g. `genMathQuestion` when the answer is 0,
+`numberBond` with a tiny "whole"), these loops **never terminate** and freeze the
+page. When adding/editing a distractor loop, cap it (`for (let g=0; cond && g<60; g++)`)
+and provide a sequential fallback. Fixed instances live in `js/data.js`
+(`genMathQuestion`) and `js/activities.js` (`numberBond`, `makeTen`, `barModel`,
+`moreOrLess`, the spelling swap).
+
+## Word/question pools
+
+Reading activities are picture-matching, so words live as `{ word, emoji, level }`
+in pools such as `WORD_PICTURE_POOL` (`js/training.js`, feeds Training Grounds **and**
+the pack-opener quiz), `CVC_WORDS` (`js/data.js`), and per-activity banks in
+`js/reading-activities*.js`. Adding picturable words means curating word+emoji
+pairs; non-picturable sight words (Dolch/Fry) belong in text-only flash
+activities, not the picture pools.
+
 ## Design Specs
 
 The `docs/` folder contains design specifications (not deployed):
